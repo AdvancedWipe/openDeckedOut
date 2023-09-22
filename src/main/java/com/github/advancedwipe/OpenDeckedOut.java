@@ -1,7 +1,11 @@
 package com.github.advancedwipe;
 
-import com.github.advancedwipe.commands.CustomCommand;
+import com.github.advancedwipe.commands.MainCommand;
+import com.github.advancedwipe.commands.MainCommandCompleter;
 import net.kyori.adventure.text.Component;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -20,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 
 public class OpenDeckedOut extends JavaPlugin implements Listener {
+    private static final Logger LOGGER = LogManager.getLogger(OpenDeckedOut.class.getSimpleName());
     FileConfiguration config = null;
 
     private final Map<Player, Long> playerCooldowns = new HashMap<>();
@@ -29,11 +34,26 @@ public class OpenDeckedOut extends JavaPlugin implements Listener {
     public void onEnable() {
         Bukkit.getPluginManager().registerEvents(this, this);
 
+        if (!loadConfig()) {
+            LOGGER.log(Level.WARN, "Could not load config file! Disabling plugin.");
+            this.setEnabled(false);
+            return;
+        }
+
+        this.loadCommands();
+    }
+
+    private void loadCommands() {
+        this.getCommand("opendeckedout").setExecutor(new MainCommand());
+        this.getCommand("opendeckedout").setTabCompleter(new MainCommandCompleter());
+    }
+
+    public boolean loadConfig() {
+        LOGGER.log(Level.INFO, "Loading configuration...");
         saveDefaultConfig();
         reloadConfig();
         this.config = getConfig();
-
-        this.getCommand("kit").setExecutor(new CustomCommand());
+        return true;
     }
 
     @EventHandler
