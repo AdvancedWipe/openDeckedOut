@@ -2,6 +2,7 @@ plugins {
     id("java")
     id("io.papermc.paperweight.userdev") version "1.5.5"
     id("xyz.jpenilla.run-paper") version "2.2.0"
+    checkstyle
 }
 
 group = "com.github.advancedwipe"
@@ -20,6 +21,13 @@ dependencies {
 
 java {
     toolchain.languageVersion.set(JavaLanguageVersion.of(17))
+}
+
+checkstyle {
+    val archive = configurations.checkstyle.get().resolve().filter {
+        it.name.startsWith("checkstyle")
+    }
+    config = resources.text.fromArchiveEntry(archive, "google_checks.xml")
 }
 
 tasks {
