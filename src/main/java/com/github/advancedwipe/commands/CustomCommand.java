@@ -1,4 +1,4 @@
-package com.github.advancedwipe;
+package com.github.advancedwipe.commands;
 
 import org.bukkit.Material;
 import org.bukkit.command.Command;
