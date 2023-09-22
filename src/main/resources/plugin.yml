@@ -5,3 +5,7 @@ description: An example plugin
 author: AdvancedWipe
 website: https://papermc.io
 api-version: '1.20'
+commands:
+  kit:
+    description: Your description
+    usage: /<command>

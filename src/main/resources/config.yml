@@ -1,0 +1,3 @@
+check_interval_ticks: 20
+min_height: 64.0
+cooldownTime: 10000
