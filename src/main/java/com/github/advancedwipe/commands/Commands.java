@@ -63,6 +63,7 @@ public final class Commands {
   }
 
   private void save(CommandContext<CommandSender> context) {
+    this.workspace.saveToConfig();
   }
 
   private void pos1(CommandContext<CommandSender> context) {

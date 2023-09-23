@@ -6,6 +6,9 @@ import cloud.commandframework.minecraft.extras.MinecraftHelp;
 import cloud.commandframework.paper.PaperCommandManager;
 import com.github.advancedwipe.commands.Commands;
 import com.github.advancedwipe.game.DeckedOutManager;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -30,6 +33,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public class OpenDeckedOut extends JavaPlugin implements Listener {
 
+  private static OpenDeckedOut instance;
   private PaperCommandManager<CommandSender> manager;
   private BukkitAudiences bukkitAudiences;
   private MinecraftHelp<CommandSender> minecraftHelp;
@@ -37,15 +41,20 @@ public class OpenDeckedOut extends JavaPlugin implements Listener {
   private CommandConfirmationManager<CommandSender> confirmationManager;
   private AnnotationParser<CommandSender> annotationParser;
 
-  private static final Logger LOGGER = LogManager.getLogger(OpenDeckedOut.class.getSimpleName());
+  public static final Logger LOGGER = LogManager.getLogger(OpenDeckedOut.class.getSimpleName());
   private final Map<Player, Long> playerCooldowns = new HashMap<>();
 
   private DeckedOutManager deckedOutManager;
   FileConfiguration config = null;
 
+  public static OpenDeckedOut getInstance() {
+    return instance;
+  }
+
   @Override
   public void onEnable() {
     Bukkit.getPluginManager().registerEvents(this, this);
+    instance = this;
 
     if (!loadConfig()) {
       LOGGER.log(Level.WARN, "Could not load config file! Disabling plugin.");
@@ -61,7 +70,11 @@ public class OpenDeckedOut extends JavaPlugin implements Listener {
 
   public boolean loadConfig() {
     LOGGER.log(Level.INFO, "Loading configuration...");
-    saveDefaultConfig();
+    File configFile = new File(getDataFolder(), "config.yml");
+
+    if (!configFile.exists()) {
+      saveDefaultConfig();
+    }
     reloadConfig();
     this.config = getConfig();
     return true;
