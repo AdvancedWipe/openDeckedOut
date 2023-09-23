@@ -1,11 +1,16 @@
 package com.github.advancedwipe;
 
-import com.github.advancedwipe.commands.MainCommand;
-import com.github.advancedwipe.commands.MainCommandCompleter;
+import cloud.commandframework.annotations.AnnotationParser;
+import cloud.commandframework.extra.confirmation.CommandConfirmationManager;
+import cloud.commandframework.minecraft.extras.MinecraftHelp;
+import cloud.commandframework.paper.PaperCommandManager;
+import com.github.advancedwipe.commands.Commands;
+import com.github.advancedwipe.game.DeckedOutManager;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.kyori.adventure.text.Component;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
@@ -14,6 +19,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -24,8 +30,17 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public class OpenDeckedOut extends JavaPlugin implements Listener {
 
+  private PaperCommandManager<CommandSender> manager;
+  private BukkitAudiences bukkitAudiences;
+  private MinecraftHelp<CommandSender> minecraftHelp;
+
+  private CommandConfirmationManager<CommandSender> confirmationManager;
+  private AnnotationParser<CommandSender> annotationParser;
+
   private static final Logger LOGGER = LogManager.getLogger(OpenDeckedOut.class.getSimpleName());
   private final Map<Player, Long> playerCooldowns = new HashMap<>();
+
+  private DeckedOutManager deckedOutManager;
   FileConfiguration config = null;
 
   @Override
@@ -34,16 +49,14 @@ public class OpenDeckedOut extends JavaPlugin implements Listener {
 
     if (!loadConfig()) {
       LOGGER.log(Level.WARN, "Could not load config file! Disabling plugin.");
-      this.setEnabled(false);
+      this.getServer().getPluginManager().disablePlugin(this);
       return;
     }
 
-    this.loadCommands();
-  }
+    this.deckedOutManager = new DeckedOutManager(this);
 
-  private void loadCommands() {
-    this.getCommand("opendeckedout").setExecutor(new MainCommand());
-    this.getCommand("opendeckedout").setTabCompleter(new MainCommandCompleter());
+    new Commands(this).register();
+
   }
 
   public boolean loadConfig() {
@@ -52,6 +65,10 @@ public class OpenDeckedOut extends JavaPlugin implements Listener {
     reloadConfig();
     this.config = getConfig();
     return true;
+  }
+
+  public DeckedOutManager getDeckedOutManager() {
+    return deckedOutManager;
   }
 
   @EventHandler
@@ -84,8 +101,8 @@ public class OpenDeckedOut extends JavaPlugin implements Listener {
 
     for (Player player : Bukkit.getOnlinePlayers()) {
       Location playerLocation = player.getLocation();
-      if (playerLocation.getWorld().equals(location.getWorld()) &&
-          playerLocation.distanceSquared(location) <= radius * radius) {
+      if (playerLocation.getWorld().equals(location.getWorld())
+          && playerLocation.distanceSquared(location) <= radius * radius) {
         nearbyPlayers.add(player);
       }
     }

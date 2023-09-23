@@ -2,6 +2,7 @@ plugins {
     id("java")
     id("io.papermc.paperweight.userdev") version "1.5.5"
     id("xyz.jpenilla.run-paper") version "2.2.0"
+    id("com.github.johnrengelman.shadow") version "8.1.1"
     checkstyle
 }
 
@@ -17,7 +18,12 @@ repositories {
 dependencies {
     compileOnly("io.papermc.paper:paper-api:1.20.1-R0.1-SNAPSHOT")
     paperweight.paperDevBundle("1.20.1-R0.1-SNAPSHOT")
-}
+    implementation("cloud.commandframework:cloud-paper:1.8.4")
+    implementation("cloud.commandframework:cloud-annotations:1.8.4")
+    implementation("cloud.commandframework:cloud-minecraft-extras:1.8.4")
+    implementation("net.kyori:adventure-platform-bukkit:4.3.0")
+
+    annotationProcessor("cloud.commandframework:cloud-annotations:1.8.4")}
 
 java {
     toolchain.languageVersion.set(JavaLanguageVersion.of(17))
@@ -41,6 +47,7 @@ tasks {
     // Configure reobfJar to run when invoking the build task
     assemble {
         dependsOn(reobfJar)
+        dependsOn(shadowJar)
     }
 
     compileJava {
