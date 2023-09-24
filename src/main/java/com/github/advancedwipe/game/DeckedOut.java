@@ -26,6 +26,11 @@ public class DeckedOut implements Game {
   private Location pos1;
   private Location pos2;
 
+  private GameStatus status = GameStatus.DISABLED;
+  private boolean preparing = false;
+  private int countdown;
+  private Location spawn;
+
   public DeckedOut(String name) {
     this.name = name;
     this.uuid = java.util.UUID.randomUUID();
@@ -69,6 +74,8 @@ public class DeckedOut implements Game {
       }
       game.world = world;
 
+      game.spawn = Utils.readStringToLocation(game.world,
+          Objects.requireNonNull(configMap.node("spawn").getString()));
       game.pos1 = Utils.readStringToLocation(game.world,
           Objects.requireNonNull(configMap.node("pos1").getString()));
       game.pos2 = Utils.readStringToLocation(game.world,
@@ -101,7 +108,22 @@ public class DeckedOut implements Game {
 
   @Override
   public void start() {
+    if (status == GameStatus.DISABLED) {
+      preparing = true;
+      countdown = -1;
 
+      status = GameStatus.WAITING;
+      preparing = false;
+    }
+  }
+  public void run() {
+    if (status == GameStatus.DISABLED) {
+      return;
+    }
+
+    if (status == GameStatus.WAITING) {
+      System.out.println("HEY");
+    }
   }
 
   @Override
@@ -188,7 +210,16 @@ public class DeckedOut implements Game {
     configMap.node("uuid").set(uuid);
     configMap.node("name").set(name);
     configMap.node("world").set(world.getName());
+    configMap.node("spawn").set(Utils.writeLocationToString(spawn));
     configMap.node("pos1").set(Utils.writeLocationToString(pos1));
     configMap.node("pos2").set(Utils.writeLocationToString(pos2));
+  }
+
+  public void setSpawn(Location location) {
+    this.spawn = location;
+  }
+
+  public Location getSpawn() {
+    return this.spawn;
   }
 }

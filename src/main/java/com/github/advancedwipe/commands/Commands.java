@@ -57,10 +57,24 @@ public final class Commands {
         .permission("opendeckedout.command.pos2")
         .handler(this::pos2));
 
+    this.cmdManager.command(deckedout.literal("spawn",
+            ArgumentDescription.of("Define spawn of player in arena"))
+        .permission("opendeckedout.command.spawn")
+        .handler(this::spawn));
+
     this.cmdManager.command(deckedout.literal("save",
             ArgumentDescription.of("Save arena"))
         .permission("opendeckedout.command.save")
         .handler(this::save));
+  }
+
+  private void spawn(CommandContext<CommandSender> context) {
+    final Player player = (Player) context.getSender();
+
+    var location = player.getLocation();
+    workspace.setSpawn(location);
+
+    player.sendMessage(String.format("Spawn set to '%s'", location));
   }
 
   private void save(CommandContext<CommandSender> context) {
