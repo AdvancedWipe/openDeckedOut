@@ -65,7 +65,9 @@ public final class Commands {
 
   private void save(CommandContext<CommandSender> context) {
     final Player player = (Player) context.getSender();
+
     this.workspace.saveToConfig();
+
     if (workspace.getFile() != null) {
       String message = String.format("Successfully saved arena to file %s", workspace.getFile().toString());
       OpenDeckedOut.LOGGER.log(Level.INFO, message);
@@ -75,8 +77,16 @@ public final class Commands {
 
   private void pos1(CommandContext<CommandSender> context) {
     final Player player = (Player) context.getSender();
-
     var location = player.getLocation();
+
+    if (workspace.getWorld() == null) {
+      workspace.setWorld(location.getWorld());
+    }
+    if (!workspace.getWorld().equals(location.getWorld())) {
+      player.sendMessage("Error: World of position1 needs to be in same world as position2");
+      return;
+    }
+
     this.workspace.setPos1(location);
 
     player.sendMessage(String.format("Pos1 set to '%s'", location));

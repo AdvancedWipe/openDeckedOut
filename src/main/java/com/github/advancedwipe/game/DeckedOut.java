@@ -1,11 +1,14 @@
 package com.github.advancedwipe.game;
 
 import com.github.advancedwipe.OpenDeckedOut;
+import com.github.advancedwipe.utils.Utils;
 import java.io.File;
 import java.io.IOException;
+import java.util.Objects;
 import java.util.UUID;
 import org.apache.logging.log4j.Level;
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.spongepowered.configurate.CommentedConfigurationNode;
 import org.spongepowered.configurate.ConfigurateException;
 import org.spongepowered.configurate.ConfigurationNode;
@@ -19,6 +22,7 @@ public class DeckedOut implements Game {
   private File file;
   private final UUID uuid;
   private String name;
+  private World world;
   private Location pos1;
   private Location pos2;
 
@@ -51,6 +55,24 @@ public class DeckedOut implements Game {
       final DeckedOut game = new DeckedOut(uuid);
       game.file = file;
       game.name = configMap.node("name").getString();
+
+      String worldName = configMap.node("world").getString();
+      if (worldName == null) {
+        OpenDeckedOut.LOGGER.log(Level.WARN, "Arena file has no world specified! Aborting...");
+        return null;
+      }
+      World world = OpenDeckedOut.getInstance().getServer().getWorld(worldName);
+      if (world == null) {
+        OpenDeckedOut.LOGGER.log(Level.WARN,
+            "The world defined in config file does not exist! Aborting loading this arena file.");
+        return null;
+      }
+      game.world = world;
+
+      game.pos1 = Utils.readStringToLocation(game.world,
+          Objects.requireNonNull(configMap.node("pos1").getString()));
+      game.pos2 = Utils.readStringToLocation(game.world,
+          Objects.requireNonNull(configMap.node("pos2").getString()));
 
       game.start();
       OpenDeckedOut.LOGGER.log(Level.INFO, String.format("Arena '%s' loaded!", game.name));
@@ -87,6 +109,14 @@ public class DeckedOut implements Game {
 
   }
 
+  public World getWorld() {
+    return world;
+  }
+
+  public void setWorld(World world) {
+    this.world = world;
+  }
+
   @Override
   public Location getPos1() {
     return null;
@@ -95,7 +125,6 @@ public class DeckedOut implements Game {
   @Override
   public void setPos1(Location location) {
     this.pos1 = location;
-
   }
 
   @Override
@@ -139,10 +168,7 @@ public class DeckedOut implements Game {
     }
 
     final ConfigurationLoader<? extends CommentedConfigurationNode> loader;
-    loader = YamlConfigurationLoader.builder()
-        .nodeStyle(NodeStyle.BLOCK)
-        .file(file)
-        .build();
+    loader = YamlConfigurationLoader.builder().nodeStyle(NodeStyle.BLOCK).file(file).build();
 
     var configMap = loader.createNode();
     try {
@@ -161,5 +187,8 @@ public class DeckedOut implements Game {
   private void setValuesToLoader(ConfigurationNode configMap) throws SerializationException {
     configMap.node("uuid").set(uuid);
     configMap.node("name").set(name);
+    configMap.node("world").set(world.getName());
+    configMap.node("pos1").set(Utils.writeLocationToString(pos1));
+    configMap.node("pos2").set(Utils.writeLocationToString(pos2));
   }
 }
