@@ -66,6 +66,17 @@ public final class Commands {
             ArgumentDescription.of("Save arena"))
         .permission("opendeckedout.command.save")
         .handler(this::save));
+
+    this.cmdManager.command(deckedout.literal("join",
+            ArgumentDescription.of("Join an arena"))
+        .argument(StringArgument.single("name"))
+        .permission("opendeckedout.command.join")
+        .handler(this::join));
+  }
+
+  private void join(CommandContext<CommandSender> context) {
+    final Player player = (Player) context.getSender();
+    player.sendMessage("Not yet implemented!");
   }
 
   private void spawn(CommandContext<CommandSender> context) {
@@ -117,6 +128,7 @@ public final class Commands {
 
   private void workspace(CommandContext<CommandSender> context) {
     final Player player = (Player) context.getSender();
+    plugin.getDeckedOutManager();
     player.sendMessage(String.format("Arena '%s' is currently in workspace", workspace.getName()));
   }
 
