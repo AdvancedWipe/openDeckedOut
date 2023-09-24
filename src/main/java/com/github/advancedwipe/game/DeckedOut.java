@@ -119,12 +119,16 @@ public class DeckedOut implements Game {
     return 0;
   }
 
+  public File getFile() {
+    return file;
+  }
+
   public void saveToConfig() {
     File directory = new File(OpenDeckedOut.getInstance().getDataFolder(), "arenas");
 
     if (!directory.exists()) {
       if (!directory.mkdirs()) {
-        OpenDeckedOut.LOGGER.warn("Failed to create folder 'arena', can not save arenas to file!");
+        OpenDeckedOut.LOGGER.warn("Failed to create folder 'arenas', can not save arenas to file!");
         return;
       }
     }

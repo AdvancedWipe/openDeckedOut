@@ -11,6 +11,7 @@ import com.github.advancedwipe.game.DeckedOut;
 import com.github.advancedwipe.game.DeckedOutManager;
 import java.util.HashMap;
 import java.util.Map;
+import org.apache.logging.log4j.Level;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -63,7 +64,13 @@ public final class Commands {
   }
 
   private void save(CommandContext<CommandSender> context) {
+    final Player player = (Player) context.getSender();
     this.workspace.saveToConfig();
+    if (workspace.getFile() != null) {
+      String message = String.format("Successfully saved arena to file %s", workspace.getFile().toString());
+      OpenDeckedOut.LOGGER.log(Level.INFO, message);
+      player.sendMessage(message);
+    }
   }
 
   private void pos1(CommandContext<CommandSender> context) {
