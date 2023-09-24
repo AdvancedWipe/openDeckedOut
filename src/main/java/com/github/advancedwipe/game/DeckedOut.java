@@ -4,8 +4,10 @@ import com.github.advancedwipe.OpenDeckedOut;
 import java.io.File;
 import java.io.IOException;
 import java.util.UUID;
+import org.apache.logging.log4j.Level;
 import org.bukkit.Location;
 import org.spongepowered.configurate.CommentedConfigurationNode;
+import org.spongepowered.configurate.ConfigurateException;
 import org.spongepowered.configurate.ConfigurationNode;
 import org.spongepowered.configurate.loader.ConfigurationLoader;
 import org.spongepowered.configurate.serialize.SerializationException;
@@ -16,13 +18,48 @@ public class DeckedOut implements Game {
 
   private File file;
   private final UUID uuid;
-  private final String name;
+  private String name;
   private Location pos1;
   private Location pos2;
 
   public DeckedOut(String name) {
     this.name = name;
     this.uuid = java.util.UUID.randomUUID();
+  }
+
+  public DeckedOut(UUID uuid) {
+    this.uuid = uuid;
+  }
+
+  public static DeckedOut loadGame(File file) {
+    final ConfigurationLoader<? extends ConfigurationNode> arenaLoader;
+    final ConfigurationNode configMap;
+    arenaLoader = YamlConfigurationLoader.builder().file(file).build();
+
+    try {
+      configMap = arenaLoader.load();
+    } catch (ConfigurateException e) {
+      e.printStackTrace();
+      return null;
+    }
+
+    try {
+      var uid = configMap.node("uuid");
+      UUID uuid;
+      uuid = uid.get(UUID.class);
+
+      final DeckedOut game = new DeckedOut(uuid);
+      game.file = file;
+      game.name = configMap.node("name").getString();
+
+      game.start();
+      OpenDeckedOut.LOGGER.log(Level.INFO, String.format("Arena '%s' loaded!", game.name));
+
+      return game;
+    } catch (Throwable throwable) {
+      throwable.printStackTrace();
+      return null;
+    }
   }
 
   @Override
@@ -83,7 +120,7 @@ public class DeckedOut implements Game {
   }
 
   public void saveToConfig() {
-    File directory = new File(OpenDeckedOut.getInstance().getDataFolder(), "arena");
+    File directory = new File(OpenDeckedOut.getInstance().getDataFolder(), "arenas");
 
     if (!directory.exists()) {
       if (!directory.mkdirs()) {

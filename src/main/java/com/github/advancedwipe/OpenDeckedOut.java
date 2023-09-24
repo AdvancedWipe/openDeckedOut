@@ -7,8 +7,6 @@ import cloud.commandframework.paper.PaperCommandManager;
 import com.github.advancedwipe.commands.Commands;
 import com.github.advancedwipe.game.DeckedOutManager;
 import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -45,6 +43,7 @@ public class OpenDeckedOut extends JavaPlugin implements Listener {
   private final Map<Player, Long> playerCooldowns = new HashMap<>();
 
   private DeckedOutManager deckedOutManager;
+  private File arenasFolder;
   FileConfiguration config = null;
 
   public static OpenDeckedOut getInstance() {
@@ -55,6 +54,7 @@ public class OpenDeckedOut extends JavaPlugin implements Listener {
   public void onEnable() {
     Bukkit.getPluginManager().registerEvents(this, this);
     instance = this;
+    deckedOutManager = new DeckedOutManager(this);
 
     if (!loadConfig()) {
       LOGGER.log(Level.WARN, "Could not load config file! Disabling plugin.");
@@ -62,7 +62,13 @@ public class OpenDeckedOut extends JavaPlugin implements Listener {
       return;
     }
 
-    this.deckedOutManager = new DeckedOutManager(this);
+    arenasFolder = new File(getDataFolder(), "arenas");
+    if (arenasFolder.exists()) {
+      File[] arenaFiles = arenasFolder.listFiles((dir, name) -> name.endsWith(".yml"));
+      if (arenaFiles != null) {
+        deckedOutManager.loadGames(arenaFiles);
+      }
+    }
 
     new Commands(this).register();
 
