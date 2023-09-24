@@ -9,6 +9,7 @@ import cloud.commandframework.paper.PaperCommandManager;
 import com.github.advancedwipe.OpenDeckedOut;
 import com.github.advancedwipe.game.DeckedOut;
 import com.github.advancedwipe.game.DeckedOutManager;
+import com.github.advancedwipe.player.PlayerManager;
 import java.util.HashMap;
 import java.util.Map;
 import org.apache.logging.log4j.Level;
@@ -76,7 +77,16 @@ public final class Commands {
 
   private void join(CommandContext<CommandSender> context) {
     final Player player = (Player) context.getSender();
-    player.sendMessage("Not yet implemented!");
+
+    if (plugin.getPlayerManager().isPlayerInGame(player)) {
+      player.sendMessage(
+          "You are already in a game, can not join another one! Leave your current game to join a new one.");
+    }
+
+    plugin.getDeckedOutManager().getGame(context.get("name"))
+        .ifPresentOrElse(game -> game.joinToGame(
+                plugin.getPlayerManager().getPlayerOrCreate(player)),
+            () -> player.sendMessage("Game not found"));
   }
 
   private void spawn(CommandContext<CommandSender> context) {
@@ -94,7 +104,8 @@ public final class Commands {
     this.workspace.saveToConfig();
 
     if (workspace.getFile() != null) {
-      String message = String.format("Successfully saved arena to file %s", workspace.getFile().toString());
+      String message = String.format("Successfully saved arena to file %s",
+          workspace.getFile().toString());
       OpenDeckedOut.LOGGER.log(Level.INFO, message);
       player.sendMessage(message);
     }

@@ -1,6 +1,7 @@
 package com.github.advancedwipe.game;
 
 import com.github.advancedwipe.OpenDeckedOut;
+import com.github.advancedwipe.player.DeckedOutPlayer;
 import com.github.advancedwipe.utils.Utils;
 import java.io.File;
 import java.io.IOException;
@@ -9,6 +10,7 @@ import java.util.UUID;
 import org.apache.logging.log4j.Level;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.entity.Player;
 import org.spongepowered.configurate.CommentedConfigurationNode;
 import org.spongepowered.configurate.ConfigurateException;
 import org.spongepowered.configurate.ConfigurationNode;
@@ -221,5 +223,20 @@ public class DeckedOut implements Game {
 
   public Location getSpawn() {
     return this.spawn;
+  }
+
+  public void joinToGame(DeckedOutPlayer dungeonPlayer) {
+    if (status == GameStatus.DISABLED) {
+      return;
+    }
+
+    if (preparing) {
+      // schedule player to join game
+    }
+    dungeonPlayer.changeGame(this);
+    Player player = dungeonPlayer.getPlayer();
+    player.teleport(spawn);
+    player.sendMessage("Joined dungeon");
+
   }
 }

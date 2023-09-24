@@ -6,6 +6,7 @@ import cloud.commandframework.minecraft.extras.MinecraftHelp;
 import cloud.commandframework.paper.PaperCommandManager;
 import com.github.advancedwipe.commands.Commands;
 import com.github.advancedwipe.game.DeckedOutManager;
+import com.github.advancedwipe.player.PlayerManager;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -43,6 +44,7 @@ public class OpenDeckedOut extends JavaPlugin implements Listener {
   private final Map<Player, Long> playerCooldowns = new HashMap<>();
 
   private DeckedOutManager deckedOutManager;
+  private PlayerManager playerManager;
   private File arenasFolder;
   FileConfiguration config = null;
 
@@ -55,6 +57,7 @@ public class OpenDeckedOut extends JavaPlugin implements Listener {
     Bukkit.getPluginManager().registerEvents(this, this);
     instance = this;
     deckedOutManager = new DeckedOutManager(this);
+    playerManager = new PlayerManager(this);
 
     if (!loadConfig()) {
       LOGGER.log(Level.WARN, "Could not load config file! Disabling plugin.");
@@ -140,5 +143,9 @@ public class OpenDeckedOut extends JavaPlugin implements Listener {
 
   private void setCooldown(Player player) {
     playerCooldowns.put(player, System.currentTimeMillis());
+  }
+
+  public PlayerManager getPlayerManager() {
+    return playerManager;
   }
 }
