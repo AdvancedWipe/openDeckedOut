@@ -274,4 +274,22 @@ public class Dungeon implements Game {
     }
 
   }
+
+  public void internalLeavePlayer(DungeonPlayer dungeonPlayer) {
+    if (status == GameStatus.DISABLED) {
+      return;
+    }
+
+    players.remove(dungeonPlayer);
+
+    if (players.isEmpty()) {
+      cancelTask();
+      rebuild();
+    }
+  }
+
+  private void rebuild() {
+    status = GameStatus.WAITING;
+    countdown = -1;
+  }
 }

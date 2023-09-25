@@ -70,6 +70,24 @@ public final class Commands {
         .argument(StringArgument.single("name"))
         .permission("opendeckedout.command.join")
         .handler(this::join));
+
+    this.cmdManager.command(deckedout.literal("leave",
+            ArgumentDescription.of("Leave your current dungeon"))
+        .permission("opendeckedout.command.leave")
+        .handler(this::leave));
+  }
+
+  private void leave(CommandContext<CommandSender> context) {
+    final Player player = (Player) context.getSender();
+
+    if (!plugin.getPlayerManager().isPlayerInGame(player)) {
+      player.sendMessage("You are not in a dungeon, no need to leave it");
+      return;
+    }
+
+    if (plugin.getPlayerManager().isPlayerInGame(player)) {
+      plugin.getPlayerManager().getPlayerOrCreate(player).changeGame(null);
+    }
   }
 
   private void join(CommandContext<CommandSender> context) {

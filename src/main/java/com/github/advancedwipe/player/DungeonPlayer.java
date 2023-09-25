@@ -41,8 +41,14 @@ public class DungeonPlayer implements Player {
   }
 
   public void changeGame(Dungeon game) {
-    // TODO Maybe save inventory before joining to restore it after game
-    this.game = game;
-    this.game.internalJoinPlayer(this);
+    if (this.game == null && game != null) { // On join
+      // TODO Maybe save inventory before joining to restore it after game
+      this.game = game;
+      this.game.internalJoinPlayer(this);
+    } else if (this.game != null && game == null) { // On leave
+      this.game.internalLeavePlayer(this);
+      this.game = null;
+      // TODO clean up values or restore inventory
+    }
   }
 }
