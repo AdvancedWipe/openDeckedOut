@@ -41,6 +41,8 @@ public class DeckedOutPlayer implements Player {
   }
 
   public void changeGame(DeckedOut game) {
+    // TODO Maybe save inventory before joining to restore it after game
     this.game = game;
+    this.game.internalJoinPlayer(this);
   }
 }

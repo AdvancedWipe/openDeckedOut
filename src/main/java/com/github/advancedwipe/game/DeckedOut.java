@@ -5,12 +5,16 @@ import com.github.advancedwipe.player.DeckedOutPlayer;
 import com.github.advancedwipe.utils.Utils;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 import org.apache.logging.log4j.Level;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitTask;
 import org.spongepowered.configurate.CommentedConfigurationNode;
 import org.spongepowered.configurate.ConfigurateException;
 import org.spongepowered.configurate.ConfigurationNode;
@@ -24,6 +28,7 @@ public class DeckedOut implements Game {
   private File file;
   private final UUID uuid;
   private String name;
+  private BukkitTask task;
   private World world;
   private Location pos1;
   private Location pos2;
@@ -32,6 +37,7 @@ public class DeckedOut implements Game {
   private boolean preparing = false;
   private int countdown;
   private Location spawn;
+  private List<DeckedOutPlayer> players = new ArrayList<>();
 
   public DeckedOut(String name) {
     this.name = name;
@@ -124,8 +130,10 @@ public class DeckedOut implements Game {
     }
 
     if (status == GameStatus.WAITING) {
-      System.out.println("HEY");
+      System.out.println("HEY We are waiting");
     }
+
+    players.forEach(player -> player.getPlayer().sendMessage("You are in the game which is running!"));
   }
 
   @Override
@@ -233,10 +241,42 @@ public class DeckedOut implements Game {
     if (preparing) {
       // schedule player to join game
     }
+
     dungeonPlayer.changeGame(this);
-    Player player = dungeonPlayer.getPlayer();
-    player.teleport(spawn);
-    player.sendMessage("Joined dungeon");
+  }
+
+  public void runTask() {
+    cancelTask();
+    task = new BukkitRunnable() {
+      @Override
+      public void run() {
+        DeckedOut.this.run();
+      }
+    }.runTaskTimer(OpenDeckedOut.getInstance(), 0, 20); // Run every second (20 ticks)
+  }
+
+  private void cancelTask() {
+    if (task != null) {
+      task.cancel();
+      task = null;
+    }
+  }
+
+  public void internalJoinPlayer(DeckedOutPlayer deckedOutPlayer) {
+    Player player = deckedOutPlayer.getPlayer();
+    if (status == GameStatus.WAITING) {
+
+      boolean isEmpty = players.isEmpty();
+      if (!players.contains(deckedOutPlayer)) {
+        players.add(deckedOutPlayer);
+      }
+
+      player.teleport(getSpawn());
+
+      if (isEmpty) {
+        runTask();
+      }
+    }
 
   }
 }
