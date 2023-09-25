@@ -248,12 +248,7 @@ public class DeckedOut implements Game {
 
   public void runTask() {
     cancelTask();
-    task = new BukkitRunnable() {
-      @Override
-      public void run() {
-        DeckedOut.this.run();
-      }
-    }.runTaskTimer(OpenDeckedOut.getInstance(), 0, 20); // Run every second (20 ticks)
+    task = new DungeonRunnable(this).runTaskTimer(OpenDeckedOut.getInstance(), 0, 20);
   }
 
   private void cancelTask() {
