@@ -7,11 +7,8 @@ import cloud.commandframework.context.CommandContext;
 import cloud.commandframework.execution.CommandExecutionCoordinator;
 import cloud.commandframework.paper.PaperCommandManager;
 import com.github.advancedwipe.OpenDeckedOut;
-import com.github.advancedwipe.game.DeckedOut;
-import com.github.advancedwipe.game.DeckedOutManager;
-import com.github.advancedwipe.player.PlayerManager;
-import java.util.HashMap;
-import java.util.Map;
+import com.github.advancedwipe.game.Dungeon;
+import com.github.advancedwipe.game.DungeonManager;
 import org.apache.logging.log4j.Level;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -19,13 +16,13 @@ import org.bukkit.entity.Player;
 public final class Commands {
 
   private final OpenDeckedOut plugin;
-  private DeckedOut workspace;
+  private Dungeon workspace;
   private final PaperCommandManager<CommandSender> cmdManager;
-  private final DeckedOutManager deckedOutManager;
+  private final DungeonManager dungeonManager;
 
   public Commands(final OpenDeckedOut plugin) {
     this.plugin = plugin;
-    this.deckedOutManager = plugin.getDeckedOutManager();
+    this.dungeonManager = plugin.getDeckedOutManager();
     this.cmdManager = createCommandManager(plugin);
   }
 
@@ -146,11 +143,11 @@ public final class Commands {
   private void add(CommandContext<CommandSender> context) {
     final String name = context.get("name");
     final Player player = (Player) context.getSender();
-    if (this.deckedOutManager.getGame(name) != null) {
+    if (this.dungeonManager.getGame(name) != null) {
       player.sendMessage("This game already exists");
     }
 
-    this.workspace = new DeckedOut(name);
+    this.workspace = new Dungeon(name);
 
     player.sendMessage(String.format("Add arena '%s' to workspace", name));
   }

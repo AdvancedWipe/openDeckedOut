@@ -1,7 +1,7 @@
 package com.github.advancedwipe.game;
 
 import com.github.advancedwipe.OpenDeckedOut;
-import com.github.advancedwipe.player.DeckedOutPlayer;
+import com.github.advancedwipe.player.DungeonPlayer;
 import com.github.advancedwipe.utils.Utils;
 import java.io.File;
 import java.io.IOException;
@@ -13,7 +13,6 @@ import org.apache.logging.log4j.Level;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 import org.spongepowered.configurate.CommentedConfigurationNode;
 import org.spongepowered.configurate.ConfigurateException;
@@ -23,7 +22,7 @@ import org.spongepowered.configurate.serialize.SerializationException;
 import org.spongepowered.configurate.yaml.NodeStyle;
 import org.spongepowered.configurate.yaml.YamlConfigurationLoader;
 
-public class DeckedOut implements Game {
+public class Dungeon implements Game {
 
   private File file;
   private final UUID uuid;
@@ -37,18 +36,18 @@ public class DeckedOut implements Game {
   private boolean preparing = false;
   private int countdown;
   private Location spawn;
-  private List<DeckedOutPlayer> players = new ArrayList<>();
+  private List<DungeonPlayer> players = new ArrayList<>();
 
-  public DeckedOut(String name) {
+  public Dungeon(String name) {
     this.name = name;
     this.uuid = java.util.UUID.randomUUID();
   }
 
-  public DeckedOut(UUID uuid) {
+  public Dungeon(UUID uuid) {
     this.uuid = uuid;
   }
 
-  public static DeckedOut loadGame(File file) {
+  public static Dungeon loadGame(File file) {
     final ConfigurationLoader<? extends ConfigurationNode> arenaLoader;
     final ConfigurationNode configMap;
     arenaLoader = YamlConfigurationLoader.builder().file(file).build();
@@ -65,7 +64,7 @@ public class DeckedOut implements Game {
       UUID uuid;
       uuid = uid.get(UUID.class);
 
-      final DeckedOut game = new DeckedOut(uuid);
+      final Dungeon game = new Dungeon(uuid);
       game.file = file;
       game.name = configMap.node("name").getString();
 
@@ -234,7 +233,7 @@ public class DeckedOut implements Game {
     return this.spawn;
   }
 
-  public void joinToGame(DeckedOutPlayer dungeonPlayer) {
+  public void joinToGame(DungeonPlayer dungeonPlayer) {
     if (status == GameStatus.DISABLED) {
       return;
     }
@@ -258,13 +257,13 @@ public class DeckedOut implements Game {
     }
   }
 
-  public void internalJoinPlayer(DeckedOutPlayer deckedOutPlayer) {
-    Player player = deckedOutPlayer.getPlayer();
+  public void internalJoinPlayer(DungeonPlayer dungeonPlayer) {
+    Player player = dungeonPlayer.getPlayer();
     if (status == GameStatus.WAITING) {
 
       boolean isEmpty = players.isEmpty();
-      if (!players.contains(deckedOutPlayer)) {
-        players.add(deckedOutPlayer);
+      if (!players.contains(dungeonPlayer)) {
+        players.add(dungeonPlayer);
       }
 
       player.teleport(getSpawn());

@@ -5,8 +5,8 @@ import cloud.commandframework.extra.confirmation.CommandConfirmationManager;
 import cloud.commandframework.minecraft.extras.MinecraftHelp;
 import cloud.commandframework.paper.PaperCommandManager;
 import com.github.advancedwipe.commands.Commands;
-import com.github.advancedwipe.game.DeckedOutManager;
-import com.github.advancedwipe.player.PlayerManager;
+import com.github.advancedwipe.game.DungeonManager;
+import com.github.advancedwipe.player.DungeonPlayerManager;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -43,8 +43,8 @@ public class OpenDeckedOut extends JavaPlugin implements Listener {
   public static final Logger LOGGER = LogManager.getLogger(OpenDeckedOut.class.getSimpleName());
   private final Map<Player, Long> playerCooldowns = new HashMap<>();
 
-  private DeckedOutManager deckedOutManager;
-  private PlayerManager playerManager;
+  private DungeonManager dungeonManager;
+  private DungeonPlayerManager playerManager;
   private File arenasFolder;
   FileConfiguration config = null;
 
@@ -56,8 +56,8 @@ public class OpenDeckedOut extends JavaPlugin implements Listener {
   public void onEnable() {
     Bukkit.getPluginManager().registerEvents(this, this);
     instance = this;
-    deckedOutManager = new DeckedOutManager(this);
-    playerManager = new PlayerManager(this);
+    dungeonManager = new DungeonManager(this);
+    playerManager = new DungeonPlayerManager(this);
 
     if (!loadConfig()) {
       LOGGER.log(Level.WARN, "Could not load config file! Disabling plugin.");
@@ -69,7 +69,7 @@ public class OpenDeckedOut extends JavaPlugin implements Listener {
     if (arenasFolder.exists()) {
       File[] arenaFiles = arenasFolder.listFiles((dir, name) -> name.endsWith(".yml"));
       if (arenaFiles != null) {
-        deckedOutManager.loadGames(arenaFiles);
+        dungeonManager.loadGames(arenaFiles);
       }
     }
 
@@ -89,8 +89,8 @@ public class OpenDeckedOut extends JavaPlugin implements Listener {
     return true;
   }
 
-  public DeckedOutManager getDeckedOutManager() {
-    return deckedOutManager;
+  public DungeonManager getDeckedOutManager() {
+    return dungeonManager;
   }
 
   @EventHandler
@@ -145,7 +145,7 @@ public class OpenDeckedOut extends JavaPlugin implements Listener {
     playerCooldowns.put(player, System.currentTimeMillis());
   }
 
-  public PlayerManager getPlayerManager() {
+  public DungeonPlayerManager getPlayerManager() {
     return playerManager;
   }
 }

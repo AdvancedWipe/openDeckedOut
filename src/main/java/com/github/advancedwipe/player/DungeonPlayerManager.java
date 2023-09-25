@@ -6,11 +6,11 @@ import java.util.List;
 import java.util.Optional;
 import org.bukkit.entity.Player;
 
-public class PlayerManager {
+public class DungeonPlayerManager {
   private final OpenDeckedOut plugin;
-  private final List<DeckedOutPlayer> players = new ArrayList<>();
+  private final List<DungeonPlayer> players = new ArrayList<>();
 
-  public PlayerManager(OpenDeckedOut plugin) {
+  public DungeonPlayerManager(OpenDeckedOut plugin) {
     this.plugin = plugin;
   }
 
@@ -20,17 +20,17 @@ public class PlayerManager {
 
 
 
-  public Optional<DeckedOutPlayer> getPlayer(Player player) {
+  public Optional<DungeonPlayer> getPlayer(Player player) {
     return players.stream()
-        .filter(deckedOutPlayer -> deckedOutPlayer.getUuid().equals(player.getUniqueId()))
+        .filter(dungeonPlayer -> dungeonPlayer.getUuid().equals(player.getUniqueId()))
         .findFirst();
   }
 
-  public DeckedOutPlayer getPlayerOrCreate(Player player) {
+  public DungeonPlayer getPlayerOrCreate(Player player) {
     return getPlayer(player).orElseGet(()-> {
-      DeckedOutPlayer deckedOutPlayer = new DeckedOutPlayer(player);
-      players.add(deckedOutPlayer);
-      return deckedOutPlayer;
+      DungeonPlayer dungeonPlayer = new DungeonPlayer(player);
+      players.add(dungeonPlayer);
+      return dungeonPlayer;
     });
   }
 }

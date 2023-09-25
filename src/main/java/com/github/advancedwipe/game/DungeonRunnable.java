@@ -4,9 +4,9 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 public class DungeonRunnable extends BukkitRunnable {
 
-  private final DeckedOut dungeon;
+  private final Dungeon dungeon;
 
-  public DungeonRunnable(DeckedOut dungeon) {
+  public DungeonRunnable(Dungeon dungeon) {
     this.dungeon = dungeon;
   }
 
