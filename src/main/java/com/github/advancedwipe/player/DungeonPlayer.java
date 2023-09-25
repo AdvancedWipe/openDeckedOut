@@ -37,7 +37,7 @@ public class DungeonPlayer implements Player {
 
   @Override
   public @Nullable Game getGame() {
-    return null;
+    return game;
   }
 
   public void changeGame(Dungeon game) {

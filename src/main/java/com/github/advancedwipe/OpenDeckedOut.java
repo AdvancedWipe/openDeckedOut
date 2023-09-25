@@ -6,6 +6,7 @@ import cloud.commandframework.minecraft.extras.MinecraftHelp;
 import cloud.commandframework.paper.PaperCommandManager;
 import com.github.advancedwipe.commands.Commands;
 import com.github.advancedwipe.game.DungeonManager;
+import com.github.advancedwipe.listener.PlayerListener;
 import com.github.advancedwipe.player.DungeonPlayerManager;
 import java.io.File;
 import java.util.ArrayList;
@@ -54,7 +55,8 @@ public class OpenDeckedOut extends JavaPlugin implements Listener {
 
   @Override
   public void onEnable() {
-    Bukkit.getPluginManager().registerEvents(this, this);
+    registerEvents();
+
     instance = this;
     dungeonManager = new DungeonManager(this);
     playerManager = new DungeonPlayerManager(this);
@@ -74,7 +76,10 @@ public class OpenDeckedOut extends JavaPlugin implements Listener {
     }
 
     new Commands(this).register();
+  }
 
+  private void registerEvents() {
+    Bukkit.getPluginManager().registerEvents(new PlayerListener(), this);
   }
 
   public boolean loadConfig() {
