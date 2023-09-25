@@ -126,6 +126,7 @@ public class DeckedOut implements Game {
   }
   public void run() {
     if (status == GameStatus.DISABLED) {
+      cancelTask();
       return;
     }
 
