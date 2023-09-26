@@ -2,6 +2,7 @@ package com.github.advancedwipe.game;
 
 import com.github.advancedwipe.OpenDeckedOut;
 import com.github.advancedwipe.player.DungeonPlayer;
+import com.github.advancedwipe.utils.DungeonUtils;
 import com.github.advancedwipe.utils.Utils;
 import java.io.File;
 import java.io.IOException;
@@ -12,6 +13,9 @@ import java.util.UUID;
 import org.apache.logging.log4j.Level;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Ravager;
 import org.bukkit.scheduler.BukkitTask;
@@ -39,7 +43,7 @@ public class Dungeon implements Game {
   private Location spawn;
   private List<DungeonPlayer> players = new ArrayList<>();
 
-  private List<Ravager> ravagers = new ArrayList<>();
+  private List<Entity> ravagers = new ArrayList<>();
   private List<Location> ravagerSpawns = new ArrayList<>();
 
   public Dungeon(String name) {
@@ -138,11 +142,16 @@ public class Dungeon implements Game {
     }
 
     if (status == GameStatus.WAITING) {
-      System.out.println("HEY We are waiting");
+      for (var ravagerSpawn : ravagerSpawns) {
+        Entity ravager = ravagerSpawn.getWorld().spawnEntity(ravagerSpawn, EntityType.RAVAGER);
+        ravagers.add(ravager);
+      }
+      status = GameStatus.RUNNING;
     }
 
-    players.forEach(
-        player -> player.getPlayer().sendMessage("You are in the game which is running!"));
+
+
+    //players.forEach(player -> player.getPlayer().sendMessage("You are in the game which is running!"));
   }
 
   @Override
@@ -160,7 +169,7 @@ public class Dungeon implements Game {
 
   @Override
   public Location getPos1() {
-    return null;
+    return this.pos1;
   }
 
   @Override
@@ -170,7 +179,7 @@ public class Dungeon implements Game {
 
   @Override
   public Location getPos2() {
-    return null;
+    return this.pos2;
   }
 
   @Override
@@ -302,6 +311,12 @@ public class Dungeon implements Game {
   private void rebuild() {
     status = GameStatus.WAITING;
     countdown = -1;
+
+    for (Entity entity : this.world.getEntities()) {
+      if (DungeonUtils.isInArena(entity.getLocation(), getPos1(), getPos2())) {
+        entity.remove();
+      }
+    }
   }
 
   public void addRavagerSpawn(Location location) {
