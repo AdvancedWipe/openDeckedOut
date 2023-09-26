@@ -23,6 +23,7 @@ dependencies {
     testImplementation("org.mockito:mockito-core:3.+")
     compileOnly("io.papermc.paper:paper-api:1.20.1-R0.1-SNAPSHOT")
     paperweight.paperDevBundle("1.20.1-R0.1-SNAPSHOT")
+    implementation("com.zaxxer:HikariCP:4.0.3")
     implementation("cloud.commandframework:cloud-paper:1.8.4")
     implementation("cloud.commandframework:cloud-annotations:1.8.4")
     implementation("cloud.commandframework:cloud-minecraft-extras:1.8.4")
