@@ -1,7 +1,12 @@
 package com.github.advancedwipe.player;
 
+import com.github.advancedwipe.cards.Card;
 import com.github.advancedwipe.game.Dungeon;
 import com.github.advancedwipe.game.Game;
+import com.github.advancedwipe.game.Money;
+import java.util.List;
+import java.util.Map;
+import java.util.Stack;
 import java.util.UUID;
 import org.jetbrains.annotations.Nullable;
 
@@ -33,6 +38,26 @@ public class DungeonPlayer implements Player {
   @Override
   public boolean isInGame() {
     return game != null;
+  }
+
+  @Override
+  public Map<Money, Integer> getWallet() {
+    return null;
+  }
+
+  @Override
+  public Stack<Card> getLibary() {
+    return null;
+  }
+
+  @Override
+  public List<Card> getHand() {
+    return null;
+  }
+
+  @Override
+  public void addCardToGraveyard() {
+
   }
 
   @Override
