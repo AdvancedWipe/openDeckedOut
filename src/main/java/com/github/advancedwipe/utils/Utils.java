@@ -1,9 +1,19 @@
 package com.github.advancedwipe.utils;
 
+import java.util.ArrayList;
+import java.util.List;
 import org.bukkit.Location;
 import org.bukkit.World;
 
 public class Utils {
+
+  public static List<String> writeLocationListToStringList(List<Location> list) {
+    List<String> stringList = new ArrayList<>();
+    for (Location location : list) {
+      stringList.add(writeLocationToString(location));
+    }
+    return stringList;
+  }
 
   public static String writeLocationToString(Location location) {
     return writeLocationToString(location.getX(),
@@ -17,9 +27,18 @@ public class Utils {
     return x + ";" + y + ";" + z + ";" + yaw + ";" + pitch;
   }
 
+  public static List<Location> writeStringListToLocationList(World world, List<String> list) {
+    List<Location> locationList = new ArrayList<>();
+    for (String string : list) {
+      locationList.add(readStringToLocation(world, string));
+    }
+    return locationList;
+  }
+
   /**
    * Parse a String to a Location
-   * @param world The world in which the location is
+   *
+   * @param world    The world in which the location is
    * @param location The location as String which should be parsed
    * @return A new Location or return null if split String is not of length 5
    */

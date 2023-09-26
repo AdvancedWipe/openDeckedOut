@@ -13,6 +13,7 @@ import org.apache.logging.log4j.Level;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Ravager;
 import org.bukkit.scheduler.BukkitTask;
 import org.spongepowered.configurate.CommentedConfigurationNode;
 import org.spongepowered.configurate.ConfigurateException;
@@ -37,6 +38,9 @@ public class Dungeon implements Game {
   private int countdown;
   private Location spawn;
   private List<DungeonPlayer> players = new ArrayList<>();
+
+  private List<Ravager> ravagers = new ArrayList<>();
+  private List<Location> ravagerSpawns = new ArrayList<>();
 
   public Dungeon(String name) {
     this.name = name;
@@ -88,6 +92,9 @@ public class Dungeon implements Game {
       game.pos2 = Utils.readStringToLocation(game.world,
           Objects.requireNonNull(configMap.node("pos2").getString()));
 
+      game.ravagerSpawns = Utils.writeStringListToLocationList(game.world,
+          Objects.requireNonNull(configMap.node("ravagerSpawns").getList(String.class)));
+
       game.start();
       OpenDeckedOut.LOGGER.log(Level.INFO, String.format("Arena '%s' loaded!", game.name));
 
@@ -123,6 +130,7 @@ public class Dungeon implements Game {
       preparing = false;
     }
   }
+
   public void run() {
     if (status == GameStatus.DISABLED) {
       cancelTask();
@@ -133,7 +141,8 @@ public class Dungeon implements Game {
       System.out.println("HEY We are waiting");
     }
 
-    players.forEach(player -> player.getPlayer().sendMessage("You are in the game which is running!"));
+    players.forEach(
+        player -> player.getPlayer().sendMessage("You are in the game which is running!"));
   }
 
   @Override
@@ -223,6 +232,8 @@ public class Dungeon implements Game {
     configMap.node("spawn").set(Utils.writeLocationToString(spawn));
     configMap.node("pos1").set(Utils.writeLocationToString(pos1));
     configMap.node("pos2").set(Utils.writeLocationToString(pos2));
+    configMap.node("ravagerSpawns").set(Utils.writeLocationListToStringList(ravagerSpawns));
+
   }
 
   public void setSpawn(Location location) {
@@ -291,5 +302,9 @@ public class Dungeon implements Game {
   private void rebuild() {
     status = GameStatus.WAITING;
     countdown = -1;
+  }
+
+  public void addRavagerSpawn(Location location) {
+    ravagerSpawns.add(location);
   }
 }

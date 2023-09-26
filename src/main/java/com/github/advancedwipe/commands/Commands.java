@@ -75,6 +75,20 @@ public final class Commands {
             ArgumentDescription.of("Leave your current dungeon"))
         .permission("opendeckedout.command.leave")
         .handler(this::leave));
+
+    this.cmdManager.command(deckedout.literal("ravagerspawn",
+            ArgumentDescription.of("Set Ravager spawn position"))
+        .permission("opendeckedout.command.ravagerpos")
+        .handler(this::createRavagerSpawn));
+  }
+
+  private void createRavagerSpawn(CommandContext<CommandSender> context) {
+    final Player player = (Player) context.getSender();
+
+    var location = player.getLocation();
+    workspace.addRavagerSpawn(location);
+
+    player.sendMessage(String.format("Ravager spawn set to '%s'", location));
   }
 
   private void leave(CommandContext<CommandSender> context) {
