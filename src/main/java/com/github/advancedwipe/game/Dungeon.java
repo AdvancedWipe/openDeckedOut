@@ -11,14 +11,17 @@ import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 import org.apache.logging.log4j.Level;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
-import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.entity.Ravager;
 import org.bukkit.scheduler.BukkitTask;
+import org.bukkit.scoreboard.DisplaySlot;
+import org.bukkit.scoreboard.Objective;
+import org.bukkit.scoreboard.Scoreboard;
+import org.jetbrains.annotations.NotNull;
 import org.spongepowered.configurate.CommentedConfigurationNode;
 import org.spongepowered.configurate.ConfigurateException;
 import org.spongepowered.configurate.ConfigurationNode;
@@ -148,8 +151,6 @@ public class Dungeon implements Game {
       }
       status = GameStatus.RUNNING;
     }
-
-
 
     //players.forEach(player -> player.getPlayer().sendMessage("You are in the game which is running!"));
   }
@@ -285,7 +286,7 @@ public class Dungeon implements Game {
       if (!players.contains(dungeonPlayer)) {
         players.add(dungeonPlayer);
       }
-
+      player.setScoreboard(getScoreBoard(player.getName()));
       player.teleport(getSpawn());
 
       if (isEmpty) {
@@ -301,6 +302,7 @@ public class Dungeon implements Game {
     }
 
     players.remove(dungeonPlayer);
+    dungeonPlayer.getPlayer().setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
 
     if (players.isEmpty()) {
       cancelTask();
@@ -317,6 +319,31 @@ public class Dungeon implements Game {
         entity.remove();
       }
     }
+  }
+
+  public Scoreboard getScoreBoard(@NotNull String name) {
+    Scoreboard board = Bukkit.getScoreboardManager().getNewScoreboard();
+
+    // Create an objective
+    Objective obj = board.registerNewObjective("CustomObjective", "dummy",
+        "       openDeckedOut       ");
+
+    // Assign the objective to a display slot (e.g., SIDEBAR)
+    obj.setDisplaySlot(DisplaySlot.SIDEBAR);
+
+    obj.getScore(" ").setScore(15);
+    obj.getScore("State 1: ██████████").setScore(14);
+    obj.getScore("  ").setScore(13);
+    obj.getScore("State 2: ██████████").setScore(12);
+    obj.getScore("   ").setScore(11);
+    obj.getScore("State 3: ██████████").setScore(10);
+    obj.getScore("    ").setScore(9);
+    obj.getScore("State 4: ██████████").setScore(8);
+    obj.getScore("     ").setScore(7);
+    obj.getScore("Cards:   ██████████").setScore(6);
+    obj.getScore("           ██████████").setScore(5);
+
+    return board;
   }
 
   public void addRavagerSpawn(Location location) {
