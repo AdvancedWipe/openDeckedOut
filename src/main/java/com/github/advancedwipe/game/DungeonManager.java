@@ -5,6 +5,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import org.apache.logging.log4j.Level;
 
 public class DungeonManager {
@@ -29,6 +30,10 @@ public class DungeonManager {
 
   public Optional<Dungeon> getGame(final String name) {
     return games.stream().filter(game -> game.getName().equals(name)).findFirst();
+  }
+
+  public List<String> getGameNames() {
+    return games.stream().map(Dungeon::getName).collect(Collectors.toList());
   }
 
 

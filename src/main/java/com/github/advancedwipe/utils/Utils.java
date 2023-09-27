@@ -1,9 +1,11 @@
 package com.github.advancedwipe.utils;
 
+import com.github.advancedwipe.game.Dungeon;
 import java.util.ArrayList;
 import java.util.List;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.entity.Player;
 
 public class Utils {
 
@@ -60,6 +62,10 @@ public class Utils {
     } else {
       return null;
     }
+  }
+
+  public static String locationToXYZ(Location location) {
+    return location.getX() + ", " + location.getY() + ", " + location.getZ();
   }
 
 }
