@@ -286,6 +286,7 @@ public class Dungeon implements Game {
       if (!players.contains(dungeonPlayer)) {
         players.add(dungeonPlayer);
       }
+      dungeonPlayer.saveInventory();
       player.setScoreboard(getScoreBoard(player.getName()));
       player.teleport(getSpawn());
 
@@ -301,8 +302,9 @@ public class Dungeon implements Game {
       return;
     }
 
-    players.remove(dungeonPlayer);
+    dungeonPlayer.restoreInventory();
     dungeonPlayer.getPlayer().setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
+    players.remove(dungeonPlayer);
 
     if (players.isEmpty()) {
       cancelTask();
