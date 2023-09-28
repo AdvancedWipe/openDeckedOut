@@ -12,7 +12,10 @@ import java.util.Objects;
 import java.util.UUID;
 import org.apache.logging.log4j.Level;
 import org.bukkit.Bukkit;
+import org.bukkit.Instrument;
 import org.bukkit.Location;
+import org.bukkit.Note;
+import org.bukkit.Note.Tone;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -48,6 +51,8 @@ public class Dungeon implements Game {
 
   private List<Entity> ravagers = new ArrayList<>();
   private List<Location> ravagerSpawns = new ArrayList<>();
+  private int tick;
+  private final int maxTick = 30;
 
   public Dungeon(String name) {
     this.name = name;
@@ -152,7 +157,16 @@ public class Dungeon implements Game {
       status = GameStatus.RUNNING;
     }
 
+    if (status == GameStatus.RUNNING) {
+      players.forEach(p -> p.getPlayer().playNote(p.getPlayer().getLocation(), Instrument.FLUTE, Note.flat(1, Tone.E)));
+
+      tick++;
+    }
+
     //players.forEach(player -> player.getPlayer().sendMessage("You are in the game which is running!"));
+    if (tick == maxTick) {
+      tick = 0;
+    }
   }
 
   @Override
@@ -268,7 +282,11 @@ public class Dungeon implements Game {
 
   public void runTask() {
     cancelTask();
-    task = new DungeonRunnable(this).runTaskTimer(OpenDeckedOut.getInstance(), 0, 20);
+    final int taskFrequency = 20;
+    final int taskDelay = 0;
+    // Dungeon has a tick frequency of 20 minecraft ticks (1 second) to process its events
+    task = new DungeonRunnable(this).runTaskTimer(OpenDeckedOut.getInstance(), taskDelay,
+        taskFrequency);
   }
 
   private void cancelTask() {
