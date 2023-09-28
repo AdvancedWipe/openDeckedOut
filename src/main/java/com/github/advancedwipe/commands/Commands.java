@@ -19,8 +19,15 @@ import org.apache.logging.log4j.Level;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * Holds all available commands of the plugin.
+ *
+ * <p>This class is responsible for registering all the different in game commands that are
+ * available to the player in openDeckedOut
+ */
 public final class Commands {
 
   private final OpenDeckedOut plugin;
@@ -28,7 +35,7 @@ public final class Commands {
   private final PaperCommandManager<CommandSender> cmdManager;
   private final DungeonManager dungeonManager;
 
-  public Commands(final OpenDeckedOut plugin) {
+  public Commands(final @NotNull OpenDeckedOut plugin) {
     this.plugin = plugin;
     workspace = new HashMap<>();
     this.dungeonManager = plugin.getDeckedOutManager();
@@ -83,7 +90,8 @@ public final class Commands {
 
     this.cmdManager.command(admin.literal("editable",
             ArgumentDescription.of(
-                "Make dungeon editable, use /deckedout admin workspaces to list all dungeons in edit mode"))
+                "Make dungeon editable, use /deckedout "
+                    + "admin workspaces to list all dungeons in edit mode"))
         .permission("opendeckedout.command.admin.editable")
         .handler(this::makeEditable));
 
@@ -164,7 +172,8 @@ public final class Commands {
 
     if (plugin.getPlayerManager().isPlayerInGame(player)) {
       player.sendMessage(
-          "You are already in a game, can not join another one! Leave your current game to join a new one.");
+          "You are already in a game, can not join another one! "
+              + "Leave your current game to join a new one.");
     }
 
     plugin.getDeckedOutManager().getGame(context.get("name"))
