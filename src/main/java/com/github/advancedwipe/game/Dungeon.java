@@ -51,6 +51,7 @@ public class Dungeon implements Game {
 
   private List<Entity> ravagers = new ArrayList<>();
   private List<Location> ravagerSpawns = new ArrayList<>();
+  private List<Location> coinSpawners = new ArrayList<>();
   private int tick;
   private final int maxTick = 30;
 
@@ -106,6 +107,8 @@ public class Dungeon implements Game {
 
       game.ravagerSpawns = Utils.writeStringListToLocationList(game.world,
           Objects.requireNonNull(configMap.node("ravagerSpawns").getList(String.class)));
+      game.coinSpawners = Utils.writeStringListToLocationList(game.world,
+          Objects.requireNonNull(configMap.node("coinSpawners").getList(String.class)));
 
       game.start();
       OpenDeckedOut.LOGGER.log(Level.INFO, String.format("Arena '%s' loaded!", game.name));
@@ -158,7 +161,8 @@ public class Dungeon implements Game {
     }
 
     if (status == GameStatus.RUNNING) {
-      players.forEach(p -> p.getPlayer().playNote(p.getPlayer().getLocation(), Instrument.FLUTE, Note.flat(1, Tone.E)));
+      players.forEach(p -> p.getPlayer()
+          .playNote(p.getPlayer().getLocation(), Instrument.FLUTE, Note.flat(1, Tone.E)));
 
       tick++;
     }
@@ -257,6 +261,7 @@ public class Dungeon implements Game {
     configMap.node("pos1").set(Utils.writeLocationToString(pos1));
     configMap.node("pos2").set(Utils.writeLocationToString(pos2));
     configMap.node("ravagerSpawns").set(Utils.writeLocationListToStringList(ravagerSpawns));
+    configMap.node("coinSpawners").set(Utils.writeLocationListToStringList(coinSpawners));
 
   }
 
@@ -368,5 +373,9 @@ public class Dungeon implements Game {
 
   public void addRavagerSpawn(Location location) {
     ravagerSpawns.add(location);
+  }
+
+  public void addCoinSpawn(Location location) {
+    coinSpawners.add(location);
   }
 }

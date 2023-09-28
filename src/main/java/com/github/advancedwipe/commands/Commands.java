@@ -127,17 +127,26 @@ public final class Commands {
             ArgumentDescription.of("Set entity spawn position"))
         .permission("opendeckedout.command.admin.spawn.entity")
         .handler(this::addRavagerSpawn));
-
-    this.cmdManager.command(spawn.literal("item",
-            ArgumentDescription.of("Set item spawner position"))
-        .permission("opendeckedout.command.admin.spawn.item")
-        .handler(this::addItemSpawners));
+    var item = spawn.literal("item");
+    this.cmdManager.command(item.literal("COIN")
+        .permission("opendeckedout.command.admin.spawn.item.coin")
+        .handler(this::addCoinSpawner));
 
 
   }
 
-  private void addItemSpawners(CommandContext<CommandSender> context) {
-    System.out.println("Not implemented yet");
+  private void addCoinSpawner(CommandContext<CommandSender> context) {
+    final Player player = (Player) context.getSender();
+    var location = player.getLocation();
+    Dungeon dungeon = getDungeonFromWorkspace(context, player);
+    if (dungeon == null) {
+      player.sendMessage("Dungeon name not available");
+      return;
+    }
+
+    dungeon.addCoinSpawn(location);
+
+    player.sendMessage(String.format("Coin spawner set to '%s'", Utils.locationToXYZ(location)));
   }
 
   private void addRavagerSpawn(CommandContext<CommandSender> context) {
@@ -151,7 +160,7 @@ public final class Commands {
 
     dungeon.addRavagerSpawn(location);
 
-    player.sendMessage(String.format("Ravager spawn set to '%s'", location));
+    player.sendMessage(String.format("Ravager spawn set to '%s'", Utils.locationToXYZ(location)));
   }
 
   private void leave(CommandContext<CommandSender> context) {
