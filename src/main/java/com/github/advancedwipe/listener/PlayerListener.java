@@ -1,13 +1,16 @@
 package com.github.advancedwipe.listener;
 
 import com.github.advancedwipe.OpenDeckedOut;
+import com.github.advancedwipe.game.Dungeon;
 import net.kyori.adventure.text.Component;
 import org.apache.logging.log4j.Level;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 public class PlayerListener implements Listener {
@@ -30,6 +33,42 @@ public class PlayerListener implements Listener {
       event.setCancelled(true);
       return;
     }
+  }
+
+  @EventHandler
+  public void onPlayerMove(PlayerMoveEvent event) {
+    Player player = event.getPlayer();
+
+    var dungeonPlayer = OpenDeckedOut.getInstance().getPlayerManager().getPlayer(player).orElse(null);
+
+    if (dungeonPlayer == null) {
+      return;
+    }
+
+    Dungeon dungeon = dungeonPlayer.getDungeon();
+
+    if (dungeon == null) {
+      return;
+    }
+
+    var sensors = dungeon.getSensors();
+
+    if (sensors == null) {
+      return;
+    }
+
+    sensors.forEach(sensor -> {
+      if (isPlayerInsideCircle(player, sensor.getLocation())) {
+        dungeon.activatedSensor(player, sensor.getLocation());
+      }
+    });
+  }
+
+  private boolean isPlayerInsideCircle(Player player, Location center) {
+    double circleRadius = 7.0;
+    Location playerLocation = player.getLocation();
+    double distance = playerLocation.distance(center);
+    return distance <= circleRadius;
   }
 
   @EventHandler

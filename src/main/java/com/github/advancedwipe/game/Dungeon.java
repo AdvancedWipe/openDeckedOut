@@ -20,11 +20,14 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Note;
 import org.bukkit.Note.Tone;
+import org.bukkit.Sound;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
@@ -57,7 +60,7 @@ public class Dungeon implements Game {
   private List<Entity> ravagers = new ArrayList<>();
   private List<Location> ravagerSpawns = new ArrayList<>();
   private List<Location> coinSpawners = new ArrayList<>();
-
+  private List<PlayerSensor> sensors = new ArrayList<>();
   private final Random random = new Random();
   private final int minRandom = 1;
   private final int maxRandom = 100;
@@ -114,10 +117,12 @@ public class Dungeon implements Game {
       game.pos2 = Utils.readStringToLocation(game.world,
           Objects.requireNonNull(configMap.node("pos2").getString()));
 
-      game.ravagerSpawns = Utils.writeStringListToLocationList(game.world,
+      game.ravagerSpawns = Utils.readStringListToLocationList(game.world,
           Objects.requireNonNull(configMap.node("ravagerSpawns").getList(String.class)));
-      game.coinSpawners = Utils.writeStringListToLocationList(game.world,
+      game.coinSpawners = Utils.readStringListToLocationList(game.world,
           Objects.requireNonNull(configMap.node("coinSpawners").getList(String.class)));
+      game.sensors = Utils.readStringToSensorList(game.world,
+          Objects.requireNonNull(configMap.node("playerSensors").getList(String.class)));
 
       game.start();
       OpenDeckedOut.LOGGER.log(Level.INFO, String.format("Arena '%s' loaded!", game.name));
@@ -172,6 +177,8 @@ public class Dungeon implements Game {
     if (status == GameStatus.RUNNING) {
       players.forEach(p -> p.getPlayer()
           .playNote(p.getPlayer().getLocation(), Instrument.FLUTE, Note.flat(1, Tone.E)));
+
+      sensors.forEach(PlayerSensor::decreaseCooldown);
 
       if (random() <= 50) {
         dropCoinOnRandomCoinSpawner();
@@ -280,6 +287,7 @@ public class Dungeon implements Game {
     configMap.node("pos2").set(Utils.writeLocationToString(pos2));
     configMap.node("ravagerSpawns").set(Utils.writeLocationListToStringList(ravagerSpawns));
     configMap.node("coinSpawners").set(Utils.writeLocationListToStringList(coinSpawners));
+    configMap.node("playerSensors").set(Utils.writeSensorListToString(sensors));
 
   }
 
@@ -399,5 +407,26 @@ public class Dungeon implements Game {
 
   private int random() {
     return ThreadLocalRandom.current().nextInt(minRandom, maxRandom + 1);
+  }
+
+  public void addSensor(Location location) {
+    sensors.add(new PlayerSensor(location));
+  }
+
+  public List<PlayerSensor> getSensors() {
+    return sensors;
+  }
+
+  public void activatedSensor(Player player, Location location) {
+    sensors.forEach(sensor -> {
+      if (sensor.getLocation().equals(location)) {
+        if (sensor.hasCooldown()) {
+          return;
+        }
+        sensor.activated(player);
+        player.playSound(location, Sound.BLOCK_SCULK_SHRIEKER_SHRIEK, 1, 1);
+        player.addPotionEffect(new PotionEffect(PotionEffectType.DARKNESS, 60, 1));
+      }
+    });
   }
 }

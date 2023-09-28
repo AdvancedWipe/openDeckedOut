@@ -24,7 +24,4 @@ public interface Player {
 
   void addCardToGraveyard();
 
-  @Nullable
-  Game getGame();
-
 }

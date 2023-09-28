@@ -118,21 +118,39 @@ public final class Commands {
   }
 
   private void registerSpawnCommands(Builder<CommandSender> spawn) {
+    this.cmdManager.command(spawn.literal("SENSOR",
+            ArgumentDescription.of("Define spawn of player sensor in dungeon"))
+        .permission("opendeckedout.command.admin.spawn.sensor")
+        .handler(this::placeSensor));
+
     this.cmdManager.command(spawn.literal("PLAYER",
             ArgumentDescription.of("Define spawn of player in dungeon"))
         .permission("opendeckedout.command.admin.spawn.player")
-        .handler(this::spawn));
-
+        .handler(this::addPlayerSpawn));
     this.cmdManager.command(spawn.literal("RAVAGER",
             ArgumentDescription.of("Set entity spawn position"))
         .permission("opendeckedout.command.admin.spawn.entity")
         .handler(this::addRavagerSpawn));
+
     var item = spawn.literal("item");
     this.cmdManager.command(item.literal("COIN")
         .permission("opendeckedout.command.admin.spawn.item.coin")
         .handler(this::addCoinSpawner));
 
 
+  }
+
+  private void placeSensor(CommandContext<CommandSender> context) {
+    final Player player = (Player) context.getSender();
+    var location = player.getLocation();
+    Dungeon dungeon = getDungeonFromWorkspace(context, player);
+    if (dungeon == null) {
+      player.sendMessage("Dungeon name not available");
+      return;
+    }
+
+    dungeon.addSensor(location);
+    player.sendMessage(String.format("Sensor placed at '%s'", Utils.locationToXYZ(location)));
   }
 
   private void addCoinSpawner(CommandContext<CommandSender> context) {
@@ -191,7 +209,7 @@ public final class Commands {
             () -> player.sendMessage("Game not found"));
   }
 
-  private void spawn(CommandContext<CommandSender> context) {
+  private void addPlayerSpawn(CommandContext<CommandSender> context) {
     final Player player = (Player) context.getSender();
     Dungeon dungeon = getDungeonFromWorkspace(context, player);
     if (dungeon == null) {

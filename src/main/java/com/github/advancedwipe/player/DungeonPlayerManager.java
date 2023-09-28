@@ -15,7 +15,7 @@ public class DungeonPlayerManager {
   }
 
   public boolean isPlayerInGame(Player player) {
-    return getPlayer(player).map(p -> p.getGame() != null).orElse(false);
+    return getPlayer(player).map(p -> p.getDungeon() != null).orElse(false);
   }
 
 

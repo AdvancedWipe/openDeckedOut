@@ -63,8 +63,7 @@ public class DungeonPlayer implements Player {
 
   }
 
-  @Override
-  public @Nullable Game getGame() {
+  public @Nullable Dungeon getDungeon() {
     return game;
   }
 

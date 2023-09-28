@@ -1,11 +1,10 @@
 package com.github.advancedwipe.utils;
 
-import com.github.advancedwipe.game.Dungeon;
+import com.github.advancedwipe.game.PlayerSensor;
 import java.util.ArrayList;
 import java.util.List;
 import org.bukkit.Location;
 import org.bukkit.World;
-import org.bukkit.entity.Player;
 
 public class Utils {
 
@@ -29,7 +28,7 @@ public class Utils {
     return x + ";" + y + ";" + z + ";" + yaw + ";" + pitch;
   }
 
-  public static List<Location> writeStringListToLocationList(World world, List<String> list) {
+  public static List<Location> readStringListToLocationList(World world, List<String> list) {
     List<Location> locationList = new ArrayList<>();
     for (String string : list) {
       locationList.add(readStringToLocation(world, string));
@@ -66,6 +65,24 @@ public class Utils {
 
   public static String locationToXYZ(Location location) {
     return location.getX() + ", " + location.getY() + ", " + location.getZ();
+  }
+
+  public static List<String> writeSensorListToString(List<PlayerSensor> sensors) {
+    List<Location> locations = new ArrayList<>();
+    sensors.forEach(sensor -> locations.add(sensor.getLocation()));
+
+    return writeLocationListToStringList(locations);
+  }
+
+  public static List<PlayerSensor> readStringToSensorList(World world, List<String> list) {
+    List<PlayerSensor> sensors = new ArrayList<>();
+    List<Location> locations = readStringListToLocationList(world, list);
+
+    for (Location location: locations) {
+      sensors.add(new PlayerSensor(location));
+    }
+
+    return sensors;
   }
 
 }
