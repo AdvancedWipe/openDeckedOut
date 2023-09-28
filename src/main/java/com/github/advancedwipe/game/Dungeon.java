@@ -3,23 +3,28 @@ package com.github.advancedwipe.game;
 import com.github.advancedwipe.OpenDeckedOut;
 import com.github.advancedwipe.player.DungeonPlayer;
 import com.github.advancedwipe.utils.DungeonUtils;
+import com.github.advancedwipe.utils.SoundUtils;
 import com.github.advancedwipe.utils.Utils;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Random;
 import java.util.UUID;
+import java.util.concurrent.ThreadLocalRandom;
 import org.apache.logging.log4j.Level;
 import org.bukkit.Bukkit;
 import org.bukkit.Instrument;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.Note;
 import org.bukkit.Note.Tone;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
@@ -52,6 +57,10 @@ public class Dungeon implements Game {
   private List<Entity> ravagers = new ArrayList<>();
   private List<Location> ravagerSpawns = new ArrayList<>();
   private List<Location> coinSpawners = new ArrayList<>();
+
+  private final Random random = new Random();
+  private final int minRandom = 1;
+  private final int maxRandom = 100;
   private int tick;
   private final int maxTick = 30;
 
@@ -164,13 +173,22 @@ public class Dungeon implements Game {
       players.forEach(p -> p.getPlayer()
           .playNote(p.getPlayer().getLocation(), Instrument.FLUTE, Note.flat(1, Tone.E)));
 
+      if (random() <= 50) {
+        dropCoinOnRandomCoinSpawner();
+      }
+
       tick++;
     }
 
-    //players.forEach(player -> player.getPlayer().sendMessage("You are in the game which is running!"));
     if (tick == maxTick) {
       tick = 0;
     }
+  }
+
+  private void dropCoinOnRandomCoinSpawner() {
+    Location location = coinSpawners.get(random.nextInt(coinSpawners.size()));
+    world.dropItem(location, new ItemStack(Material.SUNFLOWER));
+    SoundUtils.playCoinSound(players, location);
   }
 
   @Override
@@ -377,5 +395,9 @@ public class Dungeon implements Game {
 
   public void addCoinSpawn(Location location) {
     coinSpawners.add(location);
+  }
+
+  private int random() {
+    return ThreadLocalRandom.current().nextInt(minRandom, maxRandom + 1);
   }
 }
