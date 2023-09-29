@@ -11,14 +11,23 @@ import com.github.advancedwipe.OpenDeckedOut;
 import com.github.advancedwipe.game.Dungeon;
 import com.github.advancedwipe.game.DungeonManager;
 import com.github.advancedwipe.utils.Utils;
+import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.apache.logging.log4j.Level;
 import org.bukkit.Location;
+import org.bukkit.NamespacedKey;
+import org.bukkit.StructureType;
+import org.bukkit.block.structure.Mirror;
+import org.bukkit.block.structure.StructureRotation;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.structure.Structure;
+import org.bukkit.structure.StructureManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -110,6 +119,35 @@ public final class Commands {
         .permission("opendeckedout.command.save")
         .handler(this::save));
 
+    this.cmdManager.command(admin.literal("barrier",
+            ArgumentDescription.of("Save barrier position and related structure"))
+        .argument(StringArgument.builder("namespace"))
+        .argument(StringArgument.builder("key"))
+        .argument(StringArgument.builder("includeEntities"))
+        .permission("opendeckedout.command.barrier")
+        .handler(this::barrier));
+
+  }
+
+  private void barrier(CommandContext<CommandSender> context) {
+    final String namespace = context.get("namespace");
+    final String key = context.get("key");
+    final boolean includeEntities = Boolean.getBoolean(context.get("key").toString());
+    final Player player = (Player) context.getSender();
+
+    StructureManager manager = OpenDeckedOut.getInstance().getServer().getStructureManager();
+    File structureFile = manager.getStructureFile(new NamespacedKey(namespace, key));
+    Structure structure;
+
+    try {
+      structure = manager.loadStructure(structureFile);
+    } catch (IOException e) {
+      OpenDeckedOut.LOGGER.log(Level.WARN, e.getMessage());
+      return;
+    }
+
+    structure.place(player.getLocation(), includeEntities, StructureRotation.NONE, Mirror.NONE, -1,
+        1f, new Random());
   }
 
   private void makeEditable(CommandContext<CommandSender> context) {
