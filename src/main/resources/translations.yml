@@ -1,0 +1,10 @@
+en-us:
+  cards:
+    coinCard:
+      name: CoinCard
+      rule: When the card is activated, increase the dungeons probability to drop a coin by +4.
+      anecdote: In the shadowy recesses of the dungeon, a map whispers tales of untold riches, its magic able to conjure coins from the abyss, but it warns of boundless greed.
+
+  commands:
+    join:
+      alreadyInGame: You are already in a game, can not join another one! Leave your current game to join a new one.

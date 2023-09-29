@@ -17,7 +17,8 @@ public class PlayerListener implements Listener {
 
   @EventHandler
   public void onPlayerJoin(PlayerJoinEvent event) {
-    event.getPlayer().sendMessage(
+    Player player = event.getPlayer();
+    player.sendMessage(
         Component.text("Welcome to openDeckedOut " + event.getPlayer().getName() + "!"));
   }
 
@@ -39,7 +40,8 @@ public class PlayerListener implements Listener {
   public void onPlayerMove(PlayerMoveEvent event) {
     Player player = event.getPlayer();
 
-    var dungeonPlayer = OpenDeckedOut.getInstance().getPlayerManager().getPlayer(player).orElse(null);
+    var dungeonPlayer = OpenDeckedOut.getInstance().getPlayerManager().getPlayer(player)
+        .orElse(null);
 
     if (dungeonPlayer == null) {
       return;

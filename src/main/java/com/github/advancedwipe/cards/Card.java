@@ -2,7 +2,7 @@ package com.github.advancedwipe.cards;
 
 public interface Card {
 
-  String getName();
+  String getNamePath();
 
   int getID();
 
@@ -14,8 +14,8 @@ public interface Card {
 
   int getValue();
 
-  String getRules();
+  String getRulePath();
 
-  String getAnecdote();
+  String getAnecdotePath();
 
 }
