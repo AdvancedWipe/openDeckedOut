@@ -157,4 +157,8 @@ public class OpenDeckedOut extends JavaPlugin implements Listener {
   public DungeonPlayerManager getPlayerManager() {
     return playerManager;
   }
+
+  private FileConfiguration getPluginConfig() {
+    return config;
+  }
 }
