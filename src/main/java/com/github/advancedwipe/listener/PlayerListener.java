@@ -2,6 +2,7 @@ package com.github.advancedwipe.listener;
 
 import com.github.advancedwipe.OpenDeckedOut;
 import com.github.advancedwipe.game.Dungeon;
+import com.github.advancedwipe.utils.PlayerUtils;
 import net.kyori.adventure.text.Component;
 import org.apache.logging.log4j.Level;
 import org.bukkit.Location;
@@ -56,6 +57,11 @@ public class PlayerListener implements Listener {
     var sensors = dungeon.getSensors();
 
     if (sensors == null) {
+      return;
+    }
+
+    if (!PlayerUtils.hasPlayerMoved(event.getFrom(), event.getTo())) {
+      // Player has not changed the location they just looked around
       return;
     }
 
