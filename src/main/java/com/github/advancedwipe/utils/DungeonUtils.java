@@ -1,6 +1,9 @@
 package com.github.advancedwipe.utils;
 
+import java.util.ArrayList;
+import java.util.List;
 import org.bukkit.Location;
+import org.bukkit.block.Block;
 
 public class DungeonUtils {
 
@@ -26,6 +29,28 @@ public class DungeonUtils {
     double z = location.getZ();
 
     return x >= minX && x <= maxX && y >= minY && y <= maxY && z >= minZ && z <= maxZ;
+  }
+
+  public static List<Location> getBlocksInBoundingBox(Location pos1, Location pos2) {
+    List<Location> locationsInBoundingBox = new ArrayList<>();
+    var world = pos1.getWorld();
+    int minX = Math.min(pos1.getBlockX(), pos2.getBlockX());
+    int minY = Math.min(pos1.getBlockY(), pos2.getBlockY());
+    int minZ = Math.min(pos1.getBlockZ(), pos2.getBlockZ());
+
+    int maxX = Math.max(pos1.getBlockX(), pos2.getBlockX());
+    int maxY = Math.max(pos1.getBlockY(), pos2.getBlockY());
+    int maxZ = Math.max(pos1.getBlockZ(), pos2.getBlockZ());
+
+    for (int x = minX; x <= maxX; x++) {
+      for (int y = minY; y <= maxY; y++) {
+        for (int z = minZ; z <= maxZ; z++) {
+          locationsInBoundingBox.add(new Location(world, x, y, z));
+        }
+      }
+    }
+
+    return locationsInBoundingBox;
   }
 
 

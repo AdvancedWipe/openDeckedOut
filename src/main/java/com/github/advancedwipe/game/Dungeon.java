@@ -8,7 +8,9 @@ import com.github.advancedwipe.utils.Utils;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Random;
 import java.util.UUID;
@@ -22,6 +24,8 @@ import org.bukkit.Note;
 import org.bukkit.Note.Tone;
 import org.bukkit.Sound;
 import org.bukkit.World;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockState;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -52,6 +56,7 @@ public class Dungeon implements Game {
   private Location pos2;
 
   private GameStatus status = GameStatus.DISABLED;
+  private Map<Location, BlockState> originalState = new HashMap<>();
   private boolean preparing = false;
   private int countdown;
   private Location spawn;
@@ -154,6 +159,8 @@ public class Dungeon implements Game {
     if (status == GameStatus.DISABLED) {
       preparing = true;
       countdown = -1;
+
+      recordOriginalDungeon();
 
       status = GameStatus.WAITING;
       preparing = false;
@@ -365,6 +372,8 @@ public class Dungeon implements Game {
     status = GameStatus.WAITING;
     countdown = -1;
 
+    resetToOriginalDungeon();
+
     for (Entity entity : this.world.getEntities()) {
       if (DungeonUtils.isInArena(entity.getLocation(), getPos1(), getPos2())) {
         entity.remove();
@@ -428,5 +437,21 @@ public class Dungeon implements Game {
         player.addPotionEffect(new PotionEffect(PotionEffectType.DARKNESS, 60, 1));
       }
     });
+  }
+
+  public void recordOriginalDungeon() {
+    for (Location location : DungeonUtils.getBlocksInBoundingBox(getPos1(), getPos2())) {
+      var state = location.getBlock().getState();
+      originalState.put(location, state);
+    }
+  }
+
+  public void resetToOriginalDungeon() {
+    for (Map.Entry<Location, BlockState> entry : originalState.entrySet()) {
+      Location location = entry.getKey();
+      BlockState state = entry.getValue();
+      world.setBlockData(location, state.getBlockData());
+    }
+    originalState.clear();
   }
 }
