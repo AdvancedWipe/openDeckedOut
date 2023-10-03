@@ -16,12 +16,14 @@ public class DungeonPlayer implements Player {
   private final org.bukkit.entity.Player player;
   private final UUID uuid;
   private Dungeon game;
+  private PlayerStats stats;
 
   private SavedInventory savedInventory = new SavedInventory();
 
   public DungeonPlayer(org.bukkit.entity.Player player) {
     this.player = player;
     this.uuid = player.getUniqueId();
+    this.stats = new PlayerStats(player);
   }
 
   @Override
@@ -75,6 +77,7 @@ public class DungeonPlayer implements Player {
     } else if (this.game != null && game == null) { // On leave
       this.game.internalLeavePlayer(this);
       this.game = null;
+      //stats.savePlayerStats(player, stats);
       // TODO clean up values or restore inventory
     }
   }
