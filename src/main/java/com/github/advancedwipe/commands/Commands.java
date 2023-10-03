@@ -60,25 +60,28 @@ public final class Commands {
     // In theory an admin command but has no argument
     this.cmdManager.command(deckedout.literal("workspaces",
             ArgumentDescription.of("Show dungeons in edit mode"))
-        .permission("opendeckedout.command.admin.workspaces")
+        .permission("deckedout.command.admin.workspaces")
         .handler(this::workspace));
   }
 
   private void registerRegularCommands(Builder<CommandSender> deckedout) {
     this.cmdManager.command(deckedout.literal("version",
             ArgumentDescription.of("Display version of plugin currently in use"))
-        .permission("opendeckedout.command.version")
+        .permission("deckedout.command.version")
         .handler(this::version));
 
     this.cmdManager.command(deckedout.literal("join",
             ArgumentDescription.of("Join an arena"))
-        .argument(StringArgument.single("name"))
-        .permission("opendeckedout.command.join")
+        .argument(StringArgument.<CommandSender>builder("name")
+            .withSuggestionsProvider(((context, string) -> Stream.concat(
+                OpenDeckedOut.getInstance().getDeckedOutManager().getGameNames().stream(),
+                dungeonManager.getGameNames().stream()).distinct().collect(Collectors.toList()))))
+        .permission("deckedout.command.join")
         .handler(this::join));
 
     this.cmdManager.command(deckedout.literal("leave",
             ArgumentDescription.of("Leave your current dungeon"))
-        .permission("opendeckedout.command.leave")
+        .permission("deckedout.command.leave")
         .handler(this::leave));
   }
 
@@ -91,7 +94,7 @@ public final class Commands {
 
     this.cmdManager.command(admin.literal("add",
             ArgumentDescription.of("Adds a new arena to your workspace"))
-        .permission("opendeckedout.command.add")
+        .permission("deckedout.command.add")
         .handler(this::add));
 
     var spawn = admin.literal("spawn");
@@ -101,22 +104,22 @@ public final class Commands {
             ArgumentDescription.of(
                 "Make dungeon editable, use /deckedout "
                     + "admin workspaces to list all dungeons in edit mode"))
-        .permission("opendeckedout.command.admin.editable")
+        .permission("deckedout.command.admin.editable")
         .handler(this::makeEditable));
 
     this.cmdManager.command(admin.literal("pos1",
             ArgumentDescription.of("Define position 1 of arena"))
-        .permission("opendeckedout.command.pos1")
+        .permission("deckedout.command.pos1")
         .handler(this::pos1));
 
     this.cmdManager.command(admin.literal("pos2",
             ArgumentDescription.of("Define position 2 of arena"))
-        .permission("opendeckedout.command.pos2")
+        .permission("deckedout.command.pos2")
         .handler(this::pos2));
 
     this.cmdManager.command(admin.literal("save",
             ArgumentDescription.of("Save arena"))
-        .permission("opendeckedout.command.save")
+        .permission("deckedout.command.save")
         .handler(this::save));
 
     this.cmdManager.command(admin.literal("barrier",
@@ -124,7 +127,7 @@ public final class Commands {
         .argument(StringArgument.builder("namespace"))
         .argument(StringArgument.builder("key"))
         .argument(StringArgument.builder("includeEntities"))
-        .permission("opendeckedout.command.barrier")
+        .permission("deckedout.command.barrier")
         .handler(this::barrier));
 
   }
@@ -158,21 +161,21 @@ public final class Commands {
   private void registerSpawnCommands(Builder<CommandSender> spawn) {
     this.cmdManager.command(spawn.literal("SENSOR",
             ArgumentDescription.of("Define spawn of player sensor in dungeon"))
-        .permission("opendeckedout.command.admin.spawn.sensor")
+        .permission("deckedout.command.admin.spawn.sensor")
         .handler(this::placeSensor));
 
     this.cmdManager.command(spawn.literal("PLAYER",
             ArgumentDescription.of("Define spawn of player in dungeon"))
-        .permission("opendeckedout.command.admin.spawn.player")
+        .permission("deckedout.command.admin.spawn.player")
         .handler(this::addPlayerSpawn));
     this.cmdManager.command(spawn.literal("RAVAGER",
             ArgumentDescription.of("Set entity spawn position"))
-        .permission("opendeckedout.command.admin.spawn.entity")
+        .permission("deckedout.command.admin.spawn.entity")
         .handler(this::addRavagerSpawn));
 
     var item = spawn.literal("item");
     this.cmdManager.command(item.literal("COIN")
-        .permission("opendeckedout.command.admin.spawn.item.coin")
+        .permission("deckedout.command.admin.spawn.item.coin")
         .handler(this::addCoinSpawner));
 
 

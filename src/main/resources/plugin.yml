@@ -5,10 +5,8 @@ description: An example plugin
 author: AdvancedWipe
 website: https://papermc.io
 api-version: '1.20'
-commands:
-  opendeckedout:
-    description: Your description
-    usage: /<command>
-    aliases:
-      - odo
-      - do
+permissions:
+  deckedout.command.join:
+    default: "true"
+  deckedout.command.leave:
+    default: "true"
