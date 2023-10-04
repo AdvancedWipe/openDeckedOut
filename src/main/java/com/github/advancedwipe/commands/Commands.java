@@ -3,6 +3,7 @@ package com.github.advancedwipe.commands;
 import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.Command;
 import cloud.commandframework.Command.Builder;
+import cloud.commandframework.arguments.standard.IntegerArgument;
 import cloud.commandframework.arguments.standard.StringArgument;
 import cloud.commandframework.context.CommandContext;
 import cloud.commandframework.execution.CommandExecutionCoordinator;
@@ -178,7 +179,29 @@ public final class Commands {
         .permission("deckedout.command.admin.spawn.item.coin")
         .handler(this::addCoinSpawner));
 
+    this.cmdManager.command(item.literal("ARTIFACT")
+        .permission("deckedout.command.admin.spawn.item.artifact")
+        .argument(IntegerArgument.builder("level"))
+        .argument(StringArgument.builder("difficulty"))
 
+        .handler(this::addArtifactSpawner));
+
+
+  }
+
+  private void addArtifactSpawner(CommandContext<CommandSender> context) {
+    final Player player = (Player) context.getSender();
+    var location = player.getLocation();
+    Dungeon dungeon = getDungeonFromWorkspace(context, player);
+    if (dungeon == null) {
+      player.sendMessage("Dungeon name not available");
+      return;
+    }
+
+    int level = context.get("level");
+    String difficulty = context.get("difficulty");
+
+   dungeon.addArtifactSpawn(location, level, difficulty);
   }
 
   private void placeSensor(CommandContext<CommandSender> context) {

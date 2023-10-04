@@ -1,8 +1,10 @@
 package com.github.advancedwipe.utils;
 
 import com.github.advancedwipe.game.PlayerSensor;
+import com.github.advancedwipe.game.artifact.Artifact;
 import java.util.ArrayList;
 import java.util.List;
+import org.apache.logging.log4j.core.util.Integers;
 import org.bukkit.Location;
 import org.bukkit.World;
 
@@ -78,11 +80,48 @@ public class Utils {
     List<PlayerSensor> sensors = new ArrayList<>();
     List<Location> locations = readStringListToLocationList(world, list);
 
-    for (Location location: locations) {
+    for (Location location : locations) {
       sensors.add(new PlayerSensor(location));
     }
 
     return sensors;
   }
 
+  public static List<String> writeArtifactListToString(List<Artifact> artifacts) {
+    List<String> artifactsAsStrings = new ArrayList<>();
+    artifacts.forEach(artifact -> artifactsAsStrings.add(artifact.toString()));
+    return artifactsAsStrings;
+  }
+
+  public static List<Artifact> readStringListToArtifactList(World world, List<String> list) {
+    List<Artifact> artifacts = new ArrayList<>();
+    list.forEach(artifact -> {
+      int endOfLocation = findNthSemicolonIndex(artifact, 5);
+      String location = artifact.substring(0, endOfLocation);
+      var artifactVariables = artifact.split(";");
+
+      artifacts.add(new Artifact(readStringToLocation(world, location),
+          Integers.parseInt(artifactVariables[5]), artifactVariables[6]));
+    });
+
+    return artifacts;
+  }
+
+  private static int findNthSemicolonIndex(String str, int n) {
+    // Base case: If n is 0 or the string is empty, return -1 (not found)
+    if (n <= 0 || str.isEmpty()) {
+      return -1;
+    }
+
+    // Find the index of the first semicolon in the remaining substring
+    int semicolonIndex = str.indexOf(';');
+
+    // If a semicolon was found, recursively search for the (n-1)th semicolon in the remaining substring
+    if (semicolonIndex != -1) {
+      return semicolonIndex + findNthSemicolonIndex(str.substring(semicolonIndex + 1), n - 1) + 1;
+    }
+
+    // If no semicolon was found, return -1 (not found)
+    return -1;
+  }
 }

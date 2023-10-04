@@ -1,6 +1,7 @@
 package com.github.advancedwipe.game;
 
 import com.github.advancedwipe.OpenDeckedOut;
+import com.github.advancedwipe.game.artifact.Artifact;
 import com.github.advancedwipe.player.DungeonPlayer;
 import com.github.advancedwipe.utils.DungeonUtils;
 import com.github.advancedwipe.utils.SoundUtils;
@@ -66,6 +67,7 @@ public class Dungeon implements Game {
   private List<Location> ravagerSpawns = new ArrayList<>();
   private List<Location> coinSpawners = new ArrayList<>();
   private List<PlayerSensor> sensors = new ArrayList<>();
+  private List<Artifact> artifacts = new ArrayList<>();
   private final Random random = new Random();
   private final int minRandom = 1;
   private final int maxRandom = 100;
@@ -128,6 +130,8 @@ public class Dungeon implements Game {
           Objects.requireNonNull(configMap.node("coinSpawners").getList(String.class)));
       game.sensors = Utils.readStringToSensorList(game.world,
           Objects.requireNonNull(configMap.node("playerSensors").getList(String.class)));
+      game.artifacts = Utils.readStringListToArtifactList(game.world,
+          Objects.requireNonNull(configMap.node("artifactLocations").getList(String.class)));
 
       game.start();
       OpenDeckedOut.LOGGER.log(Level.INFO, String.format("Arena '%s' loaded!", game.name));
@@ -295,6 +299,7 @@ public class Dungeon implements Game {
     configMap.node("ravagerSpawns").set(Utils.writeLocationListToStringList(ravagerSpawns));
     configMap.node("coinSpawners").set(Utils.writeLocationListToStringList(coinSpawners));
     configMap.node("playerSensors").set(Utils.writeSensorListToString(sensors));
+    configMap.node("artifactLocations").set(Utils.writeArtifactListToString(artifacts));
 
   }
 
@@ -345,6 +350,9 @@ public class Dungeon implements Game {
       dungeonPlayer.saveInventory();
       player.setScoreboard(getScoreBoard(player.getName()));
       player.teleport(getSpawn());
+
+      player.getInventory().addItem(artifacts.get(0).getCompass());
+      player.setCompassTarget(artifacts.get(0).getLocation());
 
       if (isEmpty) {
         runTask();
@@ -453,5 +461,9 @@ public class Dungeon implements Game {
       world.setBlockData(location, state.getBlockData());
     }
     originalState.clear();
+  }
+
+  public void addArtifactSpawn(Location location, int level, String difficulty) {
+    artifacts.add(new Artifact(location, level, difficulty));
   }
 }
