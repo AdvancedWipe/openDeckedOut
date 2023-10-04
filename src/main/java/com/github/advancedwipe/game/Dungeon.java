@@ -466,4 +466,8 @@ public class Dungeon implements Game {
   public void addArtifactSpawn(Location location, int level, String difficulty) {
     artifacts.add(new Artifact(location, level, difficulty));
   }
+
+  public void disable() {
+    this.status = GameStatus.DISABLED;
+  }
 }

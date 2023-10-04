@@ -155,8 +155,19 @@ public final class Commands {
   }
 
   private void makeEditable(CommandContext<CommandSender> context) {
-    System.out.println("Needs implementation");
+    final String dungeonName = context.get("dungeonname");
+    final Player player = (Player) context.getSender();
 
+    Dungeon dungeon = dungeonManager.getGame(dungeonName).orElse(null);
+
+    if (dungeon == null) {
+      player.sendMessage("Something went wrong, it seems that " + dungeonName + "does not exist.");
+      return;
+    }
+
+    dungeon.disable();
+    workspace.put(dungeon.getName(), dungeon);
+    player.sendMessage(dungeonName + "Was was disabled and added to workspace, can now be edited!");
   }
 
   private void registerSpawnCommands(Builder<CommandSender> spawn) {
