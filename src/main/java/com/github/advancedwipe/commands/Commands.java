@@ -194,9 +194,25 @@ public final class Commands {
         .permission("deckedout.command.admin.spawn.item.artifact")
         .argument(IntegerArgument.builder("level"))
         .argument(StringArgument.builder("difficulty"))
-
         .handler(this::addArtifactSpawner));
 
+    this.cmdManager.command(item.literal("BERRY")
+        .permission("deckedout.command.admin.spawn.item.berry")
+        .handler(this::addRenewableBerry));
+
+
+  }
+
+  private void addRenewableBerry(CommandContext<CommandSender> context) {
+    final Player player = (Player) context.getSender();
+    var location = player.getLocation();
+    Dungeon dungeon = getDungeonFromWorkspace(context, player);
+    if (dungeon == null) {
+      player.sendMessage("Dungeon name not available");
+      return;
+    }
+
+    dungeon.addBerryPosition(location);
 
   }
 

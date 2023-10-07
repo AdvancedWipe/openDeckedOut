@@ -27,6 +27,7 @@ import org.bukkit.Sound;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
+import org.bukkit.block.data.Ageable;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -68,6 +69,7 @@ public class Dungeon implements Game {
   private List<Location> coinSpawners = new ArrayList<>();
   private List<PlayerSensor> sensors = new ArrayList<>();
   private List<Artifact> artifacts = new ArrayList<>();
+  private List<Location> berrys = new ArrayList<>();
   private final Random random = new Random();
   private final int minRandom = 1;
   private final int maxRandom = 100;
@@ -132,6 +134,8 @@ public class Dungeon implements Game {
           Objects.requireNonNull(configMap.node("playerSensors").getList(String.class)));
       game.artifacts = Utils.readStringListToArtifactList(game.world,
           Objects.requireNonNull(configMap.node("artifactLocations").getList(String.class)));
+      game.berrys = Utils.readStringListToLocationList(game.world,
+          Objects.requireNonNull(configMap.node("berrys").getList(String.class)));
 
       game.start();
       OpenDeckedOut.LOGGER.log(Level.INFO, String.format("Arena '%s' loaded!", game.name));
@@ -300,6 +304,7 @@ public class Dungeon implements Game {
     configMap.node("coinSpawners").set(Utils.writeLocationListToStringList(coinSpawners));
     configMap.node("playerSensors").set(Utils.writeSensorListToString(sensors));
     configMap.node("artifactLocations").set(Utils.writeArtifactListToString(artifacts));
+    configMap.node("berrys").set(Utils.writeLocationListToStringList(berrys));
 
   }
 
@@ -353,6 +358,17 @@ public class Dungeon implements Game {
 
       player.getInventory().addItem(artifacts.get(0).getCompass());
       player.setCompassTarget(artifacts.get(0).getLocation());
+
+      for (var berry : berrys) {
+        Block berryBlock = world.getBlockAt(berry);
+        berryBlock.setType(Material.SWEET_BERRY_BUSH);
+        Ageable ageable = (Ageable) berryBlock.getBlockData();
+        int maxAge = ageable.getMaximumAge();
+        ageable.setAge(maxAge);
+        berryBlock.setBlockData(ageable);
+      }
+
+
 
       if (isEmpty) {
         runTask();
@@ -469,5 +485,9 @@ public class Dungeon implements Game {
 
   public void disable() {
     this.status = GameStatus.DISABLED;
+  }
+
+  public void addBerryPosition(Location location) {
+    berrys.add(location);
   }
 }
