@@ -1,5 +1,6 @@
 package com.github.advancedwipe.cards;
 
+import com.github.advancedwipe.player.DungeonPlayer;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EmptyStackException;
@@ -28,6 +29,10 @@ public class CardManager {
     } catch (EmptyStackException e) {
       return; // Stack is empty, no more cards to draw
     }
+  }
+
+  public void applyCardEffect(DungeonPlayer player) {
+
   }
 
   public void addCardToGraveyard() {

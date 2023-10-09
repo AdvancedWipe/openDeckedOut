@@ -1,6 +1,7 @@
 package com.github.advancedwipe.player;
 
 import com.github.advancedwipe.cards.Card;
+import com.github.advancedwipe.cards.CardManager;
 import com.github.advancedwipe.game.Dungeon;
 import com.github.advancedwipe.game.Game;
 import com.github.advancedwipe.game.Money;
@@ -16,7 +17,6 @@ public class DungeonPlayer implements Player {
   private final org.bukkit.entity.Player player;
   private final UUID uuid;
   private Dungeon game;
-
   private SavedInventory savedInventory = new SavedInventory();
 
   public DungeonPlayer(org.bukkit.entity.Player player) {
@@ -46,21 +46,6 @@ public class DungeonPlayer implements Player {
   @Override
   public Map<Money, Integer> getWallet() {
     return null;
-  }
-
-  @Override
-  public Stack<Card> getLibary() {
-    return null;
-  }
-
-  @Override
-  public List<Card> getHand() {
-    return null;
-  }
-
-  @Override
-  public void addCardToGraveyard() {
-
   }
 
   public @Nullable Dungeon getDungeon() {

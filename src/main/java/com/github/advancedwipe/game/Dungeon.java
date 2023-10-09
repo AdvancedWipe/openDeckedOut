@@ -1,6 +1,7 @@
 package com.github.advancedwipe.game;
 
 import com.github.advancedwipe.OpenDeckedOut;
+import com.github.advancedwipe.cards.CardManager;
 import com.github.advancedwipe.game.artifact.Artifact;
 import com.github.advancedwipe.player.DungeonPlayer;
 import com.github.advancedwipe.utils.DungeonUtils;
@@ -75,10 +76,12 @@ public class Dungeon implements Game {
   private final int maxRandom = 100;
   private int tick;
   private final int maxTick = 30;
+  private CardManager cardManager;
 
   public Dungeon(String name) {
     this.name = name;
     this.uuid = java.util.UUID.randomUUID();
+    this.cardManager = new CardManager();
   }
 
   public Dungeon(UUID uuid) {

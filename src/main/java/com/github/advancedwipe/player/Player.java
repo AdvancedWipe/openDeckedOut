@@ -17,11 +17,4 @@ public interface Player {
   boolean isInGame();
 
   Map<Money, Integer> getWallet();
-
-  Stack<Card> getLibary();
-
-  List<Card> getHand();
-
-  void addCardToGraveyard();
-
 }

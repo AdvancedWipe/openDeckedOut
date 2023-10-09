@@ -20,6 +20,9 @@ public class CoinCard implements Card {
     this.anecdotePath = "cards.coinCard.rule";
   }
 
+  
+
+
   @Override
   public String getNamePath() {
     return this.namePath;
