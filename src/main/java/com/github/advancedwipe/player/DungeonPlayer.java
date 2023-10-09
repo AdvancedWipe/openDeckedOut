@@ -19,6 +19,8 @@ public class DungeonPlayer implements Player {
   private Dungeon game;
   private SavedInventory savedInventory = new SavedInventory();
 
+  private Stats stats = new Stats();
+
   public DungeonPlayer(org.bukkit.entity.Player player) {
     this.player = player;
     this.uuid = player.getUniqueId();
