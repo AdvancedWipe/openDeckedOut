@@ -371,8 +371,6 @@ public class Dungeon implements Game {
         berryBlock.setBlockData(ageable);
       }
 
-
-
       if (isEmpty) {
         runTask();
       }

@@ -1,65 +1,17 @@
 package com.github.advancedwipe.cards;
 
-public class CoinCard implements Card {
+import com.github.advancedwipe.player.DungeonPlayer;
 
-  private final String namePath;
-  private final int id;
-  private final CardType type;
-  private final CardRarity rarity;
-  private final int value;
-  private final String rulePath;
-  private final String anecdotePath;
+public class CoinCard extends Card implements Playable {
 
   public CoinCard() {
-    this.namePath = "cards.coinCard.name";
-    this.id = 1;
-    this.type = CardType.GENERATOR;
-    this.rarity = CardRarity.COMMON;
-    this.value = 7;
-    this.rulePath = "cards.coinCard.rule";
-    this.anecdotePath = "cards.coinCard.rule";
-  }
-
-  
-
-
-  @Override
-  public String getNamePath() {
-    return this.namePath;
+    super("cards.coinCard.name", 1, CardType.GENERATOR, CardRarity.COMMON, 7, "cards.coinCard.rule",
+        "cards.coinCard.rule");
   }
 
   @Override
-  public int getID() {
-    return this.id;
+  public void playCard(DungeonPlayer player) {
+    effects.forEach(effect -> effect.applyEffect(player));
   }
 
-  @Override
-  public CardType getType() {
-    return type;
-  }
-
-  @Override
-  public CardSet getSet() {
-    return null;
-  }
-
-  @Override
-  public CardRarity getRarity() {
-    return this.rarity;
-  }
-
-  @Override
-  public int getValue() {
-    return this.value;
-  }
-
-  @Override
-  public String getRulePath() {
-    return this.rulePath;
-  }
-
-  @Override
-  public String getAnecdotePath() {
-    return this.anecdotePath;
-  }
 }

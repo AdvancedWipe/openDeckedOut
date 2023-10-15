@@ -1,20 +1,72 @@
 package com.github.advancedwipe.player;
 
-import com.github.advancedwipe.cards.Card;
-import com.github.advancedwipe.game.Game;
 import com.github.advancedwipe.game.Money;
-import java.util.List;
 import java.util.Map;
-import java.util.Stack;
 import java.util.UUID;
-import org.jetbrains.annotations.Nullable;
+import org.bukkit.potion.PotionEffect;
 
-public interface Player {
-  UUID getUuid();
+public abstract class Player {
 
-  boolean isSpectator();
+  private final org.bukkit.entity.Player player;
+  private final SavedInventory savedInventory = new SavedInventory();
 
-  boolean isInGame();
+  public Player(org.bukkit.entity.Player player) {
+    this.player = player;
+  }
 
-  Map<Money, Integer> getWallet();
+  public void saveInventory() {
+    savedInventory.setInventory(player.getInventory().getContents());
+    savedInventory.setArmor(player.getInventory().getArmorContents());
+    savedInventory.setXp(player.getExp());
+    savedInventory.setEffects(player.getActivePotionEffects());
+    savedInventory.setMode(player.getGameMode());
+    savedInventory.setLevel(player.getLevel());
+    savedInventory.setFoodLevel(player.getFoodLevel());
+    savedInventory.setPlatformScoreboard(player.getScoreboard().getObjectives());
+
+    // Is needed to teleport player back to the location where they entered the join command
+    savedInventory.setInitalLocation(player.getLocation());
+
+    // Finally clear the players current inventory
+    player.getInventory().clear();
+  }
+
+  public void restoreInventory() {
+    var currentInventory = player.getInventory();
+    currentInventory.clear();
+
+    player.getInventory().setContents(savedInventory.getInventory());
+    player.getInventory().setArmorContents(savedInventory.getArmor());
+    player.setFoodLevel(savedInventory.getFoodLevel());
+    player.setLevel(savedInventory.getLevel());
+    player.setExp(savedInventory.getExp());
+    player.setGameMode(savedInventory.getGamemode());
+
+    for (PotionEffect effect : player.getActivePotionEffects()) {
+      player.removePotionEffect(effect.getType());
+    }
+    player.addPotionEffects(savedInventory.getPotionEffects());
+
+    player.teleport(savedInventory.getInitalLocation());
+  }
+
+  public org.bukkit.entity.Player getPlayer() {
+    return this.player;
+  }
+
+  public UUID getUuid() {
+    return player.getUniqueId();
+  }
+
+  public boolean isSpectator() {
+    return false;
+  }
+
+  public boolean isInGame() {
+    return false;
+  }
+
+  public Map<Money, Integer> getWallet() {
+   return null;
+  }
 }
