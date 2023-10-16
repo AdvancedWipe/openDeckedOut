@@ -172,36 +172,54 @@ public class Dungeon extends Game {
     }
 
     if (status == GameStatus.WAITING) {
-      cardManager = new CardManager();
-
-      for (var ravagerSpawn : ravagerSpawns) {
-        Entity ravager = ravagerSpawn.getWorld().spawnEntity(ravagerSpawn, EntityType.RAVAGER);
-        ravagers.add(ravager);
-      }
-      status = GameStatus.RUNNING;
+      prepareDungeon();
     }
 
     if (status == GameStatus.RUNNING) {
-      players.forEach(p -> p.getPlayer()
-          .playNote(p.getPlayer().getLocation(), Instrument.FLUTE, Note.flat(1, Tone.E)));
+      onEveryDungeonTick();
 
-      sensors.forEach(PlayerSensor::decreaseCooldown);
-
-      if (tick == maxTick - 1) {
-        cardManager.drawNewCard();
+      if (tick % 10 == 0) {
+        onEveryTenthDungeonTick();
       }
-      cardManager.applyCardEffect(players.get(0));
 
       if (random() <= 50) {
         dropCoinOnRandomCoinSpawner();
       }
 
+      if (tick == maxTick) {
+        onMaxDungeonTick();
+        return;
+      }
       tick++;
     }
 
-    if (tick == maxTick) {
-      tick = 0;
+  }
+
+  private void onEveryTenthDungeonTick() {
+    cardManager.applyCardEffect(players.get(0));
+  }
+
+  private void onMaxDungeonTick() {
+    tick = 0;
+    cardManager.drawNewCard();
+  }
+
+  private void onEveryDungeonTick() {
+    players.forEach(p -> p.getPlayer()
+        .playNote(p.getPlayer().getLocation(), Instrument.FLUTE, Note.flat(1, Tone.E)));
+
+    sensors.forEach(PlayerSensor::decreaseCooldown);
+  }
+
+  private void prepareDungeon() {
+    cardManager = new CardManager();
+
+    for (var ravagerSpawn : ravagerSpawns) {
+      Entity ravager = ravagerSpawn.getWorld().spawnEntity(ravagerSpawn, EntityType.RAVAGER);
+      ravagers.add(ravager);
     }
+
+    status = GameStatus.RUNNING;
   }
 
   private void dropCoinOnRandomCoinSpawner() {
