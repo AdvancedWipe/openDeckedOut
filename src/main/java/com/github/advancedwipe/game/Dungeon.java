@@ -81,7 +81,6 @@ public class Dungeon implements Game {
   public Dungeon(String name) {
     this.name = name;
     this.uuid = java.util.UUID.randomUUID();
-    this.cardManager = new CardManager();
   }
 
   public Dungeon(UUID uuid) {
@@ -185,6 +184,8 @@ public class Dungeon implements Game {
     }
 
     if (status == GameStatus.WAITING) {
+      cardManager = new CardManager();
+
       for (var ravagerSpawn : ravagerSpawns) {
         Entity ravager = ravagerSpawn.getWorld().spawnEntity(ravagerSpawn, EntityType.RAVAGER);
         ravagers.add(ravager);
@@ -197,6 +198,11 @@ public class Dungeon implements Game {
           .playNote(p.getPlayer().getLocation(), Instrument.FLUTE, Note.flat(1, Tone.E)));
 
       sensors.forEach(PlayerSensor::decreaseCooldown);
+
+      if (tick == maxTick - 1) {
+        cardManager.drawNewCard();
+      }
+      cardManager.applyCardEffect(players.get(0));
 
       if (random() <= 50) {
         dropCoinOnRandomCoinSpawner();
