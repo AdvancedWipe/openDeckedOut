@@ -47,22 +47,20 @@ import org.spongepowered.configurate.yaml.YamlConfigurationLoader;
 
 public class Dungeon extends Game {
 
+  private final Random random = new Random();
   private BukkitTask task;
-
+  private final int minRandom = 1;
+  private final int maxRandom = 100;
+  private int tick;
+  private final int maxTick = 30;
+  private CardManager cardManager;
   private List<DungeonPlayer> players = new ArrayList<>();
-
   private List<Entity> ravagers = new ArrayList<>();
   private List<Location> ravagerSpawns = new ArrayList<>();
   private List<Location> coinSpawners = new ArrayList<>();
   private List<PlayerSensor> sensors = new ArrayList<>();
   private List<Artifact> artifacts = new ArrayList<>();
   private List<Location> berrys = new ArrayList<>();
-  private final Random random = new Random();
-  private final int minRandom = 1;
-  private final int maxRandom = 100;
-  private int tick;
-  private final int maxTick = 30;
-  private CardManager cardManager;
 
   public Dungeon(String name) {
     super(name);
@@ -134,6 +132,38 @@ public class Dungeon extends Game {
     }
   }
 
+  public void saveToConfig() {
+    File directory = new File(OpenDeckedOut.getInstance().getDataFolder(), "arenas");
+
+    if (!directory.exists()) {
+      if (!directory.mkdirs()) {
+        OpenDeckedOut.LOGGER.warn("Failed to create folder 'arenas', can not save arenas to file!");
+        return;
+      }
+    }
+    if (file == null) {
+      do {
+        file = new File(directory, uuid + ".yml");
+      } while (file.exists());
+    }
+
+    final ConfigurationLoader<? extends CommentedConfigurationNode> loader;
+    loader = YamlConfigurationLoader.builder().nodeStyle(NodeStyle.BLOCK).file(file).build();
+
+    var configMap = loader.createNode();
+    try {
+      setValuesToLoader(configMap);
+    } catch (SerializationException exception) {
+      exception.printStackTrace();
+    }
+
+    try {
+      loader.save(configMap);
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
+
 
   public void run() {
     if (status == GameStatus.DISABLED) {
@@ -178,38 +208,6 @@ public class Dungeon extends Game {
     Location location = coinSpawners.get(random.nextInt(coinSpawners.size()));
     world.dropItem(location, new ItemStack(Material.SUNFLOWER));
     SoundUtils.playCoinSound(players, location);
-  }
-
-  public void saveToConfig() {
-    File directory = new File(OpenDeckedOut.getInstance().getDataFolder(), "arenas");
-
-    if (!directory.exists()) {
-      if (!directory.mkdirs()) {
-        OpenDeckedOut.LOGGER.warn("Failed to create folder 'arenas', can not save arenas to file!");
-        return;
-      }
-    }
-    if (file == null) {
-      do {
-        file = new File(directory, uuid + ".yml");
-      } while (file.exists());
-    }
-
-    final ConfigurationLoader<? extends CommentedConfigurationNode> loader;
-    loader = YamlConfigurationLoader.builder().nodeStyle(NodeStyle.BLOCK).file(file).build();
-
-    var configMap = loader.createNode();
-    try {
-      setValuesToLoader(configMap);
-    } catch (SerializationException exception) {
-      exception.printStackTrace();
-    }
-
-    try {
-      loader.save(configMap);
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
   }
 
   private void setValuesToLoader(ConfigurationNode configMap) throws SerializationException {
@@ -313,7 +311,7 @@ public class Dungeon extends Game {
         entity.remove();
       }
     }
-    
+
     status = GameStatus.WAITING;
   }
 
