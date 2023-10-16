@@ -10,9 +10,7 @@ import com.github.advancedwipe.utils.Utils;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Random;
 import java.util.UUID;
@@ -27,7 +25,6 @@ import org.bukkit.Note.Tone;
 import org.bukkit.Sound;
 import org.bukkit.World;
 import org.bukkit.block.Block;
-import org.bukkit.block.BlockState;
 import org.bukkit.block.data.Ageable;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -48,21 +45,10 @@ import org.spongepowered.configurate.serialize.SerializationException;
 import org.spongepowered.configurate.yaml.NodeStyle;
 import org.spongepowered.configurate.yaml.YamlConfigurationLoader;
 
-public class Dungeon implements Game {
+public class Dungeon extends Game {
 
-  private File file;
-  private final UUID uuid;
-  private String name;
   private BukkitTask task;
-  private World world;
-  private Location pos1;
-  private Location pos2;
 
-  private GameStatus status = GameStatus.DISABLED;
-  private Map<Location, BlockState> originalState = new HashMap<>();
-  private boolean preparing = false;
-  private int countdown;
-  private Location spawn;
   private List<DungeonPlayer> players = new ArrayList<>();
 
   private List<Entity> ravagers = new ArrayList<>();
@@ -79,12 +65,11 @@ public class Dungeon implements Game {
   private CardManager cardManager;
 
   public Dungeon(String name) {
-    this.name = name;
-    this.uuid = java.util.UUID.randomUUID();
+    super(name);
   }
 
   public Dungeon(UUID uuid) {
-    this.uuid = uuid;
+    super(uuid);
   }
 
   public static Dungeon loadGame(File file) {
@@ -149,33 +134,6 @@ public class Dungeon implements Game {
     }
   }
 
-  @Override
-  public String getName() {
-    return name;
-  }
-
-  @Override
-  public UUID getUuid() {
-    return uuid;
-  }
-
-  @Override
-  public GameStatus getStatus() {
-    return null;
-  }
-
-  @Override
-  public void start() {
-    if (status == GameStatus.DISABLED) {
-      preparing = true;
-      countdown = -1;
-
-      recordOriginalDungeon();
-
-      status = GameStatus.WAITING;
-      preparing = false;
-    }
-  }
 
   public void run() {
     if (status == GameStatus.DISABLED) {
@@ -220,54 +178,6 @@ public class Dungeon implements Game {
     Location location = coinSpawners.get(random.nextInt(coinSpawners.size()));
     world.dropItem(location, new ItemStack(Material.SUNFLOWER));
     SoundUtils.playCoinSound(players, location);
-  }
-
-  @Override
-  public void stop() {
-
-  }
-
-  public World getWorld() {
-    return world;
-  }
-
-  public void setWorld(World world) {
-    this.world = world;
-  }
-
-  @Override
-  public Location getPos1() {
-    return this.pos1;
-  }
-
-  @Override
-  public void setPos1(Location location) {
-    this.pos1 = location;
-  }
-
-  @Override
-  public Location getPos2() {
-    return this.pos2;
-  }
-
-  @Override
-  public void setPos2(Location location) {
-    this.pos2 = location;
-
-  }
-
-  @Override
-  public int getGameTime() {
-    return 0;
-  }
-
-  @Override
-  public int countConnectedPlayers() {
-    return 0;
-  }
-
-  public File getFile() {
-    return file;
   }
 
   public void saveToConfig() {
@@ -317,13 +227,6 @@ public class Dungeon implements Game {
 
   }
 
-  public void setSpawn(Location location) {
-    this.spawn = location;
-  }
-
-  public Location getSpawn() {
-    return this.spawn;
-  }
 
   public void joinToGame(DungeonPlayer dungeonPlayer) {
     if (status == GameStatus.DISABLED) {
@@ -400,7 +303,7 @@ public class Dungeon implements Game {
   }
 
   private void rebuild() {
-    status = GameStatus.WAITING;
+    status = GameStatus.DISABLED;
     countdown = -1;
 
     resetToOriginalDungeon();
@@ -410,6 +313,8 @@ public class Dungeon implements Game {
         entity.remove();
       }
     }
+    
+    status = GameStatus.WAITING;
   }
 
   public Scoreboard getScoreBoard(@NotNull String name) {
@@ -470,28 +375,8 @@ public class Dungeon implements Game {
     });
   }
 
-  public void recordOriginalDungeon() {
-    for (Location location : DungeonUtils.getBlocksInBoundingBox(getPos1(), getPos2())) {
-      var state = location.getBlock().getState();
-      originalState.put(location, state);
-    }
-  }
-
-  public void resetToOriginalDungeon() {
-    for (Map.Entry<Location, BlockState> entry : originalState.entrySet()) {
-      Location location = entry.getKey();
-      BlockState state = entry.getValue();
-      world.setBlockData(location, state.getBlockData());
-    }
-    originalState.clear();
-  }
-
   public void addArtifactSpawn(Location location, int level, String difficulty) {
     artifacts.add(new Artifact(location, level, difficulty));
-  }
-
-  public void disable() {
-    this.status = GameStatus.DISABLED;
   }
 
   public void addBerryPosition(Location location) {
