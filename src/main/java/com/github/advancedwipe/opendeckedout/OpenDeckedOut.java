@@ -2,6 +2,7 @@ package com.github.advancedwipe.opendeckedout;
 
 import com.github.advancedwipe.opendeckedout.commands.Commands;
 import com.github.advancedwipe.opendeckedout.game.DungeonManager;
+import com.github.advancedwipe.opendeckedout.gui.GuiManager;
 import com.github.advancedwipe.opendeckedout.listener.PlayerListener;
 import com.github.advancedwipe.opendeckedout.player.DungeonPlayerManager;
 import com.github.advancedwipe.opendeckedout.player.StatManager;
@@ -27,6 +28,7 @@ public class OpenDeckedOut extends JavaPlugin implements Listener {
   private TranslationManager translationManager;
   private StatManager statManager;
   private ScoreboardLibrary scoreboardLibrary;
+  private GuiManager guiManager;
   private File arenasFolder;
   FileConfiguration config = null;
 
@@ -39,6 +41,7 @@ public class OpenDeckedOut extends JavaPlugin implements Listener {
     playerManager = new DungeonPlayerManager(this);
     translationManager = new TranslationManager(this);
     statManager = new StatManager(this);
+    guiManager = new GuiManager(this);
 
     try {
       scoreboardLibrary = ScoreboardLibrary.loadScoreboardLibrary(this);
@@ -108,5 +111,9 @@ public class OpenDeckedOut extends JavaPlugin implements Listener {
 
   public ScoreboardLibrary getScoreboardLibrary() {
     return scoreboardLibrary;
+  }
+  
+  public GuiManager getGuiManager() {
+    return guiManager;
   }
 }

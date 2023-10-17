@@ -14,6 +14,7 @@ repositories {
     mavenCentral()
     maven("https://repo.papermc.io/repository/maven-public/")
     maven("https://jitpack.io/")
+    maven("https://repo.mattstudios.me/artifactory/public/")
 }
 
 dependencies {
@@ -29,7 +30,9 @@ dependencies {
     runtimeOnly("com.github.megavexnetwork.scoreboard-library:scoreboard-library-implementation:$scoreboardLibraryVersion")
     runtimeOnly("com.github.megavexnetwork.scoreboard-library:scoreboard-library-modern:$scoreboardLibraryVersion")
 
-    annotationProcessor("cloud.commandframework:cloud-annotations:1.8.4")}
+    annotationProcessor("cloud.commandframework:cloud-annotations:1.8.4")
+    implementation("dev.triumphteam:triumph-gui:3.1.6")
+}
 
 java {
     toolchain.languageVersion.set(JavaLanguageVersion.of(17))

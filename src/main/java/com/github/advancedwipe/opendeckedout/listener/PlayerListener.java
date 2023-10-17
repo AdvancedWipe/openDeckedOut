@@ -22,6 +22,7 @@ public class PlayerListener implements Listener {
     Player player = event.getPlayer();
     player.sendMessage(
         Component.text("Welcome to openDeckedOut " + event.getPlayer().getName() + "!"));
+    OpenDeckedOut.getInstance().getGuiManager().open(player);
   }
 
   @EventHandler
