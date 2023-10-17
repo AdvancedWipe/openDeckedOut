@@ -4,6 +4,7 @@ import com.github.advancedwipe.commands.Commands;
 import com.github.advancedwipe.game.DungeonManager;
 import com.github.advancedwipe.listener.PlayerListener;
 import com.github.advancedwipe.player.DungeonPlayerManager;
+import com.github.advancedwipe.player.StatManager;
 import com.github.advancedwipe.translation.TranslationManager;
 import java.io.File;
 import org.apache.logging.log4j.Level;
@@ -21,6 +22,7 @@ public class OpenDeckedOut extends JavaPlugin implements Listener {
   private DungeonManager dungeonManager;
   private DungeonPlayerManager playerManager;
   private TranslationManager translationManager;
+  private StatManager statManager;
   private File arenasFolder;
   FileConfiguration config = null;
 
@@ -32,6 +34,7 @@ public class OpenDeckedOut extends JavaPlugin implements Listener {
     dungeonManager = new DungeonManager(this);
     playerManager = new DungeonPlayerManager(this);
     translationManager = new TranslationManager(this);
+    statManager = new StatManager(this);
 
     if (!loadConfig()) {
       LOGGER.log(Level.WARN, "Could not load config file! Disabling plugin.");
@@ -81,5 +84,9 @@ public class OpenDeckedOut extends JavaPlugin implements Listener {
 
   public TranslationManager getTranslationManager() {
     return translationManager;
+  }
+
+  public StatManager getStatManager() {
+    return statManager;
   }
 }
