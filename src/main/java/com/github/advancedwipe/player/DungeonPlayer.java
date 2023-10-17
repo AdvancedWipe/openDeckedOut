@@ -2,7 +2,6 @@ package com.github.advancedwipe.player;
 
 import com.github.advancedwipe.cards.Card;
 import com.github.advancedwipe.game.Dungeon;
-import com.github.advancedwipe.game.Game;
 import com.github.advancedwipe.game.Money;
 import java.util.List;
 import java.util.Map;
@@ -16,14 +15,14 @@ public class DungeonPlayer implements Player {
   private final org.bukkit.entity.Player player;
   private final UUID uuid;
   private Dungeon game;
-  private PlayerStats stats;
+  private PlayerStats playerStats;
 
   private SavedInventory savedInventory = new SavedInventory();
 
   public DungeonPlayer(org.bukkit.entity.Player player) {
     this.player = player;
     this.uuid = player.getUniqueId();
-    this.stats = new PlayerStats(player);
+    this.playerStats = new PlayerStats(player);
   }
 
   @Override
