@@ -4,6 +4,7 @@ import com.github.advancedwipe.OpenDeckedOut;
 import com.github.advancedwipe.cards.CardManager;
 import com.github.advancedwipe.game.artifact.Artifact;
 import com.github.advancedwipe.player.DungeonPlayer;
+import com.github.advancedwipe.sound.Heartbeat;
 import com.github.advancedwipe.utils.DungeonUtils;
 import com.github.advancedwipe.utils.SoundUtils;
 import com.github.advancedwipe.utils.Utils;
@@ -61,6 +62,7 @@ public class Dungeon extends Game {
   private List<PlayerSensor> sensors = new ArrayList<>();
   private List<Artifact> artifacts = new ArrayList<>();
   private List<Location> berrys = new ArrayList<>();
+  private Heartbeat heartbeat;
 
   public Dungeon(String name) {
     super(name);
@@ -263,6 +265,7 @@ public class Dungeon extends Game {
     // Dungeon has a tick frequency of 20 minecraft ticks (1 second) to process its events
     task = new DungeonRunnable(this).runTaskTimer(OpenDeckedOut.getInstance(), taskDelay,
         taskFrequency);
+    heartbeat = new Heartbeat(this, 100);
   }
 
   private void cancelTask() {
@@ -397,5 +400,9 @@ public class Dungeon extends Game {
 
   public void addBerryPosition(Location location) {
     berrys.add(location);
+  }
+
+  public List<DungeonPlayer> getPlayers() {
+    return players;
   }
 }
