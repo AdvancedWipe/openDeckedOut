@@ -207,9 +207,6 @@ public class Dungeon extends Game {
   }
 
   private void onEveryDungeonTick() {
-    players.forEach(p -> p.getPlayer()
-        .playNote(p.getPlayer().getLocation(), Instrument.FLUTE, Note.flat(1, Tone.E)));
-
     sensors.forEach(PlayerSensor::decreaseCooldown);
   }
 
