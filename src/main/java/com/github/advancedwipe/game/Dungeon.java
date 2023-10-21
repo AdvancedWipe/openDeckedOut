@@ -208,7 +208,6 @@ public class Dungeon extends Game {
 
     if (increasedCoinChance > 0) {
       dropCoin(baseCoinChance + 15);
-      increasedCoinChance--;
     } else {
       dropCoin(baseCoinChance);
     }
@@ -218,6 +217,10 @@ public class Dungeon extends Game {
   private void dropCoin(int chance) {
     if (random() <= chance) {
       dropCoinOnRandomCoinSpawner();
+
+      if (increasedCoinChance > 0) {
+        increasedCoinChance--;
+      }
     }
   }
 
@@ -336,6 +339,7 @@ public class Dungeon extends Game {
   private void rebuild() {
     status = GameStatus.DISABLED;
     countdown = -1;
+    increasedCoinChance = 0;
 
     resetToOriginalDungeon();
 

@@ -9,7 +9,9 @@ public class Status {
   }
 
   public int getCoinProbabilityIncrease() {
-    return coinProbabilityIncrease;
+    int probability = coinProbabilityIncrease;
+    coinProbabilityIncrease = 0;
+    return probability;
   }
 
   public void setCoinProbabilityIncrease(int coinProbability) {
