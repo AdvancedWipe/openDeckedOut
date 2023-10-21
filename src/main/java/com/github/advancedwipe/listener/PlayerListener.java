@@ -67,6 +67,9 @@ public class PlayerListener implements Listener {
 
     sensors.forEach(sensor -> {
       if (isPlayerInsideCircle(player, sensor.getLocation())) {
+        if (player.isSneaking()) {
+          return;
+        }
         dungeon.activatedSensor(player, sensor.getLocation());
       }
     });
