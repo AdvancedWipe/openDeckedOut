@@ -2,17 +2,17 @@ package com.github.advancedwipe.player;
 
 public class Status {
 
-  private double coinProbabilityIncrease;
+  private int coinProbabilityIncrease;
 
   public Status() {
     this.coinProbabilityIncrease = 0;
   }
 
-  public double getCoinProbabilityIncrease() {
+  public int getCoinProbabilityIncrease() {
     return coinProbabilityIncrease;
   }
 
-  public void setCoinProbabilityIncrease(double coinProbability) {
+  public void setCoinProbabilityIncrease(int coinProbability) {
     this.coinProbabilityIncrease = coinProbability;
   }
 

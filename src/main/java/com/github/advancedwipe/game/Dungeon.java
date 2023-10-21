@@ -4,6 +4,8 @@ import com.github.advancedwipe.OpenDeckedOut;
 import com.github.advancedwipe.cards.CardManager;
 import com.github.advancedwipe.game.artifact.Artifact;
 import com.github.advancedwipe.player.DungeonPlayer;
+import com.github.advancedwipe.player.PlayerStats;
+import com.github.advancedwipe.player.Status;
 import com.github.advancedwipe.sound.Heartbeat;
 import com.github.advancedwipe.utils.DungeonUtils;
 import com.github.advancedwipe.utils.SoundUtils;
@@ -18,11 +20,8 @@ import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 import org.apache.logging.log4j.Level;
 import org.bukkit.Bukkit;
-import org.bukkit.Instrument;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.Note;
-import org.bukkit.Note.Tone;
 import org.bukkit.Sound;
 import org.bukkit.World;
 import org.bukkit.block.Block;
@@ -63,6 +62,8 @@ public class Dungeon extends Game {
   private List<Artifact> artifacts = new ArrayList<>();
   private List<Location> berrys = new ArrayList<>();
   private Heartbeat heartbeat;
+  private final int baseCoinChance = 2;
+  private int increasedCoinChance = 0;
 
   public Dungeon(String name) {
     super(name);
@@ -184,10 +185,6 @@ public class Dungeon extends Game {
         onEveryTenthDungeonTick();
       }
 
-      if (random() <= 50) {
-        dropCoinOnRandomCoinSpawner();
-      }
-
       if (tick == maxTick) {
         onMaxDungeonTick();
         return;
@@ -208,6 +205,25 @@ public class Dungeon extends Game {
 
   private void onEveryDungeonTick() {
     sensors.forEach(PlayerSensor::decreaseCooldown);
+
+    players.forEach(dungeonPlayer -> {
+      Status playerStatus =  dungeonPlayer.getStatus();
+      increasedCoinChance = increasedCoinChance + playerStatus.getCoinProbabilityIncrease();
+    });
+
+    if (increasedCoinChance > 0) {
+      dropCoin(baseCoinChance + 15);
+      increasedCoinChance--;
+    } else {
+      dropCoin(baseCoinChance);
+    }
+
+  }
+
+  private void dropCoin(int chance) {
+    if (random() <= chance) {
+      dropCoinOnRandomCoinSpawner();
+    }
   }
 
   private void prepareDungeon() {
