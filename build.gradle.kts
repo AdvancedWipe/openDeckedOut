@@ -13,6 +13,7 @@ description = "OpenDeckedOut plugin"
 repositories {
     mavenCentral()
     maven("https://repo.papermc.io/repository/maven-public/")
+    maven("https://jitpack.io/")
 }
 
 dependencies {
@@ -22,6 +23,11 @@ dependencies {
     implementation("cloud.commandframework:cloud-annotations:1.8.4")
     implementation("cloud.commandframework:cloud-minecraft-extras:1.8.4")
     implementation("net.kyori:adventure-platform-bukkit:4.3.0")
+
+    val scoreboardLibraryVersion = "2.0.0-RC12"
+    implementation("com.github.megavexnetwork.scoreboard-library:scoreboard-library-api:$scoreboardLibraryVersion")
+    runtimeOnly("com.github.megavexnetwork.scoreboard-library:scoreboard-library-implementation:$scoreboardLibraryVersion")
+    runtimeOnly("com.github.megavexnetwork.scoreboard-library:scoreboard-library-modern:$scoreboardLibraryVersion")
 
     annotationProcessor("cloud.commandframework:cloud-annotations:1.8.4")}
 

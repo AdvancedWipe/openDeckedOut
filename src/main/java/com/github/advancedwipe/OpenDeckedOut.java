@@ -7,6 +7,11 @@ import com.github.advancedwipe.player.DungeonPlayerManager;
 import com.github.advancedwipe.player.StatManager;
 import com.github.advancedwipe.translation.TranslationManager;
 import java.io.File;
+import net.kyori.adventure.text.Component;
+import net.megavex.scoreboardlibrary.api.ScoreboardLibrary;
+import net.megavex.scoreboardlibrary.api.exception.NoPacketAdapterAvailableException;
+import net.megavex.scoreboardlibrary.api.noop.NoopScoreboardLibrary;
+import net.megavex.scoreboardlibrary.api.sidebar.Sidebar;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -23,6 +28,7 @@ public class OpenDeckedOut extends JavaPlugin implements Listener {
   private DungeonPlayerManager playerManager;
   private TranslationManager translationManager;
   private StatManager statManager;
+  private ScoreboardLibrary scoreboardLibrary;
   private File arenasFolder;
   FileConfiguration config = null;
 
@@ -35,6 +41,13 @@ public class OpenDeckedOut extends JavaPlugin implements Listener {
     playerManager = new DungeonPlayerManager(this);
     translationManager = new TranslationManager(this);
     statManager = new StatManager(this);
+
+    try {
+      scoreboardLibrary = ScoreboardLibrary.loadScoreboardLibrary(this);
+    } catch (NoPacketAdapterAvailableException e) {
+      // If no packet adapter was found, you can fallback to the no-op implementation:
+      scoreboardLibrary = new NoopScoreboardLibrary();
+    }
 
     if (!loadConfig()) {
       LOGGER.log(Level.WARN, "Could not load config file! Disabling plugin.");
@@ -88,5 +101,9 @@ public class OpenDeckedOut extends JavaPlugin implements Listener {
 
   public StatManager getStatManager() {
     return statManager;
+  }
+
+  public ScoreboardLibrary getScoreboardLibrary() {
+    return scoreboardLibrary;
   }
 }

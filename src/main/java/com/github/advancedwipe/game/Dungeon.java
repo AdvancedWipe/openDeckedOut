@@ -4,7 +4,6 @@ import com.github.advancedwipe.OpenDeckedOut;
 import com.github.advancedwipe.cards.CardManager;
 import com.github.advancedwipe.game.artifact.Artifact;
 import com.github.advancedwipe.player.DungeonPlayer;
-import com.github.advancedwipe.player.PlayerStats;
 import com.github.advancedwipe.player.Status;
 import com.github.advancedwipe.sound.Heartbeat;
 import com.github.advancedwipe.utils.DungeonUtils;
@@ -18,6 +17,7 @@ import java.util.Objects;
 import java.util.Random;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.apache.logging.log4j.Level;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -64,6 +64,7 @@ public class Dungeon extends Game {
   private Heartbeat heartbeat;
   private final int baseCoinChance = 2;
   private int increasedCoinChance = 0;
+  private com.github.advancedwipe.game.Scoreboard scoreboard = new com.github.advancedwipe.game.Scoreboard();
 
   public Dungeon(String name) {
     super(name);
@@ -207,7 +208,7 @@ public class Dungeon extends Game {
     sensors.forEach(PlayerSensor::decreaseCooldown);
 
     players.forEach(dungeonPlayer -> {
-      Status playerStatus =  dungeonPlayer.getStatus();
+      Status playerStatus = dungeonPlayer.getStatus();
       increasedCoinChance = increasedCoinChance + playerStatus.getCoinProbabilityIncrease();
     });
 
@@ -297,7 +298,9 @@ public class Dungeon extends Game {
         players.add(dungeonPlayer);
       }
       dungeonPlayer.saveInventory();
-      player.setScoreboard(getScoreBoard(player.getName()));
+
+      scoreboard.addPlayer(player);
+
       player.teleport(getSpawn());
 
       player.getInventory().addItem(artifacts.get(0).getCompass());
@@ -325,7 +328,7 @@ public class Dungeon extends Game {
     }
 
     dungeonPlayer.restoreInventory();
-    dungeonPlayer.getPlayer().setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
+    scoreboard.removePlayer(dungeonPlayer);
     players.remove(dungeonPlayer);
 
     if (players.isEmpty()) {
@@ -347,31 +350,6 @@ public class Dungeon extends Game {
     }
 
     status = GameStatus.WAITING;
-  }
-
-  public Scoreboard getScoreBoard(@NotNull String name) {
-    Scoreboard board = Bukkit.getScoreboardManager().getNewScoreboard();
-
-    // Create an objective
-    Objective obj = board.registerNewObjective("CustomObjective", "dummy",
-        "       openDeckedOut       ");
-
-    // Assign the objective to a display slot (e.g., SIDEBAR)
-    obj.setDisplaySlot(DisplaySlot.SIDEBAR);
-
-    obj.getScore(" ").setScore(15);
-    obj.getScore("State 1: ██████████").setScore(14);
-    obj.getScore("  ").setScore(13);
-    obj.getScore("State 2: ██████████").setScore(12);
-    obj.getScore("   ").setScore(11);
-    obj.getScore("State 3: ██████████").setScore(10);
-    obj.getScore("    ").setScore(9);
-    obj.getScore("State 4: ██████████").setScore(8);
-    obj.getScore("     ").setScore(7);
-    obj.getScore("Cards:   ██████████").setScore(6);
-    obj.getScore("           ██████████").setScore(5);
-
-    return board;
   }
 
   public void addRavagerSpawn(Location location) {
