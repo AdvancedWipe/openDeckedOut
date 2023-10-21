@@ -7,11 +7,9 @@ import com.github.advancedwipe.player.DungeonPlayerManager;
 import com.github.advancedwipe.player.StatManager;
 import com.github.advancedwipe.translation.TranslationManager;
 import java.io.File;
-import net.kyori.adventure.text.Component;
 import net.megavex.scoreboardlibrary.api.ScoreboardLibrary;
 import net.megavex.scoreboardlibrary.api.exception.NoPacketAdapterAvailableException;
 import net.megavex.scoreboardlibrary.api.noop.NoopScoreboardLibrary;
-import net.megavex.scoreboardlibrary.api.sidebar.Sidebar;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -81,6 +79,11 @@ public class OpenDeckedOut extends JavaPlugin implements Listener {
     reloadConfig();
     this.config = getConfig();
     return true;
+  }
+
+  @Override
+  public void onDisable() {
+    scoreboardLibrary.close();
   }
 
   public static OpenDeckedOut getInstance() {
