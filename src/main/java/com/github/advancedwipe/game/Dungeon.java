@@ -207,9 +207,7 @@ public class Dungeon extends Game {
       increasedCoinChance = increasedCoinChance + playerStatus.getCoinProbabilityIncrease();
     });
 
-    if (increasedCoinChance != scoreboard.getTreasureDrops()) {
-      scoreboard.setTreasureDrops(increasedCoinChance);
-    }
+    updateScoreboard();
 
     if (increasedCoinChance > 0) {
       dropCoin(baseCoinChance + 15);
@@ -217,6 +215,12 @@ public class Dungeon extends Game {
       dropCoin(baseCoinChance);
     }
 
+  }
+
+  private void updateScoreboard() {
+    if (increasedCoinChance != scoreboard.getTreasureDrops()) {
+      scoreboard.setTreasureDrops(increasedCoinChance);
+    }
   }
 
   private void dropCoin(int chance) {

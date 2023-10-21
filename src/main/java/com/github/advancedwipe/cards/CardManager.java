@@ -52,6 +52,10 @@ public class CardManager {
     return library;
   }
 
+  public int getLibrarySize() {
+    return library.size();
+  }
+
   public List<Card> getHand() {
     return hand;
   }
