@@ -3,9 +3,18 @@ package com.github.advancedwipe.game;
 
 import com.github.advancedwipe.OpenDeckedOut;
 import com.github.advancedwipe.player.DungeonPlayer;
+import java.util.ArrayList;
+import java.util.List;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.Style;
+import net.kyori.adventure.text.format.TextDecoration;
+import net.kyori.adventure.text.minimessage.MiniMessage;
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import net.megavex.scoreboardlibrary.api.sidebar.Sidebar;
+import net.megavex.scoreboardlibrary.api.sidebar.component.ComponentSidebarLayout;
+import net.megavex.scoreboardlibrary.api.sidebar.component.SidebarComponent;
+import net.megavex.scoreboardlibrary.api.sidebar.component.animation.CollectionSidebarAnimation;
+import net.megavex.scoreboardlibrary.api.sidebar.component.animation.SidebarAnimation;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
@@ -15,21 +24,13 @@ public class Scoreboard {
   private int treasureDrops = 0;
 
   private Sidebar sidebar;
+  private ComponentSidebarLayout componentSidebar;
+  private SidebarAnimation<Component> titleAnimation;
+  private StringBuilder coinFields = new StringBuilder();
 
   public Scoreboard() {
     this.maxTreasureDrops = 10;
-
-//    bj.getScore(" ").setScore(15);
-//    obj.getScore(NamedTextColor.RED + "State 1: ██████████" + NamedTextColor.RED).setScore(14);
-//    obj.getScore("  ").setScore(13);
-//    obj.getScore("State 2: ██████████").setScore(12);
-//    obj.getScore("   ").setScore(11);
-//    obj.getScore("State 3: ██████████").setScore(10);
-//    obj.getScore("    ").setScore(9);
-//    obj.getScore("State 4: ██████████").setScore(8);
-//    obj.getScore("     ").setScore(7);
-//    obj.getScore("Cards:   ██████████").setScore(6);
-//    obj.getScore("           ██████████").setScore(5);
+    createSidebar();
   }
 
   public void addPlayer(@NotNull DungeonPlayer dungeonPlayer) {
@@ -37,9 +38,6 @@ public class Scoreboard {
   }
 
   public void addPlayer(@NotNull Player player) {
-    if (sidebar == null) {
-      createSidebar();
-    }
 
     sidebar.addPlayer(player);
   }
@@ -47,12 +45,26 @@ public class Scoreboard {
   private void createSidebar() {
     sidebar = OpenDeckedOut.getInstance().getScoreboardLibrary().createSidebar();
 
-    sidebar.title(Component.text("Sidebar Title"));
-    sidebar.line(0, Component.empty());
-    sidebar.line(1, Component.text("Line 1"));
-    sidebar.line(2, Component.text("Line 2"));
-    sidebar.line(2, Component.empty());
-    sidebar.line(3, Component.text("epicserver.net"));
+    titleAnimation = createGradientAnimation(
+        Component.text("     openDO     ", Style.style(TextDecoration.BOLD)));
+    var title = SidebarComponent.animatedLine(titleAnimation);
+
+    SidebarComponent lines = SidebarComponent.builder().addBlankLine()
+        .addDynamicLine(() -> Component.text("Coins: " + coinFields.toString())).build();
+
+    this.componentSidebar = new ComponentSidebarLayout(title, lines);
+  }
+
+  public void update() {
+    updateStrings();
+
+    titleAnimation.nextFrame();
+    componentSidebar.apply(sidebar);
+  }
+
+  private void updateStrings() {
+    coinFields = new StringBuilder();
+    coinFields.append("█".repeat(Math.max(0, treasureDrops)));
   }
 
   public void removePlayer(DungeonPlayer player) {
@@ -68,13 +80,31 @@ public class Scoreboard {
     }
   }
 
+  private @NotNull SidebarAnimation<Component> createGradientAnimation(@NotNull Component text) {
+    float step = 1f / 8f;
 
-  public String getTreasureDrops() {
-    return null;
+    List<Component> frames = new ArrayList<>((int) (2f / step));
+
+    float phase = -1f;
+    while (phase < 1) {
+      frames.add(MiniMessage.miniMessage().deserialize("<gradient:yellow:gold:" + phase + "><text>",
+          Placeholder.component("text", text)));
+      phase += step;
+    }
+
+    return new CollectionSidebarAnimation<>(frames);
   }
 
-  public void increaseTreasureDrops(int value) {
-    this.treasureDrops = treasureDrops + value;
+  public int getTreasureDrops() {
+    return treasureDrops;
+  }
+
+  public void setTreasureDrops(int value) {
+    this.treasureDrops = value;
+  }
+
+  public void decreaseTreasureDrops() {
+    this.treasureDrops--;
   }
 
 }

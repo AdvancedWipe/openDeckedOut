@@ -42,7 +42,8 @@ import org.spongepowered.configurate.yaml.YamlConfigurationLoader;
 public class Dungeon extends Game {
 
   private final Random random = new Random();
-  private BukkitTask task;
+  private BukkitTask dungeonTask;
+  private BukkitTask scoreboardTask;
   private final int minRandom = 1;
   private final int maxRandom = 100;
   private int tick;
@@ -206,6 +207,10 @@ public class Dungeon extends Game {
       increasedCoinChance = increasedCoinChance + playerStatus.getCoinProbabilityIncrease();
     });
 
+    if (increasedCoinChance != scoreboard.getTreasureDrops()) {
+      scoreboard.setTreasureDrops(increasedCoinChance);
+    }
+
     if (increasedCoinChance > 0) {
       dropCoin(baseCoinChance + 15);
     } else {
@@ -220,6 +225,7 @@ public class Dungeon extends Game {
 
       if (increasedCoinChance > 0) {
         increasedCoinChance--;
+        scoreboard.decreaseTreasureDrops();
       }
     }
   }
@@ -274,16 +280,20 @@ public class Dungeon extends Game {
     final int taskFrequency = 20;
     final int taskDelay = 0;
     // Dungeon has a tick frequency of 20 minecraft ticks (1 second) to process its events
-    task = new DungeonRunnable(this).runTaskTimer(OpenDeckedOut.getInstance(), taskDelay,
+    dungeonTask = new DungeonRunnable(this).runTaskTimer(OpenDeckedOut.getInstance(), taskDelay,
         taskFrequency);
+    scoreboardTask = new ScoreboardRunnable(scoreboard).runTaskTimer(OpenDeckedOut.getInstance(),
+        taskDelay, 1);
     heartbeat = new Heartbeat(this, 100);
   }
 
   private void cancelTask() {
-    if (task != null) {
-      task.cancel();
+    if (dungeonTask != null) {
+      dungeonTask.cancel();
+      scoreboardTask.cancel();
       heartbeat.cancel();
-      task = null;
+      dungeonTask = null;
+      scoreboardTask = null;
       heartbeat = null;
     }
   }
