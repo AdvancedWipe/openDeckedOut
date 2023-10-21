@@ -37,4 +37,8 @@ public class Heartbeat {
     });
   }
 
+  public void cancel() {
+    Bukkit.getScheduler().cancelTask(taskId);
+  }
+
 }
