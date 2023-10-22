@@ -32,6 +32,7 @@ public class Scoreboard {
   private final Statusbar stateTwoStatus;
   private final Statusbar stateThreeStatus;
   private final Statusbar stateFourStatus;
+  private final MultiRowStatusbar libraryStatus;
   private Component libraryMessageOne;
   private Component libraryMessageTwo;
 
@@ -46,6 +47,8 @@ public class Scoreboard {
         NamedTextColor.GRAY);
     this.stateFourStatus = new Statusbar("State4:", '■', 15, 0, NamedTextColor.DARK_AQUA,
         NamedTextColor.GRAY);
+    this.libraryStatus = new MultiRowStatusbar(2, "Library:", "          ", '▌', 40, 0,
+        NamedTextColor.WHITE, NamedTextColor.GRAY);
 
     createSidebar();
   }
@@ -66,8 +69,6 @@ public class Scoreboard {
         Component.text("     openDO     ", Style.style(TextDecoration.BOLD)));
     var title = SidebarComponent.animatedLine(titleAnimation);
 
-    updateMessages();
-
     SidebarComponent lines = SidebarComponent.builder()
         .addBlankLine()
         .addDynamicLine(treasureStatus::getMessage)
@@ -78,29 +79,22 @@ public class Scoreboard {
         .addBlankLine()
         .addDynamicLine(stateFourStatus::getMessage)
         .addBlankLine()
-        .addDynamicLine(() -> libraryMessageOne)
-        .addDynamicLine(() -> libraryMessageTwo)
+        .addDynamicLine(() -> libraryStatus.getRow(0).getMessage())
+        .addDynamicLine(() -> libraryStatus.getRow(1).getMessage())
         .build();
 
     this.componentSidebar = new ComponentSidebarLayout(title, lines);
   }
 
   public void update() {
-    updateMessages();
     treasureStatus.setStatus(treasureDrops);
     stateTwoStatus.setStatus(0);
     stateThreeStatus.setStatus(0);
     stateFourStatus.setStatus(0);
+    libraryStatus.setStatus(0);
 
     titleAnimation.nextFrame();
     componentSidebar.apply(sidebar);
-  }
-
-  private void updateMessages() {
-    libraryMessageOne = buildStatusbar("Library:", "▌", 20, 0, NamedTextColor.WHITE,
-        NamedTextColor.GRAY);
-    libraryMessageTwo = buildStatusbar("          ", "▌", 20, 0, NamedTextColor.WHITE,
-        NamedTextColor.GRAY);
   }
 
   private Component buildStatusbar(String key, String statusIcon, int size, int status,
