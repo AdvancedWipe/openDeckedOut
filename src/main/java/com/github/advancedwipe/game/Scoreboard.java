@@ -28,16 +28,25 @@ public class Scoreboard {
   private ComponentSidebarLayout componentSidebar;
   private SidebarAnimation<Component> titleAnimation;
   private StringBuilder coinFields = new StringBuilder();
-  private Component treasureMessage;
-  private Component stateTwoMessage;
-  private Component stateThreeMessage;
-  private Component stateFourMessage;
+  private final Statusbar treasureStatus;
+  private final Statusbar stateTwoStatus;
+  private final Statusbar stateThreeStatus;
+  private final Statusbar stateFourStatus;
   private Component libraryMessageOne;
   private Component libraryMessageTwo;
 
 
   public Scoreboard() {
     this.maxTreasureDrops = 10;
+    this.treasureStatus = new Statusbar("Treasure:", '■', 15, treasureDrops, NamedTextColor.YELLOW,
+        NamedTextColor.GRAY);
+    this.stateTwoStatus = new Statusbar("State2:", '■', 15, treasureDrops, NamedTextColor.AQUA,
+        NamedTextColor.GRAY);
+    this.stateThreeStatus = new Statusbar("State3:", '■', 15, treasureDrops, NamedTextColor.RED,
+        NamedTextColor.GRAY);
+    this.stateFourStatus = new Statusbar("State4:", '■', 15, 0, NamedTextColor.DARK_AQUA,
+        NamedTextColor.GRAY);
+
     createSidebar();
   }
 
@@ -61,13 +70,13 @@ public class Scoreboard {
 
     SidebarComponent lines = SidebarComponent.builder()
         .addBlankLine()
-        .addDynamicLine(() -> treasureMessage)
+        .addDynamicLine(treasureStatus::getMessage)
         .addBlankLine()
-        .addDynamicLine(() -> stateTwoMessage)
+        .addDynamicLine(stateTwoStatus::getMessage)
         .addBlankLine()
-        .addDynamicLine(() -> stateThreeMessage)
+        .addDynamicLine(stateThreeStatus::getMessage)
         .addBlankLine()
-        .addDynamicLine(() -> stateFourMessage)
+        .addDynamicLine(stateFourStatus::getMessage)
         .addBlankLine()
         .addDynamicLine(() -> libraryMessageOne)
         .addDynamicLine(() -> libraryMessageTwo)
@@ -78,18 +87,20 @@ public class Scoreboard {
 
   public void update() {
     updateMessages();
+    treasureStatus.setStatus(treasureDrops);
+    stateTwoStatus.setStatus(0);
+    stateThreeStatus.setStatus(0);
+    stateFourStatus.setStatus(0);
 
     titleAnimation.nextFrame();
     componentSidebar.apply(sidebar);
   }
 
   private void updateMessages() {
-    treasureMessage = buildStatusbar("Treasure:", "■", 15, treasureDrops, NamedTextColor.YELLOW, NamedTextColor.GRAY);
-    stateTwoMessage = buildStatusbar("State2:", "■", 15, 0, NamedTextColor.AQUA, NamedTextColor.GRAY);
-    stateThreeMessage = buildStatusbar("State3:", "■", 15, 0, NamedTextColor.RED, NamedTextColor.GRAY);
-    stateFourMessage = buildStatusbar("State4:", "■", 15, 0, NamedTextColor.DARK_AQUA, NamedTextColor.GRAY);
-    libraryMessageOne = buildStatusbar("Library:", "▌", 20, 0, NamedTextColor.WHITE, NamedTextColor.GRAY);
-    libraryMessageTwo = buildStatusbar("          ", "▌", 20, 0, NamedTextColor.WHITE, NamedTextColor.GRAY);
+    libraryMessageOne = buildStatusbar("Library:", "▌", 20, 0, NamedTextColor.WHITE,
+        NamedTextColor.GRAY);
+    libraryMessageTwo = buildStatusbar("          ", "▌", 20, 0, NamedTextColor.WHITE,
+        NamedTextColor.GRAY);
   }
 
   private Component buildStatusbar(String key, String statusIcon, int size, int status,
