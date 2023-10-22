@@ -355,6 +355,8 @@ public class Dungeon extends Game {
     countdown = -1;
     increasedCoinChance = 0;
 
+    scoreboard = new Scoreboard();
+
     resetToOriginalDungeon();
 
     for (Entity entity : this.world.getEntities()) {

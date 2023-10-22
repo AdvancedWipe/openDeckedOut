@@ -58,7 +58,6 @@ public class Scoreboard {
   }
 
   public void addPlayer(@NotNull Player player) {
-
     sidebar.addPlayer(player);
   }
 
