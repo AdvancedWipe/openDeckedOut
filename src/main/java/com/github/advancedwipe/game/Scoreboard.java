@@ -125,7 +125,7 @@ public class Scoreboard {
   }
 
   private @NotNull SidebarAnimation<Component> createGradientAnimation(@NotNull Component text) {
-    float step = 1f / 8f;
+    float step = 1f / 50f;
 
     List<Component> frames = new ArrayList<>((int) (2f / step));
 
