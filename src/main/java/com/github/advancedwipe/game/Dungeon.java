@@ -59,14 +59,20 @@ public class Dungeon extends Game {
   private Heartbeat heartbeat;
   private final int baseCoinChance = 2;
   private int increasedCoinChance = 0;
+  private int clank;
+  private int clankBlock;
   private com.github.advancedwipe.game.Scoreboard scoreboard = new com.github.advancedwipe.game.Scoreboard();
 
   public Dungeon(String name) {
     super(name);
+    this.clank = 0;
+    this.clankBlock = 0;
   }
 
   public Dungeon(UUID uuid) {
     super(uuid);
+    this.clank = 0;
+    this.clankBlock = 0;
   }
 
   public static Dungeon loadGame(File file) {
@@ -354,6 +360,8 @@ public class Dungeon extends Game {
     status = GameStatus.DISABLED;
     countdown = -1;
     increasedCoinChance = 0;
+    clank = 0;
+    clankBlock = 0;
 
     scoreboard = new Scoreboard();
 
@@ -395,10 +403,44 @@ public class Dungeon extends Game {
           return;
         }
         sensor.activated(player);
+        increaseClank();
         player.playSound(location, Sound.BLOCK_SCULK_SHRIEKER_SHRIEK, 1, 1);
         player.addPotionEffect(new PotionEffect(PotionEffectType.DARKNESS, 60, 1));
       }
     });
+  }
+
+  private void increaseClank() {
+    if (hasClankBlock()) {
+      clankBlock--;
+    } else {
+      clank++;
+    }
+
+    updateHeartbeat();
+
+    if (clank >= 20) {
+      System.out.println("Clank maxed out!");
+    }
+  }
+
+  private void updateHeartbeat() {
+    if (heartbeat.getDelay() == 20) {
+      return;
+    }
+
+    int stepSize = 5;
+
+    if (clank >= 16) {
+      heartbeat.changeSoundFrequency(20);
+    } else {
+      int delay = stepSize * clank;
+      heartbeat.changeSoundFrequency(100 - delay);
+    }
+  }
+
+  private boolean hasClankBlock() {
+    return clankBlock > 0;
   }
 
   public void addArtifactSpawn(Location location, int level, String difficulty) {

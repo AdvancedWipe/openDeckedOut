@@ -41,4 +41,8 @@ public class Heartbeat {
     Bukkit.getScheduler().cancelTask(taskId);
   }
 
+  public int getDelay() {
+    return delay;
+  }
+
 }
