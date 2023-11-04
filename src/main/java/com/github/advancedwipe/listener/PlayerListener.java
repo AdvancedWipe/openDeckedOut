@@ -2,6 +2,7 @@ package com.github.advancedwipe.listener;
 
 import com.github.advancedwipe.OpenDeckedOut;
 import com.github.advancedwipe.game.Dungeon;
+import com.github.advancedwipe.player.DungeonPlayer;
 import com.github.advancedwipe.utils.PlayerUtils;
 import net.kyori.adventure.text.Component;
 import org.apache.logging.log4j.Level;
@@ -54,6 +55,17 @@ public class PlayerListener implements Listener {
       return;
     }
 
+    checkSensors(event, dungeon, player);
+    checkExit(event, dungeon, dungeonPlayer);
+  }
+
+  private void checkExit(PlayerMoveEvent event, Dungeon dungeon, DungeonPlayer player) {
+    if (isPlayerInsideCircle(player.getPlayer(), dungeon.getExit(), 2.0)) {
+      dungeon.internalLeavePlayer(player);
+    }
+  }
+
+  private void checkSensors(PlayerMoveEvent event, Dungeon dungeon, Player player) {
     var sensors = dungeon.getSensors();
 
     if (sensors == null) {
@@ -66,7 +78,7 @@ public class PlayerListener implements Listener {
     }
 
     sensors.forEach(sensor -> {
-      if (isPlayerInsideCircle(player, sensor.getLocation())) {
+      if (isPlayerInsideCircle(player, sensor.getLocation(), 7.0)) {
         if (player.isSneaking()) {
           return;
         }
@@ -75,11 +87,10 @@ public class PlayerListener implements Listener {
     });
   }
 
-  private boolean isPlayerInsideCircle(Player player, Location center) {
-    double circleRadius = 7.0;
+  private boolean isPlayerInsideCircle(Player player, Location center, double radius) {
     Location playerLocation = player.getLocation();
     double distance = playerLocation.distance(center);
-    return distance <= circleRadius;
+    return distance <= radius;
   }
 
   @EventHandler

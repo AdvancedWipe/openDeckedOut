@@ -18,6 +18,7 @@ public abstract class Game {
   protected Location pos1;
   protected Location pos2;
   protected Location spawn;
+  protected Location exit;
   protected GameStatus status = GameStatus.DISABLED;
   protected int countdown;
   protected boolean preparing = false;
@@ -110,6 +111,14 @@ public abstract class Game {
 
   public Location getSpawn() {
     return this.spawn;
+  }
+
+  public void setExit(Location location) {
+    this.exit = location;
+  }
+
+  public Location getExit() {
+    return exit;
   }
 
   public GameStatus getStatus() {

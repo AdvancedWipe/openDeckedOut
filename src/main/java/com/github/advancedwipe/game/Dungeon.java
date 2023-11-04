@@ -126,6 +126,8 @@ public class Dungeon extends Game {
           Objects.requireNonNull(configMap.node("artifactLocations").getList(String.class)));
       game.berrys = Utils.readStringListToLocationList(game.world,
           Objects.requireNonNull(configMap.node("berrys").getList(String.class)));
+      game.exit = Utils.readStringToLocation(game.world,
+          Objects.requireNonNull(configMap.node("exit").getString()));
 
       game.start();
       OpenDeckedOut.LOGGER.log(Level.INFO, String.format("Arena '%s' loaded!", game.name));
@@ -269,6 +271,7 @@ public class Dungeon extends Game {
     configMap.node("playerSensors").set(Utils.writeSensorListToString(sensors));
     configMap.node("artifactLocations").set(Utils.writeArtifactListToString(artifacts));
     configMap.node("berrys").set(Utils.writeLocationListToStringList(berrys));
+    configMap.node("exit").set(Utils.writeLocationToString(exit));
 
   }
 

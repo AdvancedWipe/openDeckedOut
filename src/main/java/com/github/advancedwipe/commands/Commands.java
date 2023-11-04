@@ -22,7 +22,6 @@ import java.util.stream.Stream;
 import org.apache.logging.log4j.Level;
 import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
-import org.bukkit.StructureType;
 import org.bukkit.block.structure.Mirror;
 import org.bukkit.block.structure.StructureRotation;
 import org.bukkit.command.CommandSender;
@@ -131,6 +130,23 @@ public final class Commands {
         .permission("deckedout.command.barrier")
         .handler(this::barrier));
 
+    this.cmdManager.command(admin.literal("exit", ArgumentDescription.of("Set exit position"))
+        .permission("deckedout.command.exit").handler(this::addExit));
+
+  }
+
+  private void addExit(CommandContext<CommandSender> context) {
+    final Player player = (Player) context.getSender();
+    Dungeon dungeon = getDungeonFromWorkspace(context, player);
+    if (dungeon == null) {
+      player.sendMessage("Dungeon name not available");
+      return;
+    }
+
+    var location = player.getLocation();
+    dungeon.setExit(location);
+
+    player.sendMessage(String.format("Set exit to '%s'", Utils.locationToXYZ(location)));
   }
 
   private void barrier(CommandContext<CommandSender> context) {
@@ -228,7 +244,7 @@ public final class Commands {
     int level = context.get("level");
     String difficulty = context.get("difficulty");
 
-   dungeon.addArtifactSpawn(location, level, difficulty);
+    dungeon.addArtifactSpawn(location, level, difficulty);
   }
 
   private void placeSensor(CommandContext<CommandSender> context) {
