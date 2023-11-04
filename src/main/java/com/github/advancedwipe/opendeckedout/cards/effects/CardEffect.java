@@ -1,4 +1,4 @@
-package com.github.advancedwipe.opendeckedout.cards;
+package com.github.advancedwipe.opendeckedout.cards.effects;
 
 import com.github.advancedwipe.opendeckedout.player.DungeonPlayer;
 

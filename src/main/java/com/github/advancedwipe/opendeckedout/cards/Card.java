@@ -1,5 +1,6 @@
 package com.github.advancedwipe.opendeckedout.cards;
 
+import com.github.advancedwipe.opendeckedout.cards.effects.CardEffect;
 import com.github.advancedwipe.opendeckedout.player.DungeonPlayer;
 import java.util.ArrayList;
 import java.util.List;

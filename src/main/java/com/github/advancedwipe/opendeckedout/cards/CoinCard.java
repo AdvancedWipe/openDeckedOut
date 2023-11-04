@@ -1,5 +1,7 @@
 package com.github.advancedwipe.opendeckedout.cards;
 
+import com.github.advancedwipe.opendeckedout.cards.effects.CoinEffect;
+
 public class CoinCard extends Card {
 
   public CoinCard() {
