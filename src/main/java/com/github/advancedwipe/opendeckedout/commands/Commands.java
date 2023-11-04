@@ -83,6 +83,11 @@ public final class Commands {
             ArgumentDescription.of("Leave your current dungeon"))
         .permission("deckedout.command.leave")
         .handler(this::leave));
+
+    this.cmdManager.command(deckedout.literal("deck",
+            ArgumentDescription.of("View your decks"))
+        .permission("deckedout.command.deck")
+        .handler(this::displayDeck));
   }
 
   private void registerAdminCommands(Builder<CommandSender> deckedout) {
@@ -133,6 +138,12 @@ public final class Commands {
     this.cmdManager.command(admin.literal("exit", ArgumentDescription.of("Set exit position"))
         .permission("deckedout.command.exit").handler(this::addExit));
 
+  }
+
+  private void displayDeck(CommandContext<CommandSender> context) {
+    final Player player = (Player) context.getSender();
+
+    OpenDeckedOut.getInstance().getGuiManager().open(player);
   }
 
   private void addExit(CommandContext<CommandSender> context) {
