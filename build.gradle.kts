@@ -18,6 +18,9 @@ repositories {
 }
 
 dependencies {
+    testImplementation(platform("org.junit:junit-bom:5.9.1"))
+    testImplementation("org.junit.jupiter:junit-jupiter")
+    testImplementation("org.mockito:mockito-core:3.+")
     compileOnly("io.papermc.paper:paper-api:1.20.1-R0.1-SNAPSHOT")
     paperweight.paperDevBundle("1.20.1-R0.1-SNAPSHOT")
     implementation("cloud.commandframework:cloud-paper:1.8.4")
@@ -63,9 +66,15 @@ tasks {
         options.encoding = Charsets.UTF_8.name() // We want UTF-8 for everything
         options.release.set(17)
     }
+
+    test {
+        useJUnitPlatform()
+    }
+
     javadoc {
         options.encoding = Charsets.UTF_8.name() // We want UTF-8 for everything
     }
+
     processResources {
         filteringCharset = Charsets.UTF_8.name() // We want UTF-8 for everything
         val props = mapOf(
