@@ -17,6 +17,12 @@ import org.bukkit.event.player.PlayerQuitEvent;
 
 public class PlayerListener implements Listener {
 
+  private final OpenDeckedOut plugin;
+
+  public PlayerListener(OpenDeckedOut plugin) {
+    this.plugin = plugin;
+  }
+
   @EventHandler
   public void onPlayerJoin(PlayerJoinEvent event) {
     Player player = event.getPlayer();
@@ -30,7 +36,7 @@ public class PlayerListener implements Listener {
       return;
     }
 
-    if (OpenDeckedOut.getInstance().getPlayerManager().isPlayerInGame(event.getPlayer())) {
+    if (plugin.getPlayerManager().isPlayerInGame(event.getPlayer())) {
       OpenDeckedOut.LOGGER.log(Level.DEBUG,
           event.getPlayer().getName() + "tried to break a block, but was canceled");
       event.setCancelled(true);
@@ -42,7 +48,7 @@ public class PlayerListener implements Listener {
   public void onPlayerMove(PlayerMoveEvent event) {
     Player player = event.getPlayer();
 
-    var dungeonPlayer = OpenDeckedOut.getInstance().getPlayerManager().getPlayer(player)
+    var dungeonPlayer = plugin.getPlayerManager().getPlayer(player)
         .orElse(null);
 
     if (dungeonPlayer == null) {
@@ -96,7 +102,7 @@ public class PlayerListener implements Listener {
   @EventHandler
   public void onPlayerLeave(PlayerQuitEvent event) {
     Player player = event.getPlayer();
-    var playerManager = OpenDeckedOut.getInstance().getPlayerManager();
+    var playerManager = plugin.getPlayerManager();
 
     if (playerManager.isPlayerInGame(player)) {
       playerManager.getPlayerOrCreate(player).changeGame(null);

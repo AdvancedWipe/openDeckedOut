@@ -28,7 +28,7 @@ public class StatManager {
 
   public void loadPlayerStats() {
     try (FileReader fileReader = new FileReader(
-        OpenDeckedOut.getInstance().getDataFolder() + "/player_stats.yml")) {
+        plugin.getDataFolder() + "/player_stats.yml")) {
       data = new Yaml().load(fileReader);
     } catch (IOException e) {
       OpenDeckedOut.LOGGER.log(Level.WARN, e.getMessage());
@@ -37,7 +37,7 @@ public class StatManager {
 
   public void savePlayerStats() {
     try (FileWriter fileWriter = new FileWriter(
-        OpenDeckedOut.getInstance().getDataFolder() + "/player_stats.yml")) {
+        plugin.getDataFolder() + "/player_stats.yml")) {
       new Yaml().dump(data, fileWriter);
     } catch (IOException e) {
       OpenDeckedOut.LOGGER.log(Level.WARN, e.getMessage());

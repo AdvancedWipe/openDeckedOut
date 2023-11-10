@@ -8,11 +8,13 @@ import org.bukkit.entity.Player;
 
 public class Heartbeat {
 
+  OpenDeckedOut plugin;
   private final Dungeon dungeon;
   private int taskId;
   private int delay;
 
-  public Heartbeat(Dungeon dungeon, int delay) {
+  public Heartbeat(OpenDeckedOut plugin, Dungeon dungeon, int delay) {
+    this.plugin = plugin;
     this.dungeon = dungeon;
     this.delay = delay;
     scheduleSoundTask();
@@ -25,7 +27,7 @@ public class Heartbeat {
   }
 
   private void scheduleSoundTask() {
-    taskId = Bukkit.getScheduler().runTaskTimer(OpenDeckedOut.getInstance(),
+    taskId = Bukkit.getScheduler().runTaskTimer(plugin,
         this::playSoundToAllPlayers, 0L, delay).getTaskId();
   }
 

@@ -21,6 +21,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class Scoreboard {
 
+  private final OpenDeckedOut plugin;
   private final int maxTreasureDrops;
   private int treasureDrops = 0;
 
@@ -37,7 +38,8 @@ public class Scoreboard {
   private Component libraryMessageTwo;
 
 
-  public Scoreboard() {
+  public Scoreboard(OpenDeckedOut plugin) {
+    this.plugin = plugin;
     this.maxTreasureDrops = 10;
     this.treasureStatus = new Statusbar("Treasure:", '■', 15, treasureDrops, NamedTextColor.YELLOW,
         NamedTextColor.GRAY);
@@ -62,7 +64,7 @@ public class Scoreboard {
   }
 
   private void createSidebar() {
-    sidebar = OpenDeckedOut.getInstance().getScoreboardLibrary().createSidebar();
+    sidebar = plugin.getScoreboardLibrary().createSidebar();
 
     titleAnimation = createGradientAnimation(
         Component.text("     openDO     ", Style.style(TextDecoration.BOLD)));

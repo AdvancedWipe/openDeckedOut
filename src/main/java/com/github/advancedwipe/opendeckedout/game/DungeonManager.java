@@ -19,7 +19,7 @@ public class DungeonManager {
 
   public void loadGames(File[] arenaFiles) {
       for (File arenaFile : arenaFiles) {
-        Dungeon game = Dungeon.loadGame(arenaFile);
+        Dungeon game = Dungeon.loadGame(plugin, arenaFile);
         if (game != null) {
           this.games.add(game);
         } else {
@@ -39,6 +39,6 @@ public class DungeonManager {
 
 
   public void createGame(String name) {
-    final Dungeon dungeon = new Dungeon(name);
+    final Dungeon dungeon = new Dungeon(plugin, name);
   }
 }

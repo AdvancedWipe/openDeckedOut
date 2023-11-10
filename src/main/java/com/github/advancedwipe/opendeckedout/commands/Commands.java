@@ -74,7 +74,7 @@ public final class Commands {
             ArgumentDescription.of("Join an arena"))
         .argument(StringArgument.<CommandSender>builder("name")
             .withSuggestionsProvider(((context, string) -> Stream.concat(
-                OpenDeckedOut.getInstance().getDeckedOutManager().getGameNames().stream(),
+                plugin.getDeckedOutManager().getGameNames().stream(),
                 dungeonManager.getGameNames().stream()).distinct().collect(Collectors.toList()))))
         .permission("deckedout.command.join")
         .handler(this::join));
@@ -94,7 +94,7 @@ public final class Commands {
     var admin = deckedout.literal("admin", ArgumentDescription.of("Admin commands"))
         .argument(StringArgument.<CommandSender>builder("dungeonname")
             .withSuggestionsProvider(((context, string) -> Stream.concat(
-                OpenDeckedOut.getInstance().getDeckedOutManager().getGameNames().stream(),
+                plugin.getDeckedOutManager().getGameNames().stream(),
                 workspace.keySet().stream()).distinct().collect(Collectors.toList()))));
 
     this.cmdManager.command(admin.literal("add",
@@ -143,7 +143,7 @@ public final class Commands {
   private void displayDeck(CommandContext<CommandSender> context) {
     final Player player = (Player) context.getSender();
 
-    OpenDeckedOut.getInstance().getGuiManager().open(player);
+    plugin.getGuiManager().open(player);
   }
 
   private void addExit(CommandContext<CommandSender> context) {
@@ -166,7 +166,7 @@ public final class Commands {
     final boolean includeEntities = Boolean.getBoolean(context.get("key").toString());
     final Player player = (Player) context.getSender();
 
-    StructureManager manager = OpenDeckedOut.getInstance().getServer().getStructureManager();
+    StructureManager manager = plugin.getServer().getStructureManager();
     File structureFile = manager.getStructureFile(new NamespacedKey(namespace, key));
     Structure structure;
 
@@ -412,7 +412,7 @@ public final class Commands {
       player.sendMessage("This dungeon already exists");
     }
 
-    this.workspace.put(dungeonName, new Dungeon(dungeonName));
+    this.workspace.put(dungeonName, new Dungeon(plugin, dungeonName));
 
     player.sendMessage(String.format("Add dungeon '%s' to workspace", dungeonName));
   }

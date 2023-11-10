@@ -1,5 +1,6 @@
 package com.github.advancedwipe.opendeckedout.game;
 
+import com.github.advancedwipe.opendeckedout.OpenDeckedOut;
 import com.github.advancedwipe.opendeckedout.utils.DungeonUtils;
 import java.io.File;
 import java.util.HashMap;
@@ -11,6 +12,7 @@ import org.bukkit.block.BlockState;
 
 public abstract class Game {
 
+  protected OpenDeckedOut plugin;
   protected File file;
   protected final UUID uuid;
   protected String name;
@@ -24,12 +26,14 @@ public abstract class Game {
   protected boolean preparing = false;
   private final Map<Location, BlockState> originalState = new HashMap<>();
 
-  public Game(String name) {
+  public Game(OpenDeckedOut plugin, String name) {
+    this.plugin = plugin;
     this.name = name;
     this.uuid = java.util.UUID.randomUUID();
   }
 
-  public Game(UUID uuid) {
+  public Game(OpenDeckedOut plugin, UUID uuid) {
+    this.plugin = plugin;
     this.uuid = uuid;
   }
 

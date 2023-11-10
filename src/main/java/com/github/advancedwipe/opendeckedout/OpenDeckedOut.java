@@ -18,6 +18,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.VisibleForTesting;
 
 public class OpenDeckedOut extends JavaPlugin implements Listener {
 
@@ -32,23 +33,26 @@ public class OpenDeckedOut extends JavaPlugin implements Listener {
   private File arenasFolder;
   FileConfiguration config = null;
 
+  public OpenDeckedOut() {
+  }
+
+  public OpenDeckedOut(DungeonManager dungeonManager, DungeonPlayerManager playerManager, TranslationManager translationManager, StatManager statManager) {
+    if (!isJUnitTest()) {
+      throw new IllegalStateException("This constructor should only be used for unit testing.");
+    }
+
+    this.dungeonManager = dungeonManager;
+    this.playerManager = playerManager;
+    this.translationManager = translationManager;
+    this.statManager = statManager;
+  }
+
   @Override
   public void onEnable() {
     registerEvents();
 
-    instance = this;
-    dungeonManager = new DungeonManager(this);
-    playerManager = new DungeonPlayerManager(this);
-    translationManager = new TranslationManager(this);
-    statManager = new StatManager(this);
-    guiManager = new GuiManager(this);
-
-    try {
-      scoreboardLibrary = ScoreboardLibrary.loadScoreboardLibrary(this);
-    } catch (NoPacketAdapterAvailableException e) {
-      // If no packet adapter was found, you can fallback to the no-op implementation:
-      scoreboardLibrary = new NoopScoreboardLibrary();
-    }
+    initializeValues();
+    initializeScoreboardLibrary();
 
     if (!loadConfig()) {
       LOGGER.log(Level.WARN, "Could not load config file! Disabling plugin.");
@@ -67,12 +71,30 @@ public class OpenDeckedOut extends JavaPlugin implements Listener {
     new Commands(this).register();
   }
 
-
   private void registerEvents() {
-    Bukkit.getPluginManager().registerEvents(new PlayerListener(), this);
+    Bukkit.getPluginManager().registerEvents(new PlayerListener(this), this);
   }
 
-  public boolean loadConfig() {
+  private void initializeValues() {
+    instance = this;
+    dungeonManager = new DungeonManager(this);
+    playerManager = new DungeonPlayerManager(this);
+    translationManager = new TranslationManager(this);
+    statManager = new StatManager(this);
+    guiManager = new GuiManager(this);
+  }
+
+  private void initializeScoreboardLibrary() {
+    try {
+      scoreboardLibrary = ScoreboardLibrary.loadScoreboardLibrary(this);
+    } catch (NoPacketAdapterAvailableException e) {
+      // If no packet adapter was found, you can fallback to the no-op implementation:
+      scoreboardLibrary = new NoopScoreboardLibrary();
+    }
+  }
+
+
+  private boolean loadConfig() {
     LOGGER.log(Level.INFO, "Loading configuration...");
     File configFile = new File(getDataFolder(), "config.yml");
 
@@ -87,10 +109,6 @@ public class OpenDeckedOut extends JavaPlugin implements Listener {
   @Override
   public void onDisable() {
     scoreboardLibrary.close();
-  }
-
-  public static OpenDeckedOut getInstance() {
-    return instance;
   }
 
   public DungeonManager getDeckedOutManager() {
@@ -115,5 +133,10 @@ public class OpenDeckedOut extends JavaPlugin implements Listener {
   
   public GuiManager getGuiManager() {
     return guiManager;
+  }
+
+  private boolean isJUnitTest() {
+    String vendor = System.getProperty("java.vendor.url");
+    return vendor != null && vendor.contains("junit");
   }
 }

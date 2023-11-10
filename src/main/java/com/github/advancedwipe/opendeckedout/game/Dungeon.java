@@ -61,21 +61,23 @@ public class Dungeon extends Game {
   private int increasedCoinChance = 0;
   private int clank;
   private int clankBlock;
-  private com.github.advancedwipe.opendeckedout.game.Scoreboard scoreboard = new com.github.advancedwipe.opendeckedout.game.Scoreboard();
+  private com.github.advancedwipe.opendeckedout.game.Scoreboard scoreboard;
 
-  public Dungeon(String name) {
-    super(name);
+  public Dungeon(OpenDeckedOut plugin, String name) {
+    super(plugin, name);
     this.clank = 0;
     this.clankBlock = 0;
+    scoreboard = new com.github.advancedwipe.opendeckedout.game.Scoreboard(plugin);
   }
 
-  public Dungeon(UUID uuid) {
-    super(uuid);
+  public Dungeon(OpenDeckedOut plugin, UUID uuid) {
+    super(plugin, uuid);
     this.clank = 0;
     this.clankBlock = 0;
+    scoreboard = new com.github.advancedwipe.opendeckedout.game.Scoreboard(plugin);
   }
 
-  public static Dungeon loadGame(File file) {
+  public static Dungeon loadGame(OpenDeckedOut plugin, File file) {
     final ConfigurationLoader<? extends ConfigurationNode> arenaLoader;
     final ConfigurationNode configMap;
     arenaLoader = YamlConfigurationLoader.builder().file(file).build();
@@ -92,7 +94,7 @@ public class Dungeon extends Game {
       UUID uuid;
       uuid = uid.get(UUID.class);
 
-      final Dungeon game = new Dungeon(uuid);
+      final Dungeon game = new Dungeon(plugin, uuid);
       game.file = file;
       game.name = configMap.node("name").getString();
 
@@ -101,7 +103,7 @@ public class Dungeon extends Game {
         OpenDeckedOut.LOGGER.log(Level.WARN, "Arena file has no world specified! Aborting...");
         return null;
       }
-      World world = OpenDeckedOut.getInstance().getServer().getWorld(worldName);
+      World world = plugin.getServer().getWorld(worldName);
       if (world == null) {
         OpenDeckedOut.LOGGER.log(Level.WARN,
             "The world defined in config file does not exist! Aborting loading this arena file.");
@@ -140,7 +142,7 @@ public class Dungeon extends Game {
   }
 
   public void saveToConfig() {
-    File directory = new File(OpenDeckedOut.getInstance().getDataFolder(), "arenas");
+    File directory = new File(plugin.getDataFolder(), "arenas");
 
     if (!directory.exists()) {
       if (!directory.mkdirs()) {
@@ -293,11 +295,9 @@ public class Dungeon extends Game {
     final int taskFrequency = 20;
     final int taskDelay = 0;
     // Dungeon has a tick frequency of 20 minecraft ticks (1 second) to process its events
-    dungeonTask = new DungeonRunnable(this).runTaskTimer(OpenDeckedOut.getInstance(), taskDelay,
-        taskFrequency);
-    scoreboardTask = new ScoreboardRunnable(scoreboard).runTaskTimer(OpenDeckedOut.getInstance(),
-        taskDelay, 1);
-    heartbeat = new Heartbeat(this, 100);
+    dungeonTask = new DungeonRunnable(this).runTaskTimer(plugin, taskDelay, taskFrequency);
+    scoreboardTask = new ScoreboardRunnable(scoreboard).runTaskTimer(plugin, taskDelay, 1);
+    heartbeat = new Heartbeat(plugin, this, 100);
   }
 
   private void cancelTask() {
@@ -366,7 +366,7 @@ public class Dungeon extends Game {
     clank = 0;
     clankBlock = 0;
 
-    scoreboard = new Scoreboard();
+    scoreboard = new Scoreboard(plugin);
 
     resetToOriginalDungeon();
 
