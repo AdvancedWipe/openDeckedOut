@@ -10,7 +10,7 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.junit.jupiter.api.Test;
 
-public class DungeonUtilsTest {
+class DungeonUtilsTest {
 
   @Test
   void isInArena_ShouldReturnTrue_WhenLocationInsideBoundingBox() {

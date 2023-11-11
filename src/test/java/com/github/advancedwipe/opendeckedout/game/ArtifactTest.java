@@ -6,7 +6,7 @@ import com.github.advancedwipe.opendeckedout.game.artifact.Artifact;
 import org.bukkit.Location;
 import org.junit.jupiter.api.Test;
 
-public class ArtifactTest {
+class ArtifactTest {
 
   private final double x = 10.5;
   private final double y = 20.3;

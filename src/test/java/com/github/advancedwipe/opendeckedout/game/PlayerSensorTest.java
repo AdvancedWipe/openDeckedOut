@@ -9,7 +9,7 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.junit.jupiter.api.Test;
 
-public class PlayerSensorTest {
+class PlayerSensorTest {
 
   private final double x = 10.5;
   private final double y = 20.3;

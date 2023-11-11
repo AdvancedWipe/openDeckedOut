@@ -16,7 +16,7 @@ import org.bukkit.World;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 
-public class UtilsTest {
+class UtilsTest {
 
   private final double x1 = 10.5;
   private final double y1 = 20.3;
