@@ -26,13 +26,13 @@ public abstract class Game {
   protected boolean preparing = false;
   private final Map<Location, BlockState> originalState = new HashMap<>();
 
-  public Game(OpenDeckedOut plugin, String name) {
+  protected Game(OpenDeckedOut plugin, String name) {
     this.plugin = plugin;
     this.name = name;
     this.uuid = java.util.UUID.randomUUID();
   }
 
-  public Game(OpenDeckedOut plugin, UUID uuid) {
+  protected Game(OpenDeckedOut plugin, UUID uuid) {
     this.plugin = plugin;
     this.uuid = uuid;
   }

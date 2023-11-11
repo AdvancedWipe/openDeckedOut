@@ -16,7 +16,7 @@ public abstract class Card implements Playable {
   private final String anecdotePath;
   protected final List<CardEffect> effects = new ArrayList<>();
 
-  public Card(String namePath, int id, CardType type, CardRarity rarity, int value, String rulePath,
+  protected Card(String namePath, int id, CardType type, CardRarity rarity, int value, String rulePath,
       String anecdotePath) {
     this.namePath = namePath;
     this.id = id;

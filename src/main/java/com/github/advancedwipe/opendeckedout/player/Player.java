@@ -10,7 +10,7 @@ public abstract class Player {
   private final org.bukkit.entity.Player player;
   private final SavedInventory savedInventory = new SavedInventory();
 
-  public Player(org.bukkit.entity.Player player) {
+  protected Player(org.bukkit.entity.Player player) {
     this.player = player;
   }
 
