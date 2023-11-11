@@ -26,21 +26,21 @@ public class CardManager {
   public void drawNewCard() {
     try {
       hand.push(library.pop());
-    } catch (EmptyStackException e) {
-      return; // Stack is empty, no more cards to draw
+    } catch (EmptyStackException ignored) {
+      // Stack is empty, no more cards to draw
     }
   }
 
   public void applyCardEffect(DungeonPlayer player) {
     try {
       hand.pop().playCard(player);
-    } catch (EmptyStackException e) {
-      return;
+    } catch (EmptyStackException ignored) {
+      // Stack is empty, no more cards in hand
     }
   }
 
   public void moveCardToGraveyard() {
-
+    throw new RuntimeException("Not implemented yet");
   }
 
   public List<Card> getCards() {
