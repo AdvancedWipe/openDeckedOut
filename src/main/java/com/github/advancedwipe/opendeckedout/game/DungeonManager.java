@@ -5,10 +5,10 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import org.apache.logging.log4j.Level;
 
 public class DungeonManager {
+
   private final List<Dungeon> games;
   private final OpenDeckedOut plugin;
 
@@ -18,14 +18,14 @@ public class DungeonManager {
   }
 
   public void loadGames(File[] arenaFiles) {
-      for (File arenaFile : arenaFiles) {
-        Dungeon game = Dungeon.loadGame(plugin, arenaFile);
-        if (game != null) {
-          this.games.add(game);
-        } else {
-          OpenDeckedOut.LOGGER.log(Level.WARN, String.format("Unable to load %s", arenaFile.toString()));
-        }
+    for (File arenaFile : arenaFiles) {
+      Dungeon game = Dungeon.loadGame(plugin, arenaFile);
+      if (game != null) {
+        this.games.add(game);
+      } else {
+        OpenDeckedOut.LOGGER.log(Level.WARN, "Unable to load {}", arenaFile.toString());
       }
+    }
   }
 
   public Optional<Dungeon> getGame(final String name) {
@@ -33,12 +33,11 @@ public class DungeonManager {
   }
 
   public List<String> getGameNames() {
-    return games.stream().map(Dungeon::getName).collect(Collectors.toList());
+    return games.stream().map(Dungeon::getName).toList();
   }
 
 
-
   public void createGame(String name) {
-    final Dungeon dungeon = new Dungeon(plugin, name);
+    throw new RuntimeException("Not implemented yet");
   }
 }

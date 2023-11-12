@@ -15,7 +15,7 @@ public class SoundUtils {
 
   public static void playCoinSound(List<DungeonPlayer> players, Location location) {
     var coinSounds = getCoinSounds();
-    players.forEach(p -> p.getPlayer()
+    players.forEach(p -> p.getBukkitPlayer()
         .playNote(location, Instrument.CHIME, coinSounds.get(random.nextInt(coinSounds.size()))));
   }
 

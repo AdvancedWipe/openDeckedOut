@@ -18,7 +18,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.jetbrains.annotations.VisibleForTesting;
 
 public class OpenDeckedOut extends JavaPlugin implements Listener {
 

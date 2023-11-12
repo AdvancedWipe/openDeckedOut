@@ -40,7 +40,6 @@ public class PlayerListener implements Listener {
       OpenDeckedOut.LOGGER.log(Level.DEBUG,
           event.getPlayer().getName() + "tried to break a block, but was canceled");
       event.setCancelled(true);
-      return;
     }
   }
 
@@ -62,11 +61,11 @@ public class PlayerListener implements Listener {
     }
 
     checkSensors(event, dungeon, player);
-    checkExit(event, dungeon, dungeonPlayer);
+    checkExit(dungeon, dungeonPlayer);
   }
 
-  private void checkExit(PlayerMoveEvent event, Dungeon dungeon, DungeonPlayer player) {
-    if (isPlayerInsideCircle(player.getPlayer(), dungeon.getExit(), 2.0)) {
+  private void checkExit(Dungeon dungeon, DungeonPlayer player) {
+    if (isPlayerInsideCircle(player.getBukkitPlayer(), dungeon.getExit(), 2.0)) {
       dungeon.internalLeavePlayer(player);
     }
   }

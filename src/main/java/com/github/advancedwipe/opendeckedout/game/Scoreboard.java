@@ -56,7 +56,7 @@ public class Scoreboard {
   }
 
   public void addPlayer(@NotNull DungeonPlayer dungeonPlayer) {
-    addPlayer(dungeonPlayer.getPlayer());
+    addPlayer(dungeonPlayer.getBukkitPlayer());
   }
 
   public void addPlayer(@NotNull Player player) {
@@ -114,7 +114,7 @@ public class Scoreboard {
   }
 
   public void removePlayer(DungeonPlayer player) {
-    removePlayer(player.getPlayer());
+    removePlayer(player.getBukkitPlayer());
   }
 
   public void removePlayer(Player player) {

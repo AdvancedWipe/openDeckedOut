@@ -311,7 +311,7 @@ public class Dungeon extends Game {
   }
 
   public void internalJoinPlayer(DungeonPlayer dungeonPlayer) {
-    Player player = dungeonPlayer.getPlayer();
+    Player player = dungeonPlayer.getBukkitPlayer();
     if (status == GameStatus.WAITING) {
 
       boolean isEmpty = players.isEmpty();

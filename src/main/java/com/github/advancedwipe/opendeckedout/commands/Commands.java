@@ -17,7 +17,6 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.apache.logging.log4j.Level;
 import org.bukkit.Location;
@@ -75,7 +74,7 @@ public final class Commands {
         .argument(StringArgument.<CommandSender>builder("name")
             .withSuggestionsProvider(((context, string) -> Stream.concat(
                 plugin.getDeckedOutManager().getGameNames().stream(),
-                dungeonManager.getGameNames().stream()).distinct().collect(Collectors.toList()))))
+                dungeonManager.getGameNames().stream()).distinct().toList())))
         .permission("deckedout.command.join")
         .handler(this::join));
 
@@ -95,7 +94,7 @@ public final class Commands {
         .argument(StringArgument.<CommandSender>builder("dungeonname")
             .withSuggestionsProvider(((context, string) -> Stream.concat(
                 plugin.getDeckedOutManager().getGameNames().stream(),
-                workspace.keySet().stream()).distinct().collect(Collectors.toList()))));
+                workspace.keySet().stream()).distinct().toList())));
 
     this.cmdManager.command(admin.literal("add",
             ArgumentDescription.of("Adds a new arena to your workspace"))

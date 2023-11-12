@@ -28,6 +28,7 @@ public class MultiRowStatusbar {
   }
 
   private void update() {
+    throw new UnsupportedOperationException("Not implemented yet");
 
   }
 

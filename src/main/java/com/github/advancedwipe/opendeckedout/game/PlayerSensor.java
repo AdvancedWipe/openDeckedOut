@@ -8,7 +8,7 @@ import org.bukkit.entity.Player;
 public class PlayerSensor {
 
   private final Location location;
-  private final int cooldownTimer = 3; // timer in dungeon ticks
+  private static final int COOLDOWN_TIMER = 3; // timer in dungeon ticks
   private final Map<Player, Integer> cooldowns = new HashMap<>();
   private boolean hasCooldown;
 
@@ -22,7 +22,7 @@ public class PlayerSensor {
   }
 
   public void activated(Player player) {
-    cooldowns.put(player, cooldownTimer);
+    cooldowns.put(player, COOLDOWN_TIMER);
     hasCooldown = true;
   }
 

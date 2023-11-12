@@ -1,61 +1,62 @@
 package com.github.advancedwipe.opendeckedout.player;
 
 import com.github.advancedwipe.opendeckedout.game.Money;
+import java.util.Collections;
 import java.util.Map;
 import java.util.UUID;
 import org.bukkit.potion.PotionEffect;
 
 public abstract class Player {
 
-  private final org.bukkit.entity.Player player;
+  private final org.bukkit.entity.Player bukkitPlayer;
   private final SavedInventory savedInventory = new SavedInventory();
 
   protected Player(org.bukkit.entity.Player player) {
-    this.player = player;
+    this.bukkitPlayer = player;
   }
 
   public void saveInventory() {
-    savedInventory.setInventory(player.getInventory().getContents());
-    savedInventory.setArmor(player.getInventory().getArmorContents());
-    savedInventory.setXp(player.getExp());
-    savedInventory.setEffects(player.getActivePotionEffects());
-    savedInventory.setMode(player.getGameMode());
-    savedInventory.setLevel(player.getLevel());
-    savedInventory.setFoodLevel(player.getFoodLevel());
-    savedInventory.setPlatformScoreboard(player.getScoreboard().getObjectives());
+    savedInventory.setInventory(bukkitPlayer.getInventory().getContents());
+    savedInventory.setArmor(bukkitPlayer.getInventory().getArmorContents());
+    savedInventory.setXp(bukkitPlayer.getExp());
+    savedInventory.setEffects(bukkitPlayer.getActivePotionEffects());
+    savedInventory.setMode(bukkitPlayer.getGameMode());
+    savedInventory.setLevel(bukkitPlayer.getLevel());
+    savedInventory.setFoodLevel(bukkitPlayer.getFoodLevel());
+    savedInventory.setPlatformScoreboard(bukkitPlayer.getScoreboard().getObjectives());
 
     // Is needed to teleport player back to the location where they entered the join command
-    savedInventory.setInitalLocation(player.getLocation());
+    savedInventory.setInitalLocation(bukkitPlayer.getLocation());
 
     // Finally clear the players current inventory
-    player.getInventory().clear();
+    bukkitPlayer.getInventory().clear();
   }
 
   public void restoreInventory() {
-    var currentInventory = player.getInventory();
+    var currentInventory = bukkitPlayer.getInventory();
     currentInventory.clear();
 
-    player.getInventory().setContents(savedInventory.getInventory());
-    player.getInventory().setArmorContents(savedInventory.getArmor());
-    player.setFoodLevel(savedInventory.getFoodLevel());
-    player.setLevel(savedInventory.getLevel());
-    player.setExp(savedInventory.getExp());
-    player.setGameMode(savedInventory.getGamemode());
+    bukkitPlayer.getInventory().setContents(savedInventory.getInventory());
+    bukkitPlayer.getInventory().setArmorContents(savedInventory.getArmor());
+    bukkitPlayer.setFoodLevel(savedInventory.getFoodLevel());
+    bukkitPlayer.setLevel(savedInventory.getLevel());
+    bukkitPlayer.setExp(savedInventory.getExp());
+    bukkitPlayer.setGameMode(savedInventory.getGamemode());
 
-    for (PotionEffect effect : player.getActivePotionEffects()) {
-      player.removePotionEffect(effect.getType());
+    for (PotionEffect effect : bukkitPlayer.getActivePotionEffects()) {
+      bukkitPlayer.removePotionEffect(effect.getType());
     }
-    player.addPotionEffects(savedInventory.getPotionEffects());
+    bukkitPlayer.addPotionEffects(savedInventory.getPotionEffects());
 
-    player.teleport(savedInventory.getInitalLocation());
+    bukkitPlayer.teleport(savedInventory.getInitalLocation());
   }
 
-  public org.bukkit.entity.Player getPlayer() {
-    return this.player;
+  public org.bukkit.entity.Player getBukkitPlayer() {
+    return this.bukkitPlayer;
   }
 
   public UUID getUuid() {
-    return player.getUniqueId();
+    return bukkitPlayer.getUniqueId();
   }
 
   public boolean isSpectator() {
@@ -67,6 +68,6 @@ public abstract class Player {
   }
 
   public Map<Money, Integer> getWallet() {
-   return null;
+   return Collections.emptyMap();
   }
 }

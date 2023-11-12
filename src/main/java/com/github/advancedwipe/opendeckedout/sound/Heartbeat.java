@@ -33,7 +33,7 @@ public class Heartbeat {
 
   private void playSoundToAllPlayers() {
     dungeon.getPlayers().forEach(dungeonPlayer -> {
-      Player player = dungeonPlayer.getPlayer();
+      Player player = dungeonPlayer.getBukkitPlayer();
       Location location = player.getLocation();
       player.playSound(location, "minecraft:opendo.heartbeat60bpm", 1.0F, 1.0F);
     });
