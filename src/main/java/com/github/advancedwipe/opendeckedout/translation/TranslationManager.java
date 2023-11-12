@@ -31,7 +31,6 @@ public class TranslationManager {
 
   private void loadTranslations() {
     File translationsFile = new File(plugin.getDataFolder(), "/translations.yml");
-    System.out.println(translationsFile);
 
     if (!translationsFile.exists()) {
       InputStream inputStream = this.plugin.getResource("translations.yml");
