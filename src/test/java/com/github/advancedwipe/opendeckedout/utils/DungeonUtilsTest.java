@@ -46,7 +46,7 @@ class DungeonUtilsTest {
     Location pos1 = new Location(mock(World.class), 0, 0, 0);
     Location pos2 = new Location(mock(World.class), 2, 2, 2);
 
-    List<Location> result = DungeonUtils.getBlocksInBoundingBox(pos1, pos2);
+    List<Location> result = DungeonUtils.getLocationsInBoundingBox(pos1, pos2);
 
     assertEquals(27, result.size()); // 3x3x3 grid
     assertTrue(result.contains(new Location(pos1.getWorld(), 0, 0, 0)));

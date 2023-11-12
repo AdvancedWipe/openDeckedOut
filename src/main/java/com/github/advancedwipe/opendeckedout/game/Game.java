@@ -54,7 +54,7 @@ public abstract class Game {
   }
 
   public void recordOriginalDungeon() {
-    for (Location location : DungeonUtils.getBlocksInBoundingBox(getPos1(), getPos2())) {
+    for (Location location : DungeonUtils.getLocationsInBoundingBox(getPos1(), getPos2())) {
       var state = location.getBlock().getState();
       originalState.put(location, state);
     }
