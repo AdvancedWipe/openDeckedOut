@@ -156,7 +156,7 @@ public final class Commands {
     var location = player.getLocation();
     dungeon.setExit(location);
 
-    player.sendMessage(String.format("Set exit to '%s'", Utils.locationToXYZ(location)));
+    player.sendMessage(String.format("Set exit to '%s'", Utils.locationToXyz(location)));
   }
 
   private void barrier(CommandContext<CommandSender> context) {
@@ -267,7 +267,7 @@ public final class Commands {
     }
 
     dungeon.addSensor(location);
-    player.sendMessage(String.format("Sensor placed at '%s'", Utils.locationToXYZ(location)));
+    player.sendMessage(String.format("Sensor placed at '%s'", Utils.locationToXyz(location)));
   }
 
   private void addCoinSpawner(CommandContext<CommandSender> context) {
@@ -281,7 +281,7 @@ public final class Commands {
 
     dungeon.addCoinSpawn(location);
 
-    player.sendMessage(String.format("Coin spawner set to '%s'", Utils.locationToXYZ(location)));
+    player.sendMessage(String.format("Coin spawner set to '%s'", Utils.locationToXyz(location)));
   }
 
   private void addRavagerSpawn(CommandContext<CommandSender> context) {
@@ -295,7 +295,7 @@ public final class Commands {
 
     dungeon.addRavagerSpawn(location);
 
-    player.sendMessage(String.format("Ravager spawn set to '%s'", Utils.locationToXYZ(location)));
+    player.sendMessage(String.format("Ravager spawn set to '%s'", Utils.locationToXyz(location)));
   }
 
   private void leave(CommandContext<CommandSender> context) {
@@ -337,7 +337,7 @@ public final class Commands {
     var location = player.getLocation();
     dungeon.setSpawn(location);
 
-    player.sendMessage(String.format("Set player spawn to '%s'", Utils.locationToXYZ(location)));
+    player.sendMessage(String.format("Set player spawn to '%s'", Utils.locationToXyz(location)));
   }
 
   private void save(CommandContext<CommandSender> context) {
@@ -379,7 +379,7 @@ public final class Commands {
 
     dungeon.setPos1(location);
 
-    player.sendMessage(String.format("Set pos1 to '%s'", Utils.locationToXYZ(location)));
+    player.sendMessage(String.format("Set pos1 to '%s'", Utils.locationToXyz(location)));
   }
 
   private void pos2(CommandContext<CommandSender> context) {
@@ -394,7 +394,7 @@ public final class Commands {
 
     dungeon.setPos2(location);
 
-    player.sendMessage(String.format("Set pos2 to '%s'", Utils.locationToXYZ(location)));
+    player.sendMessage(String.format("Set pos2 to '%s'", Utils.locationToXyz(location)));
   }
 
   private void workspace(CommandContext<CommandSender> context) {

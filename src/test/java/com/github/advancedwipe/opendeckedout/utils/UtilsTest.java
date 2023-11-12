@@ -148,7 +148,7 @@ class UtilsTest {
   @Test
   void locationToXYZ_ShouldReturnExpectedString_WithValidInput() {
 
-    String result = Utils.locationToXYZ(location1);
+    String result = Utils.locationToXyz(location1);
 
     assertEquals(x1 + ", " + y1 + ", " + z1, result);
   }
@@ -157,7 +157,7 @@ class UtilsTest {
   void locationToXYZ_ShouldReturnNull_WithNullInput() {
     Location nullLocation = null;
 
-    String result = Utils.locationToXYZ(nullLocation);
+    String result = Utils.locationToXyz(nullLocation);
 
     assertNull(result);
   }
