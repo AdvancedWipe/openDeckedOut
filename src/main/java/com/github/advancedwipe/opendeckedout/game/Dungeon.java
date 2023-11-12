@@ -44,10 +44,10 @@ public class Dungeon extends Game {
   private final Random random = new Random();
   private BukkitTask dungeonTask;
   private BukkitTask scoreboardTask;
-  private final int minRandom = 1;
-  private final int maxRandom = 100;
+  private static final int MIN_RANDOM = 1;
+  private static final int MAX_RANDOM = 100;
   private int tick;
-  private final int maxTick = 30;
+  private static final int MAX_TICK = 30;
   private CardManager cardManager;
   private List<DungeonPlayer> players = new ArrayList<>();
   private List<Entity> ravagers = new ArrayList<>();
@@ -57,7 +57,7 @@ public class Dungeon extends Game {
   private List<Artifact> artifacts = new ArrayList<>();
   private List<Location> berrys = new ArrayList<>();
   private Heartbeat heartbeat;
-  private final int baseCoinChance = 2;
+  private static final int BASE_COIN_CHANCE = 2;
   private int increasedCoinChance = 0;
   private int clank;
   private int clankBlock;
@@ -132,11 +132,11 @@ public class Dungeon extends Game {
           Objects.requireNonNull(configMap.node("exit").getString()));
 
       game.start();
-      OpenDeckedOut.LOGGER.log(Level.INFO, String.format("Arena '%s' loaded!", game.name));
+      OpenDeckedOut.LOGGER.log(Level.INFO, "Arena '{}' loaded!", game.name);
 
       return game;
     } catch (Throwable throwable) {
-      throwable.printStackTrace();
+      OpenDeckedOut.LOGGER.log(Level.WARN, throwable.getMessage());
       return null;
     }
   }
@@ -144,11 +144,10 @@ public class Dungeon extends Game {
   public void saveToConfig() {
     File directory = new File(plugin.getDataFolder(), "arenas");
 
-    if (!directory.exists()) {
-      if (!directory.mkdirs()) {
+    if (!directory.exists() && (!directory.mkdirs())) {
         OpenDeckedOut.LOGGER.warn("Failed to create folder 'arenas', can not save arenas to file!");
         return;
-      }
+
     }
     if (file == null) {
       do {
@@ -191,7 +190,7 @@ public class Dungeon extends Game {
         onEveryTenthDungeonTick();
       }
 
-      if (tick == maxTick) {
+      if (tick == MAX_TICK) {
         onMaxDungeonTick();
         return;
       }
@@ -220,9 +219,9 @@ public class Dungeon extends Game {
     updateScoreboard();
 
     if (increasedCoinChance > 0) {
-      dropCoin(baseCoinChance + 15);
+      dropCoin(BASE_COIN_CHANCE + 15);
     } else {
-      dropCoin(baseCoinChance);
+      dropCoin(BASE_COIN_CHANCE);
     }
 
   }
@@ -388,7 +387,7 @@ public class Dungeon extends Game {
   }
 
   private int random() {
-    return ThreadLocalRandom.current().nextInt(minRandom, maxRandom + 1);
+    return ThreadLocalRandom.current().nextInt(MIN_RANDOM, MAX_RANDOM + 1);
   }
 
   public void addSensor(Location location) {
