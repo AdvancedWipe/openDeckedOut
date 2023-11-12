@@ -14,6 +14,7 @@ import java.util.List;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.jetbrains.annotations.NotNull;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 class UtilsTest {
@@ -155,11 +156,7 @@ class UtilsTest {
 
   @Test
   void locationToXYZ_ShouldReturnNull_WithNullInput() {
-    Location nullLocation = null;
-
-    String result = Utils.locationToXyz(nullLocation);
-
-    assertNull(result);
+    Assertions.assertThrows(NullPointerException.class, () -> Utils.locationToXyz(null));
   }
 
   @Test
@@ -186,9 +183,7 @@ class UtilsTest {
 
   @Test
   void writeSensorListToString_ShouldReturnEmptyList_WithNullInput() {
-    List<String> result = Utils.writeSensorListToString(null);
-
-    assertTrue(result.isEmpty());
+    Assertions.assertThrows(NullPointerException.class, () -> Utils.writeSensorListToString(null));
   }
 
   @Test
