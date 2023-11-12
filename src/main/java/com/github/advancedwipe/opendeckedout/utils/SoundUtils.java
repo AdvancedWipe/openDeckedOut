@@ -11,12 +11,16 @@ import org.bukkit.Note.Tone;
 
 public class SoundUtils {
 
-  public static Random random = new Random();
+  private SoundUtils() {
+    // private
+  }
+
+  public static final Random RANDOM = new Random();
 
   public static void playCoinSound(List<DungeonPlayer> players, Location location) {
     var coinSounds = getCoinSounds();
     players.forEach(p -> p.getBukkitPlayer()
-        .playNote(location, Instrument.CHIME, coinSounds.get(random.nextInt(coinSounds.size()))));
+        .playNote(location, Instrument.CHIME, coinSounds.get(RANDOM.nextInt(coinSounds.size()))));
   }
 
   private static List<Note> getCoinSounds() {

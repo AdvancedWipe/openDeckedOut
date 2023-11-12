@@ -5,6 +5,10 @@ import org.jetbrains.annotations.NotNull;
 
 public class PlayerUtils {
 
+  private PlayerUtils() {
+    // private
+  }
+
   public static boolean hasPlayerMoved(@NotNull Location from, @NotNull Location to) {
     double fromX = from.getX();
     double fromY = from.getY();

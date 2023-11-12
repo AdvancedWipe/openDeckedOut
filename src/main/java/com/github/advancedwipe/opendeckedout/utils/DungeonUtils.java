@@ -6,6 +6,10 @@ import org.bukkit.Location;
 
 public class DungeonUtils {
 
+  private DungeonUtils() {
+    // private
+  }
+
   public static boolean isInArena(Location location, Location pos1, Location pos2) {
     if (!pos1.getWorld().equals(
         pos2.getWorld())) { // Needs to be the same world, might be redundant due to it being checked on setting pos1 and pos2

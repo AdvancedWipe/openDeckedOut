@@ -10,6 +10,10 @@ import org.bukkit.World;
 
 public class Utils {
 
+  private Utils() {
+    // private
+  }
+
   public static List<String> writeLocationListToStringList(List<Location> list) {
     List<String> stringList = new ArrayList<>();
     for (Location location : list) {
