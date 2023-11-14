@@ -78,6 +78,21 @@ public class DatabaseManager {
     return false;
   }
 
+  public boolean tableExists(String tableName) {
+    String sqlQuery = "SELECT to_regclass(?)";
+    try (Connection connection = source.getConnection();
+        PreparedStatement statement = connection.prepareStatement(sqlQuery)) {
+      statement.setString(1, tableName);
+
+      ResultSet resultSet = statement.executeQuery();
+
+      return resultSet.next();
+    } catch (SQLException e) {
+      OpenDeckedOut.LOGGER.log(Level.WARN, e.getMessage());
+    }
+    return false;
+  }
+
   public ResultSet fetchPlayers() {
     try (Connection connection = source.getConnection();
         PreparedStatement statement = connection.prepareStatement(this.query)) {

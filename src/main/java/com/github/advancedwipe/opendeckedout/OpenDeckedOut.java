@@ -77,6 +77,7 @@ public class OpenDeckedOut extends JavaPlugin implements Listener {
       this.getServer().getPluginManager().disablePlugin(this);
     }
     System.out.println(databaseManager.checkPostgresDatabaseExists("openDeckedOut"));
+    System.out.println(databaseManager.tableExists("player"));
   }
 
   private void registerEvents() {
