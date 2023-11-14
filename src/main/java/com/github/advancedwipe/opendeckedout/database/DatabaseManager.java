@@ -7,7 +7,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.Objects;
 import javax.sql.DataSource;
 import org.apache.logging.log4j.Level;
@@ -63,23 +62,15 @@ public class DatabaseManager {
 
   public boolean checkPostgresDatabaseExists(String databaseName) {
     String sqlQuery = "SELECT 1 FROM pg_database WHERE datname = ?";
-    try (Connection connection = source.getConnection();
-        PreparedStatement statement = connection.prepareStatement(sqlQuery)) {
-      // Set the database name as a parameter
-      statement.setString(1, databaseName);
-
-      ResultSet resultSet = statement.executeQuery();
-
-      // If the database exists, return true. Otherwise, return false.
-      return resultSet.next();
-    } catch (SQLException e) {
-      OpenDeckedOut.LOGGER.log(Level.WARN, e.getMessage());
-    }
-    return false;
+    return checkForExistence(databaseName, sqlQuery);
   }
 
   public boolean tableExists(String tableName) {
     String sqlQuery = "SELECT to_regclass(?)";
+    return checkForExistence(tableName, sqlQuery);
+  }
+
+  private boolean checkForExistence(String tableName, String sqlQuery) {
     try (Connection connection = source.getConnection();
         PreparedStatement statement = connection.prepareStatement(sqlQuery)) {
       statement.setString(1, tableName);
