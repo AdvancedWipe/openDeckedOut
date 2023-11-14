@@ -76,7 +76,7 @@ public class OpenDeckedOut extends JavaPlugin implements Listener {
       LOGGER.log(Level.WARN, "Could not connect to database! Disabling plugin.");
       this.getServer().getPluginManager().disablePlugin(this);
     }
-    databaseManager.fetchPlayers();
+    System.out.println(databaseManager.checkPostgresDatabaseExists("openDeckedOut"));
   }
 
   private void registerEvents() {

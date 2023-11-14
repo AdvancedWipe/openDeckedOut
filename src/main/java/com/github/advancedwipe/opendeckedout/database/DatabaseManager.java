@@ -16,7 +16,7 @@ public class DatabaseManager {
 
   private final OpenDeckedOut plugin;
   private DataSource source;
-  private final String statement = "SELECT * FROM player";
+  private final String query = "SELECT * FROM player";
 
   public DatabaseManager(OpenDeckedOut plugin) {
     this.plugin = plugin;
@@ -61,12 +61,14 @@ public class DatabaseManager {
     }
   }
 
-  public static boolean checkPostgresDatabaseExists(DataSource dataSource, String databaseName) {
-    try (Connection connection = dataSource.getConnection()) {
-      // Execute a SQL query to check if the database exists.
-      Statement statement = connection.createStatement();
-      ResultSet resultSet = statement.executeQuery(
-          "SELECT datname FROM pg_catalog.pg_database WHERE datname = '" + databaseName + "'");
+  public boolean checkPostgresDatabaseExists(String databaseName) {
+    String sqlQuery = "SELECT 1 FROM pg_database WHERE datname = ?";
+    try (Connection connection = source.getConnection();
+        PreparedStatement statement = connection.prepareStatement(sqlQuery)) {
+      // Set the database name as a parameter
+      statement.setString(1, databaseName);
+
+      ResultSet resultSet = statement.executeQuery();
 
       // If the database exists, return true. Otherwise, return false.
       return resultSet.next();
@@ -78,7 +80,7 @@ public class DatabaseManager {
 
   public ResultSet fetchPlayers() {
     try (Connection connection = source.getConnection();
-        PreparedStatement statement = connection.prepareStatement(this.statement)) {
+        PreparedStatement statement = connection.prepareStatement(this.query)) {
       return statement.executeQuery();
     } catch (SQLException e) {
       OpenDeckedOut.LOGGER.log(Level.WARN, "Could not fetch from database: {}", e.getMessage());
