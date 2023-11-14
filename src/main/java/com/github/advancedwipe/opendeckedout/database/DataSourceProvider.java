@@ -1,15 +1,15 @@
-package com.github.advancedwipe.database;
+package com.github.advancedwipe.opendeckedout.database;
 
-import com.github.advancedwipe.config.DatabaseConfig;
+import com.github.advancedwipe.opendeckedout.config.DatabaseConfig.DatabaseSettings;
 import java.sql.SQLException;
 import javax.sql.DataSource;
 
 public abstract class DataSourceProvider<T extends DataSource> {
 
   private final T source;
-  private final DatabaseConfig.DatabaseSettings config;
+  private final DatabaseSettings config;
 
-  public DataSourceProvider(DatabaseConfig.DatabaseSettings config) throws SQLException {
+  public DataSourceProvider(DatabaseSettings config) throws SQLException {
     this.config = config;
     this.source = initSource();
     testConnection(source);
@@ -33,7 +33,7 @@ public abstract class DataSourceProvider<T extends DataSource> {
     return source;
   }
 
-  public DatabaseConfig.DatabaseSettings getConfig() {
+  public DatabaseSettings getConfig() {
     return config;
   }
 

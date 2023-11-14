@@ -1,6 +1,7 @@
 package com.github.advancedwipe.opendeckedout;
 
 import com.github.advancedwipe.opendeckedout.commands.Commands;
+import com.github.advancedwipe.opendeckedout.database.DatabaseManager;
 import com.github.advancedwipe.opendeckedout.game.DungeonManager;
 import com.github.advancedwipe.opendeckedout.gui.GuiManager;
 import com.github.advancedwipe.opendeckedout.listener.PlayerListener;
@@ -29,13 +30,15 @@ public class OpenDeckedOut extends JavaPlugin implements Listener {
   private StatManager statManager;
   private ScoreboardLibrary scoreboardLibrary;
   private GuiManager guiManager;
+  private DatabaseManager databaseManager;
   private File arenasFolder;
   FileConfiguration config = null;
 
   public OpenDeckedOut() {
   }
 
-  public OpenDeckedOut(DungeonManager dungeonManager, DungeonPlayerManager playerManager, TranslationManager translationManager, StatManager statManager) {
+  public OpenDeckedOut(DungeonManager dungeonManager, DungeonPlayerManager playerManager,
+      TranslationManager translationManager, StatManager statManager) {
     if (!isJUnitTest()) {
       throw new IllegalStateException("This constructor should only be used for unit testing.");
     }
@@ -48,16 +51,16 @@ public class OpenDeckedOut extends JavaPlugin implements Listener {
 
   @Override
   public void onEnable() {
-    registerEvents();
-
-    initializeValues();
-    initializeScoreboardLibrary();
-
     if (!loadConfig()) {
       LOGGER.log(Level.WARN, "Could not load config file! Disabling plugin.");
       this.getServer().getPluginManager().disablePlugin(this);
       return;
     }
+
+    initializeValues();
+    initializeScoreboardLibrary();
+
+    registerEvents();
 
     arenasFolder = new File(getDataFolder(), "arenas");
     if (arenasFolder.exists()) {
@@ -68,6 +71,12 @@ public class OpenDeckedOut extends JavaPlugin implements Listener {
     }
 
     new Commands(this).register();
+
+    if (!databaseManager.connect()) {
+      LOGGER.log(Level.WARN, "Could not connect to database! Disabling plugin.");
+      this.getServer().getPluginManager().disablePlugin(this);
+    }
+    databaseManager.fetchPlayers();
   }
 
   private void registerEvents() {
@@ -81,6 +90,7 @@ public class OpenDeckedOut extends JavaPlugin implements Listener {
     translationManager = new TranslationManager(this);
     statManager = new StatManager(this);
     guiManager = new GuiManager(this);
+    databaseManager = new DatabaseManager(this);
   }
 
   private void initializeScoreboardLibrary() {
@@ -108,6 +118,7 @@ public class OpenDeckedOut extends JavaPlugin implements Listener {
   @Override
   public void onDisable() {
     scoreboardLibrary.close();
+    databaseManager.disconnect();
   }
 
   public DungeonManager getDeckedOutManager() {
@@ -129,7 +140,7 @@ public class OpenDeckedOut extends JavaPlugin implements Listener {
   public ScoreboardLibrary getScoreboardLibrary() {
     return scoreboardLibrary;
   }
-  
+
   public GuiManager getGuiManager() {
     return guiManager;
   }

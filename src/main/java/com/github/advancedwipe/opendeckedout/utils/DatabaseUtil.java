@@ -1,6 +1,6 @@
-package com.github.advancedwipe.utils;
+package com.github.advancedwipe.opendeckedout.utils;
 
-import com.github.advancedwipe.config.DatabaseConfig;
+import com.github.advancedwipe.opendeckedout.config.DatabaseConfig;
 import java.sql.SQLException;
 import java.util.Properties;
 

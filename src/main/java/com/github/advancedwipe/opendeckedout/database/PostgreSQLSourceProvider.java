@@ -1,8 +1,8 @@
-package com.github.advancedwipe.database;
+package com.github.advancedwipe.opendeckedout.database;
 
-import com.github.advancedwipe.config.DatabaseConfig;
-import com.github.advancedwipe.config.DatabaseType;
-import com.github.advancedwipe.utils.DatabaseUtil;
+import com.github.advancedwipe.opendeckedout.config.DatabaseType;
+import com.github.advancedwipe.opendeckedout.config.DatabaseConfig.DatabaseSettings;
+import com.github.advancedwipe.opendeckedout.utils.DatabaseUtil;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import java.sql.SQLException;
@@ -10,7 +10,7 @@ import java.util.Properties;
 
 public class PostgreSQLSourceProvider extends DataSourceProvider<HikariDataSource> {
 
-  public PostgreSQLSourceProvider(DatabaseConfig.DatabaseSettings config) throws SQLException {
+  public PostgreSQLSourceProvider(DatabaseSettings config) throws SQLException {
     super(config);
   }
 

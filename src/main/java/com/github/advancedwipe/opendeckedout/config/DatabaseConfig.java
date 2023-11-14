@@ -1,4 +1,4 @@
-package com.github.advancedwipe.config;
+package com.github.advancedwipe.opendeckedout.config;
 
 public class DatabaseConfig {
 

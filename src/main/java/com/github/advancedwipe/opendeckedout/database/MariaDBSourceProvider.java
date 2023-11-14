@@ -1,17 +1,15 @@
-package com.github.advancedwipe.database;
+package com.github.advancedwipe.opendeckedout.database;
 
-import com.github.advancedwipe.OpenDeckedOut;
-import com.github.advancedwipe.config.DatabaseConfig;
+import com.github.advancedwipe.opendeckedout.config.DatabaseConfig.DatabaseSettings;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.TimeZone;
 import javax.sql.DataSource;
 
 public class MariaDBSourceProvider extends DataSourceProvider<HikariDataSource> {
 
-  public MariaDBSourceProvider(DatabaseConfig.DatabaseSettings config) throws SQLException {
+  public MariaDBSourceProvider(DatabaseSettings config) throws SQLException {
     super(config);
   }
 
