@@ -1,12 +1,16 @@
 package com.github.advancedwipe.opendeckedout.database;
 
 import com.github.advancedwipe.opendeckedout.OpenDeckedOut;
+import com.github.advancedwipe.opendeckedout.cards.Card;
+import com.github.advancedwipe.opendeckedout.cards.CardFactory;
 import com.github.advancedwipe.opendeckedout.config.DatabaseConfig.DatabaseSettings;
 import com.zaxxer.hikari.HikariDataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import javax.sql.DataSource;
 import org.apache.logging.log4j.Level;
@@ -110,7 +114,8 @@ public class DatabaseManager {
     }
   }
 
-  public void fetchPlayerCards() {
+  public List<Card> fetchPlayerCards() {
+    List<Card> cards = new ArrayList<>();
     String sql = "SELECT card.card_id, card.amount FROM player LEFT JOIN card ON ?::UUID = card.player_uuid;";
 
     try (Connection connection = source.getConnection();
@@ -119,12 +124,12 @@ public class DatabaseManager {
 
       var resultSet = statement.executeQuery();
       while (resultSet.next()) {
-        System.out.println(resultSet.getInt("card_id"));
-        System.out.println(resultSet.getInt("amount"));
+        cards.add(CardFactory.createCard(resultSet.getInt("card_id")));
       }
     } catch (SQLException e) {
       OpenDeckedOut.LOGGER.log(Level.WARN, "Could not update table: {}", e.getMessage());
     }
+    return cards;
   }
 
 }
