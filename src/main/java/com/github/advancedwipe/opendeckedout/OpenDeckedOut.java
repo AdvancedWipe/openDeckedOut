@@ -79,6 +79,8 @@ public class OpenDeckedOut extends JavaPlugin implements Listener {
     LOGGER.log(Level.INFO, "Database 'openDeckedOut' exists: {}", databaseManager.checkPostgresDatabaseExists("openDeckedOut"));
     LOGGER.log(Level.INFO, "Table 'player' exists: {}", databaseManager.tableExists("player"));
     LOGGER.log(Level.INFO, "Table 'card' exists: {}", databaseManager.tableExists("card"));
+
+    databaseManager.insertCard();
   }
 
   private void registerEvents() {

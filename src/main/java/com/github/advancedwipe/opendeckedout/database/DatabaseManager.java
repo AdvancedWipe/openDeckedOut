@@ -94,4 +94,20 @@ public class DatabaseManager {
     return null;
   }
 
+  public void insertCard() {
+    String sql = "INSERT INTO card (player_uuid,  card_uuid, card_id, amount) VALUES (?::UUID, ?::UUID, ?, ?);";
+
+    try (Connection connection = source.getConnection();
+        PreparedStatement statement = connection.prepareStatement(sql)) {
+      statement.setString(1, "9b0bd5cc-3591-3e1f-abc4-8cad6a7fcf2f");
+      statement.setString(2, "9b0bd5cc-3591-3e1f-abc4-8cad6a7fcf2c");
+      statement.setInt(3, 1);
+      statement.setInt(4, 3);
+
+      statement.executeUpdate();
+    } catch (SQLException e) {
+      OpenDeckedOut.LOGGER.log(Level.WARN, "Could not update table: {}", e.getMessage());
+    }
+  }
+
 }
