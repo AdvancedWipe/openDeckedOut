@@ -110,4 +110,21 @@ public class DatabaseManager {
     }
   }
 
+  public void fetchPlayerCards() {
+    String sql = "SELECT card.card_id, card.amount FROM player LEFT JOIN card ON ?::UUID = card.player_uuid;";
+
+    try (Connection connection = source.getConnection();
+        PreparedStatement statement = connection.prepareStatement(sql)) {
+      statement.setString(1, "9b0bd5cc-3591-3e1f-abc4-8cad6a7fcf2f");
+
+      var resultSet = statement.executeQuery();
+      while (resultSet.next()) {
+        System.out.println(resultSet.getInt("card_id"));
+        System.out.println(resultSet.getInt("amount"));
+      }
+    } catch (SQLException e) {
+      OpenDeckedOut.LOGGER.log(Level.WARN, "Could not update table: {}", e.getMessage());
+    }
+  }
+
 }
