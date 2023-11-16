@@ -19,7 +19,7 @@ import net.megavex.scoreboardlibrary.api.sidebar.component.animation.SidebarAnim
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-public class Scoreboard {
+public class Scoreboard implements Element {
 
   private final OpenDeckedOut plugin;
   private final int maxTreasureDrops;
@@ -88,6 +88,7 @@ public class Scoreboard {
     this.componentSidebar = new ComponentSidebarLayout(title, lines);
   }
 
+  @Override
   public void update() {
     treasureStatus.setStatus(treasureDrops);
     stateTwoStatus.setStatus(0);
