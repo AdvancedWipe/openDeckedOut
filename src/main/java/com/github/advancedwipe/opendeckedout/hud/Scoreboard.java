@@ -35,6 +35,7 @@ public class Scoreboard implements Element {
   private final Statusbar stateThreeStatus;
   private final Statusbar stateFourStatus;
   private final MultiRowStatusbar libraryStatus;
+  private final Counter counter;
   private Component libraryMessageOne;
   private Component libraryMessageTwo;
 
@@ -52,6 +53,7 @@ public class Scoreboard implements Element {
         NamedTextColor.GRAY);
     this.libraryStatus = new MultiRowStatusbar(2, "Library:", "          ", '▌', 40, 0,
         NamedTextColor.WHITE, NamedTextColor.GRAY);
+    this.counter = new Counter("Elapsed time: ", NamedTextColor.GRAY);
 
     createSidebar();
   }
@@ -83,6 +85,7 @@ public class Scoreboard implements Element {
         .addBlankLine()
         .addDynamicLine(() -> libraryStatus.getRow(0).getMessage())
         .addDynamicLine(() -> libraryStatus.getRow(1).getMessage())
+        .addDynamicLine(counter::getMessage)
         .build();
 
     this.componentSidebar = new ComponentSidebarLayout(title, lines);
@@ -95,6 +98,7 @@ public class Scoreboard implements Element {
     stateThreeStatus.setStatus(0);
     stateFourStatus.setStatus(0);
     libraryStatus.setStatus(librarySize);
+    counter.update();
 
     titleAnimation.nextFrame();
     componentSidebar.apply(sidebar);
