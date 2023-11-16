@@ -1,4 +1,4 @@
-package com.github.advancedwipe.opendeckedout.game;
+package com.github.advancedwipe.opendeckedout.hud;
 
 import java.util.ArrayList;
 import java.util.List;

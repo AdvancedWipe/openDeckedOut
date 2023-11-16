@@ -3,6 +3,8 @@ package com.github.advancedwipe.opendeckedout.game;
 import com.github.advancedwipe.opendeckedout.OpenDeckedOut;
 import com.github.advancedwipe.opendeckedout.cards.CardManager;
 import com.github.advancedwipe.opendeckedout.game.artifact.Artifact;
+import com.github.advancedwipe.opendeckedout.hud.Scoreboard;
+import com.github.advancedwipe.opendeckedout.hud.ScoreboardRunnable;
 import com.github.advancedwipe.opendeckedout.player.DungeonPlayer;
 import com.github.advancedwipe.opendeckedout.player.Status;
 import com.github.advancedwipe.opendeckedout.sound.Heartbeat;
@@ -62,20 +64,20 @@ public class Dungeon extends Game {
   private int increasedCoinChance = 0;
   private int clank;
   private int clankBlock;
-  private com.github.advancedwipe.opendeckedout.game.Scoreboard scoreboard;
+  private Scoreboard scoreboard;
 
   public Dungeon(OpenDeckedOut plugin, String name) {
     super(plugin, name);
     this.clank = 0;
     this.clankBlock = 0;
-    scoreboard = new com.github.advancedwipe.opendeckedout.game.Scoreboard(plugin);
+    scoreboard = new Scoreboard(plugin);
   }
 
   public Dungeon(OpenDeckedOut plugin, UUID uuid) {
     super(plugin, uuid);
     this.clank = 0;
     this.clankBlock = 0;
-    scoreboard = new com.github.advancedwipe.opendeckedout.game.Scoreboard(plugin);
+    scoreboard = new Scoreboard(plugin);
   }
 
   public static Dungeon loadGame(OpenDeckedOut plugin, File file) {
