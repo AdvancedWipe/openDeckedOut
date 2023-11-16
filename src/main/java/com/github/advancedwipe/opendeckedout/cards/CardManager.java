@@ -1,22 +1,24 @@
 package com.github.advancedwipe.opendeckedout.cards;
 
+import com.github.advancedwipe.opendeckedout.OpenDeckedOut;
 import com.github.advancedwipe.opendeckedout.player.DungeonPlayer;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EmptyStackException;
 import java.util.List;
 import java.util.Stack;
+import org.bukkit.entity.Player;
 
 public class CardManager {
 
-  private final List<Card> cards = new ArrayList<>();
+  private final OpenDeckedOut plugin;
+  private List<Card> cards = new ArrayList<>();
   private final Stack<Card> library = new Stack<>();
   private final Stack<Card> hand = new Stack<>();
   private final List<Card> graveyard = new ArrayList<>();
 
-  public CardManager() {
-    library.push(new CoinCard());
-    shuffleCards();
+  public CardManager(OpenDeckedOut plugin) {
+    this.plugin = plugin;
   }
 
   public void shuffleCards() {
@@ -61,5 +63,13 @@ public class CardManager {
 
   public List<Card> getGraveyard() {
     return graveyard;
+  }
+
+  public void loadPlayerCards(Player player) {
+    cards = plugin.getDatabaseManager().fetchPlayerCards(player);
+
+    for (Card card : cards) {
+      library.push(card);
+    }
   }
 }

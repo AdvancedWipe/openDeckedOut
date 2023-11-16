@@ -17,6 +17,7 @@ import java.util.Objects;
 import java.util.Random;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
+import net.kyori.adventure.text.Component;
 import org.apache.logging.log4j.Level;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -230,6 +231,7 @@ public class Dungeon extends Game {
     if (increasedCoinChance != scoreboard.getTreasureDrops()) {
       scoreboard.setTreasureDrops(increasedCoinChance);
     }
+    scoreboard.setLibrarySize(cardManager.getLibrarySize());
   }
 
   private void dropCoin(int chance) {
@@ -244,8 +246,6 @@ public class Dungeon extends Game {
   }
 
   private void prepareDungeon() {
-    cardManager = new CardManager();
-
     for (var ravagerSpawn : ravagerSpawns) {
       Entity ravager = ravagerSpawn.getWorld().spawnEntity(ravagerSpawn, EntityType.RAVAGER);
       ravagers.add(ravager);
@@ -320,6 +320,11 @@ public class Dungeon extends Game {
       }
       dungeonPlayer.saveInventory();
 
+      if (cardManager == null) {
+        cardManager = new CardManager(plugin);
+      }
+      cardManager.loadPlayerCards(player);
+
       scoreboard.addPlayer(player);
 
       player.teleport(getSpawn());
@@ -371,7 +376,15 @@ public class Dungeon extends Game {
 
     for (Entity entity : this.world.getEntities()) {
       if (DungeonUtils.isInArena(entity.getLocation(), getPos1(), getPos2())) {
-        entity.remove();
+        try {
+          entity.remove();
+        } catch (UnsupportedOperationException e) {
+          if (entity instanceof Player) {
+            Location spawn = entity.getLocation().getWorld().getSpawnLocation();
+            entity.teleport(spawn);
+            entity.sendMessage(Component.text("You started the dungeon from with in it, could not reset to last position. Teleporting back to world spawn after dungeon is rebuilding."));
+          }
+        }
       }
     }
 

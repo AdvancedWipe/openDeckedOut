@@ -28,8 +28,14 @@ public class MultiRowStatusbar {
   }
 
   private void update() {
-    throw new UnsupportedOperationException("Not implemented yet");
-
+    if (status % 2 == 0) {
+      System.out.println(status + " is even.");
+    } else {
+      var row = rows.get(0);
+      int currentStatus = row.getStatus();
+      currentStatus++;
+      row.setStatus(currentStatus);
+    }
   }
 
   public void setStatus(int status) {

@@ -33,6 +33,10 @@ public class Statusbar {
     }
   }
 
+  public int getStatus() {
+    return status;
+  }
+
   private void update() {
     message = keyComponent;
 

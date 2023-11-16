@@ -6,7 +6,7 @@ import org.jetbrains.annotations.Nullable;
 public class DungeonPlayer extends Player {
 
   private Dungeon game;
-  private final Stats stats = new Stats();
+  //private final Stats stats = new Stats();
   private Status status;
   private PlayerStats playerStats;
 

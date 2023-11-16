@@ -7,7 +7,7 @@ public class CardFactory {
 
   public static Card createCard(int cardId) {
     switch (cardId) {
-      case 1:
+      case 0:
         return new CoinCard();
       default:
         OpenDeckedOut.LOGGER.log(Level.WARN, "Unknown card ID: {}", cardId);

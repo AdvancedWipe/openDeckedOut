@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Objects;
 import javax.sql.DataSource;
 import org.apache.logging.log4j.Level;
+import org.bukkit.entity.Player;
 
 public class DatabaseManager {
 
@@ -114,13 +115,13 @@ public class DatabaseManager {
     }
   }
 
-  public List<Card> fetchPlayerCards() {
+  public List<Card> fetchPlayerCards(Player player) {
     List<Card> cards = new ArrayList<>();
     String sql = "SELECT card.card_id, card.amount FROM player LEFT JOIN card ON ?::UUID = card.player_uuid;";
 
     try (Connection connection = source.getConnection();
         PreparedStatement statement = connection.prepareStatement(sql)) {
-      statement.setString(1, "9b0bd5cc-3591-3e1f-abc4-8cad6a7fcf2f");
+      statement.setString(1, player.getUniqueId().toString());
 
       var resultSet = statement.executeQuery();
       while (resultSet.next()) {

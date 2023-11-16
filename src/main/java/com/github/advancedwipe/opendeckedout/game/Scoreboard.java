@@ -24,6 +24,7 @@ public class Scoreboard {
   private final OpenDeckedOut plugin;
   private final int maxTreasureDrops;
   private int treasureDrops = 0;
+  private int librarySize = 0;
 
   private Sidebar sidebar;
   private ComponentSidebarLayout componentSidebar;
@@ -92,7 +93,7 @@ public class Scoreboard {
     stateTwoStatus.setStatus(0);
     stateThreeStatus.setStatus(0);
     stateFourStatus.setStatus(0);
-    libraryStatus.setStatus(0);
+    libraryStatus.setStatus(librarySize);
 
     titleAnimation.nextFrame();
     componentSidebar.apply(sidebar);
@@ -151,6 +152,18 @@ public class Scoreboard {
 
   public void decreaseTreasureDrops() {
     this.treasureDrops--;
+  }
+
+  public int getLibrarySize() {
+    return 0;
+  }
+
+  public void setLibrarySize(int size) {
+    this.librarySize = size;
+  }
+
+  public void decreaseLibrarySize() {
+    this.librarySize--;
   }
 
 }

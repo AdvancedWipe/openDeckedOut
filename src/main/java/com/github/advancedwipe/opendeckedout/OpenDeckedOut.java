@@ -124,6 +124,10 @@ public class OpenDeckedOut extends JavaPlugin implements Listener {
     databaseManager.disconnect();
   }
 
+  public DatabaseManager getDatabaseManager() {
+    return databaseManager;
+  }
+
   public DungeonManager getDeckedOutManager() {
     return dungeonManager;
   }
