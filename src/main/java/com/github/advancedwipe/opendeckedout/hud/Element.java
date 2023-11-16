@@ -1,6 +1,6 @@
 package com.github.advancedwipe.opendeckedout.hud;
 
-public interface Component {
+public interface Element {
 
   void update();
 

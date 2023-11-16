@@ -5,24 +5,24 @@ import java.util.List;
 
 public class Hud {
 
-  private List<Component> components;
+  private List<Element> elements;
 
   public Hud() {
-    components = new ArrayList<>();
+    elements = new ArrayList<>();
   }
 
   public void update() {
-    for (Component component: components) {
-      component.update();
+    for (Element element : elements) {
+      element.update();
     }
   }
 
-  public void addComponent(Component component) {
-    components.add(component);
+  public void addElement(Element element) {
+    elements.add(element);
   }
 
-  public void removeComponent(Component component) {
-    components.remove(component);
+  public void removeElement(Element element) {
+    elements.remove(element);
   }
 
 }
