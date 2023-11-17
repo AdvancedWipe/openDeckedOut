@@ -3,11 +3,11 @@ package com.github.advancedwipe.opendeckedout.hud;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Hud {
+public class CompositeContainer {
 
   private List<Element> elements;
 
-  public Hud() {
+  public CompositeContainer() {
     elements = new ArrayList<>();
   }
 
