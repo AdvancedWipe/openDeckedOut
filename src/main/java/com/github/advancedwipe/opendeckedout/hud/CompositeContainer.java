@@ -5,24 +5,24 @@ import java.util.List;
 
 public class CompositeContainer {
 
-  private List<Element> elements;
+  private List<Component> components;
 
   public CompositeContainer() {
-    elements = new ArrayList<>();
+    components = new ArrayList<>();
   }
 
   public void update() {
-    for (Element element : elements) {
-      element.update();
+    for (Component component : components) {
+      component.update();
     }
   }
 
-  public void addElement(Element element) {
-    elements.add(element);
+  public void addComponent(Component component) {
+    components.add(component);
   }
 
-  public void removeElement(Element element) {
-    elements.remove(element);
+  public void removeComponent(Component component) {
+    components.remove(component);
   }
 
 }

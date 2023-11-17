@@ -5,7 +5,6 @@ import com.github.advancedwipe.opendeckedout.OpenDeckedOut;
 import com.github.advancedwipe.opendeckedout.player.DungeonPlayer;
 import java.util.ArrayList;
 import java.util.List;
-import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.Style;
 import net.kyori.adventure.text.format.TextDecoration;
@@ -19,7 +18,7 @@ import net.megavex.scoreboardlibrary.api.sidebar.component.animation.SidebarAnim
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-public class Scoreboard implements Element {
+public class Scoreboard implements Component {
 
   private final OpenDeckedOut plugin;
   private final int maxTreasureDrops;
@@ -28,7 +27,7 @@ public class Scoreboard implements Element {
 
   private Sidebar sidebar;
   private ComponentSidebarLayout componentSidebar;
-  private SidebarAnimation<Component> titleAnimation;
+  private SidebarAnimation<net.kyori.adventure.text.Component> titleAnimation;
   private StringBuilder coinFields = new StringBuilder();
   private final Statusbar treasureStatus;
   private final Statusbar stateTwoStatus;
@@ -36,8 +35,8 @@ public class Scoreboard implements Element {
   private final Statusbar stateFourStatus;
   private final MultiRowStatusbar libraryStatus;
   private final Counter counter;
-  private Component libraryMessageOne;
-  private Component libraryMessageTwo;
+  private net.kyori.adventure.text.Component libraryMessageOne;
+  private net.kyori.adventure.text.Component libraryMessageTwo;
 
 
   public Scoreboard(OpenDeckedOut plugin) {
@@ -70,7 +69,7 @@ public class Scoreboard implements Element {
     sidebar = plugin.getScoreboardLibrary().createSidebar();
 
     titleAnimation = createGradientAnimation(
-        Component.text("     openDO     ", Style.style(TextDecoration.BOLD)));
+        net.kyori.adventure.text.Component.text("     openDO     ", Style.style(TextDecoration.BOLD)));
     var title = SidebarComponent.animatedLine(titleAnimation);
 
     SidebarComponent lines = SidebarComponent.builder()
@@ -104,15 +103,15 @@ public class Scoreboard implements Element {
     componentSidebar.apply(sidebar);
   }
 
-  private Component buildStatusbar(String key, String statusIcon, int size, int status,
+  private net.kyori.adventure.text.Component buildStatusbar(String key, String statusIcon, int size, int status,
       NamedTextColor keyColor, NamedTextColor disabledColor) {
-    Component statusbar = Component.text(String.format("%s ", key)).color(keyColor);
+    net.kyori.adventure.text.Component statusbar = net.kyori.adventure.text.Component.text(String.format("%s ", key)).color(keyColor);
 
     for (int i = 0; i < size; i++) {
       if (i < status) {
-        statusbar = statusbar.append(Component.text(statusIcon).color(keyColor));
+        statusbar = statusbar.append(net.kyori.adventure.text.Component.text(statusIcon).color(keyColor));
       } else {
-        statusbar = statusbar.append(Component.text(statusIcon).color(disabledColor));
+        statusbar = statusbar.append(net.kyori.adventure.text.Component.text(statusIcon).color(disabledColor));
       }
     }
 
@@ -132,10 +131,10 @@ public class Scoreboard implements Element {
     }
   }
 
-  private @NotNull SidebarAnimation<Component> createGradientAnimation(@NotNull Component text) {
+  private @NotNull SidebarAnimation<net.kyori.adventure.text.Component> createGradientAnimation(@NotNull net.kyori.adventure.text.Component text) {
     float step = 1f / 50f;
 
-    List<Component> frames = new ArrayList<>((int) (2f / step));
+    List<net.kyori.adventure.text.Component> frames = new ArrayList<>((int) (2f / step));
 
     float phase = -1f;
     while (phase < 1) {
