@@ -1,6 +1,7 @@
 package com.github.advancedwipe.opendeckedout.game;
 
 import com.github.advancedwipe.opendeckedout.OpenDeckedOut;
+import com.github.advancedwipe.opendeckedout.hud.CompositeContainer;
 import com.github.advancedwipe.opendeckedout.utils.DungeonUtils;
 import java.io.File;
 import java.util.HashMap;
@@ -25,6 +26,7 @@ public abstract class Game {
   protected int countdown;
   protected boolean preparing = false;
   private final Map<Location, BlockState> originalState = new HashMap<>();
+  protected CompositeContainer hud;
 
   protected Game(OpenDeckedOut plugin, String name) {
     this.plugin = plugin;
@@ -44,6 +46,7 @@ public abstract class Game {
       countdown = -1;
 
       recordOriginalDungeon();
+      hud = new CompositeContainer();
 
       status = GameStatus.WAITING;
       preparing = false;

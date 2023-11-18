@@ -5,7 +5,7 @@ import java.util.List;
 
 public class CompositeContainer {
 
-  private List<Component> components;
+  private final List<Component> components;
 
   public CompositeContainer() {
     components = new ArrayList<>();

@@ -70,14 +70,12 @@ public class Dungeon extends Game {
     super(plugin, name);
     this.clank = 0;
     this.clankBlock = 0;
-    scoreboard = new Scoreboard(plugin);
   }
 
   public Dungeon(OpenDeckedOut plugin, UUID uuid) {
     super(plugin, uuid);
     this.clank = 0;
     this.clankBlock = 0;
-    scoreboard = new Scoreboard(plugin);
   }
 
   public static Dungeon loadFromFile(OpenDeckedOut plugin, File file) {
@@ -217,6 +215,7 @@ public class Dungeon extends Game {
     });
 
     updateScoreboard();
+    hud.update();
 
     if (increasedCoinChance > 0) {
       dropCoin(BASE_COIN_CHANCE + 15);
@@ -295,7 +294,10 @@ public class Dungeon extends Game {
       // schedule player to join game
     }
 
-    boolean isEmpty = players.isEmpty();
+    if (players.isEmpty()) {
+      runTask();
+    }
+
     if (!players.contains(dungeonPlayer)) {
       players.add(dungeonPlayer);
     }
@@ -307,15 +309,16 @@ public class Dungeon extends Game {
 
     preparePlayer(player);
 
-    if (isEmpty) {
-      runTask();
-    }
   }
 
   public void runTask() {
     cancelTask();
     final int taskFrequency = 20;
     final int taskDelay = 0;
+
+    scoreboard = new Scoreboard(plugin);
+    hud.addComponent(scoreboard);
+
     // Dungeon has a tick frequency of 20 minecraft ticks (1 second) to process its events
     dungeonTask = new DungeonRunnable(this).runTaskTimer(plugin, taskDelay, taskFrequency);
     scoreboardTask = new ScoreboardRunnable(scoreboard).runTaskTimer(plugin, taskDelay, 1);
@@ -365,7 +368,7 @@ public class Dungeon extends Game {
     clank = 0;
     clankBlock = 0;
 
-    scoreboard = new Scoreboard(plugin);
+    hud.removeComponent(scoreboard);
 
     resetToOriginalDungeon();
 
