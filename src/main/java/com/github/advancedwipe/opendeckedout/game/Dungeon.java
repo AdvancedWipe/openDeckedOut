@@ -134,7 +134,7 @@ public class Dungeon extends Game {
       game.exit = Utils.readStringToLocation(game.world,
           Objects.requireNonNull(configMap.node("exit").getString()));
 
-      game.start();
+      game.initialize();
       OpenDeckedOut.LOGGER.log(Level.INFO, "Arena '{}' loaded!", game.name);
 
       return game;

@@ -38,7 +38,7 @@ public abstract class Game {
   }
 
 
-  public void start() {
+  public void initialize() {
     if (status == GameStatus.DISABLED) {
       preparing = true;
       countdown = -1;
