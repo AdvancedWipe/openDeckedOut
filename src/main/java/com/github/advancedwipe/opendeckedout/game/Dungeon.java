@@ -250,6 +250,15 @@ public class Dungeon extends Game {
       ravagers.add(ravager);
     }
 
+    for (var berry : berrys) {
+      Block berryBlock = world.getBlockAt(berry);
+      berryBlock.setType(Material.SWEET_BERRY_BUSH);
+      Ageable ageable = (Ageable) berryBlock.getBlockData();
+      int maxAge = ageable.getMaximumAge();
+      ageable.setAge(maxAge);
+      berryBlock.setBlockData(ageable);
+    }
+
     status = GameStatus.RUNNING;
   }
 
@@ -276,7 +285,7 @@ public class Dungeon extends Game {
   }
 
 
-  public void joinToGame(DungeonPlayer dungeonPlayer) {
+  public void join(DungeonPlayer dungeonPlayer) {
     if (status == GameStatus.DISABLED) {
       return;
     }
@@ -285,7 +294,7 @@ public class Dungeon extends Game {
       // schedule player to join game
     }
 
-    dungeonPlayer.changeGame(this);
+    preparePlayerForDungeon(dungeonPlayer);
   }
 
   public void runTask() {
@@ -309,7 +318,7 @@ public class Dungeon extends Game {
     }
   }
 
-  public void internalJoinPlayer(DungeonPlayer dungeonPlayer) {
+  public void preparePlayerForDungeon(DungeonPlayer dungeonPlayer) {
     Player player = dungeonPlayer.getBukkitPlayer();
     if (status == GameStatus.WAITING) {
 
@@ -317,7 +326,6 @@ public class Dungeon extends Game {
       if (!players.contains(dungeonPlayer)) {
         players.add(dungeonPlayer);
       }
-      dungeonPlayer.saveInventory();
 
       if (cardManager == null) {
         cardManager = new CardManager(plugin);
@@ -330,15 +338,6 @@ public class Dungeon extends Game {
 
       player.getInventory().addItem(artifacts.get(0).getCompass());
       player.setCompassTarget(artifacts.get(0).getLocation());
-
-      for (var berry : berrys) {
-        Block berryBlock = world.getBlockAt(berry);
-        berryBlock.setType(Material.SWEET_BERRY_BUSH);
-        Ageable ageable = (Ageable) berryBlock.getBlockData();
-        int maxAge = ageable.getMaximumAge();
-        ageable.setAge(maxAge);
-        berryBlock.setBlockData(ageable);
-      }
 
       if (isEmpty) {
         runTask();

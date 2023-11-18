@@ -104,7 +104,7 @@ public class PlayerListener implements Listener {
     var playerManager = plugin.getPlayerManager();
 
     if (playerManager.isPlayerInGame(player)) {
-      playerManager.getPlayerOrCreate(player).changeGame(null);
+      playerManager.getPlayerOrCreate(player).quit();
     }
   }
 

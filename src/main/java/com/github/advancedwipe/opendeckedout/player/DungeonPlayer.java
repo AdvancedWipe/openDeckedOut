@@ -16,17 +16,15 @@ public class DungeonPlayer extends Player {
     this.playerStats = new PlayerStats(player);
   }
 
-  public void changeGame(Dungeon game) {
-    if (this.game == null && game != null) { // On join
-      // TODO Maybe save inventory before joining to restore it after game
-      this.game = game;
-      this.game.internalJoinPlayer(this);
-    } else if (this.game != null && game == null) { // On leave
-      this.game.internalLeavePlayer(this);
-      this.game = null;
-      //stats.savePlayerStats(player, stats);
-      // TODO clean up values or restore inventory
-    }
+  public void join(Dungeon dungeon) {
+    saveInventory();
+    this.game = dungeon;
+    this.game.preparePlayerForDungeon(this);
+  }
+
+  public void quit() {
+    this.game.internalLeavePlayer(this);
+    this.game = null;
   }
 
   @Override

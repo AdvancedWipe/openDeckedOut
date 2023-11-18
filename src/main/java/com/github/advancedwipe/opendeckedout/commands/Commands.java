@@ -11,11 +11,13 @@ import cloud.commandframework.paper.PaperCommandManager;
 import com.github.advancedwipe.opendeckedout.OpenDeckedOut;
 import com.github.advancedwipe.opendeckedout.game.Dungeon;
 import com.github.advancedwipe.opendeckedout.game.DungeonManager;
+import com.github.advancedwipe.opendeckedout.player.DungeonPlayerManager;
 import com.github.advancedwipe.opendeckedout.utils.Utils;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Random;
 import java.util.stream.Stream;
 import org.apache.logging.log4j.Level;
@@ -42,11 +44,13 @@ public final class Commands {
   private Map<String, Dungeon> workspace;
   private final PaperCommandManager<CommandSender> cmdManager;
   private final DungeonManager dungeonManager;
+  private final DungeonPlayerManager playerManager;
 
   public Commands(final @NotNull OpenDeckedOut plugin) {
     this.plugin = plugin;
     workspace = new HashMap<>();
     this.dungeonManager = plugin.getDeckedOutManager();
+    this.playerManager = plugin.getPlayerManager();
     this.cmdManager = createCommandManager(plugin);
   }
 
@@ -306,8 +310,8 @@ public final class Commands {
       return;
     }
 
-    if (plugin.getPlayerManager().isPlayerInGame(player)) {
-      plugin.getPlayerManager().getPlayerOrCreate(player).changeGame(null);
+    if (playerManager.isPlayerInGame(player)) {
+      playerManager.getPlayerOrCreate(player).quit();
     }
   }
 
@@ -321,8 +325,7 @@ public final class Commands {
     }
 
     plugin.getDeckedOutManager().getGame(context.get("name"))
-        .ifPresentOrElse(game -> game.joinToGame(
-                plugin.getPlayerManager().getPlayerOrCreate(player)),
+        .ifPresentOrElse(game -> playerManager.getPlayerOrCreate(player).join(game),
             () -> player.sendMessage("Game not found"));
   }
 
