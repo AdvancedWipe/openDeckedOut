@@ -70,6 +70,8 @@ public class OpenDeckedOut extends JavaPlugin implements Listener {
       }
     }
 
+    dungeonManager.initializeGames();
+
     new Commands(this).register();
 
     if (!databaseManager.connect()) {

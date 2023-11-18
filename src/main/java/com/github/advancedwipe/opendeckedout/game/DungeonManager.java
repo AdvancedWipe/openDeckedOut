@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import org.apache.logging.log4j.Level;
+import org.jetbrains.annotations.NotNull;
 
 public class DungeonManager {
 
@@ -17,14 +18,25 @@ public class DungeonManager {
     this.games = new ArrayList<>();
   }
 
-  public void loadGames(File[] arenaFiles) {
+  public void loadGames(File @NotNull [] arenaFiles) {
     for (File arenaFile : arenaFiles) {
-      Dungeon game = Dungeon.loadGame(plugin, arenaFile);
+      Dungeon game = Dungeon.loadFromFile(plugin, arenaFile);
       if (game != null) {
         this.games.add(game);
+        OpenDeckedOut.LOGGER.log(Level.INFO, "Dungeon '{}' loaded!", game.name);
       } else {
-        OpenDeckedOut.LOGGER.log(Level.WARN, "Unable to load {}", arenaFile.toString());
+        OpenDeckedOut.LOGGER.log(Level.WARN, "Unable to load {}", arenaFile);
       }
+    }
+  }
+
+  public void initializeGames() {
+    if (games.isEmpty()) {
+      return;
+    }
+
+    for (Game game: games) {
+      game.initialize();
     }
   }
 

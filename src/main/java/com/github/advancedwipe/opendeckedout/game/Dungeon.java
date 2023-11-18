@@ -80,7 +80,7 @@ public class Dungeon extends Game {
     scoreboard = new Scoreboard(plugin);
   }
 
-  public static Dungeon loadGame(OpenDeckedOut plugin, File file) {
+  public static Dungeon loadFromFile(OpenDeckedOut plugin, File file) {
     final ConfigurationLoader<? extends ConfigurationNode> arenaLoader;
     final ConfigurationNode configMap;
     arenaLoader = YamlConfigurationLoader.builder().file(file).build();
@@ -133,9 +133,6 @@ public class Dungeon extends Game {
           Objects.requireNonNull(configMap.node("berrys").getList(String.class)));
       game.exit = Utils.readStringToLocation(game.world,
           Objects.requireNonNull(configMap.node("exit").getString()));
-
-      game.initialize();
-      OpenDeckedOut.LOGGER.log(Level.INFO, "Arena '{}' loaded!", game.name);
 
       return game;
     } catch (Throwable throwable) {
