@@ -19,7 +19,7 @@ public class DungeonPlayer extends Player {
   public void join(Dungeon dungeon) {
     saveInventory();
     this.game = dungeon;
-    this.game.preparePlayerForDungeon(this);
+    this.game.join(this);
   }
 
   public void quit() {

@@ -145,8 +145,8 @@ public class Dungeon extends Game {
     File directory = new File(plugin.getDataFolder(), "arenas");
 
     if (!directory.exists() && (!directory.mkdirs())) {
-        OpenDeckedOut.LOGGER.warn("Failed to create folder 'arenas', can not save arenas to file!");
-        return;
+      OpenDeckedOut.LOGGER.warn("Failed to create folder 'arenas', can not save arenas to file!");
+      return;
 
     }
     if (file == null) {
@@ -286,6 +286,7 @@ public class Dungeon extends Game {
 
 
   public void join(DungeonPlayer dungeonPlayer) {
+    Player player = dungeonPlayer.getBukkitPlayer();
     if (status == GameStatus.DISABLED) {
       return;
     }
@@ -294,7 +295,21 @@ public class Dungeon extends Game {
       // schedule player to join game
     }
 
-    preparePlayerForDungeon(dungeonPlayer);
+    boolean isEmpty = players.isEmpty();
+    if (!players.contains(dungeonPlayer)) {
+      players.add(dungeonPlayer);
+    }
+
+    if (cardManager == null) {
+      cardManager = new CardManager(plugin);
+    }
+    cardManager.loadPlayerCards(player);
+
+    preparePlayer(player);
+
+    if (isEmpty) {
+      runTask();
+    }
   }
 
   public void runTask() {
@@ -318,32 +333,14 @@ public class Dungeon extends Game {
     }
   }
 
-  public void preparePlayerForDungeon(DungeonPlayer dungeonPlayer) {
-    Player player = dungeonPlayer.getBukkitPlayer();
-    if (status == GameStatus.WAITING) {
+  public void preparePlayer(Player player) {
 
-      boolean isEmpty = players.isEmpty();
-      if (!players.contains(dungeonPlayer)) {
-        players.add(dungeonPlayer);
-      }
+    scoreboard.addPlayer(player);
 
-      if (cardManager == null) {
-        cardManager = new CardManager(plugin);
-      }
-      cardManager.loadPlayerCards(player);
+    player.teleport(getSpawn());
 
-      scoreboard.addPlayer(player);
-
-      player.teleport(getSpawn());
-
-      player.getInventory().addItem(artifacts.get(0).getCompass());
-      player.setCompassTarget(artifacts.get(0).getLocation());
-
-      if (isEmpty) {
-        runTask();
-      }
-    }
-
+    player.getInventory().addItem(artifacts.get(0).getCompass());
+    player.setCompassTarget(artifacts.get(0).getLocation());
   }
 
   public void internalLeavePlayer(DungeonPlayer dungeonPlayer) {
@@ -380,7 +377,8 @@ public class Dungeon extends Game {
           if (entity instanceof Player) {
             Location spawn = entity.getLocation().getWorld().getSpawnLocation();
             entity.teleport(spawn);
-            entity.sendMessage(Component.text("You started the dungeon from with in it, could not reset to last position. Teleporting back to world spawn after dungeon is rebuilding."));
+            entity.sendMessage(Component.text(
+                "You started the dungeon from with in it, could not reset to last position. Teleporting back to world spawn after dungeon is rebuilding."));
           }
         }
       }
