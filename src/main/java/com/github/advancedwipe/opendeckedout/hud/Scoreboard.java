@@ -39,9 +39,10 @@ public class Scoreboard implements Component {
   private net.kyori.adventure.text.Component libraryMessageTwo;
 
 
-  public Scoreboard(OpenDeckedOut plugin) {
+  public Scoreboard(OpenDeckedOut plugin, int librarySize) {
     this.plugin = plugin;
     this.maxTreasureDrops = 10;
+    this.librarySize = librarySize;
     this.treasureStatus = new Statusbar("Treasure:", '■', 15, treasureDrops, NamedTextColor.YELLOW,
         NamedTextColor.GRAY);
     this.stateTwoStatus = new Statusbar("State2:", '■', 15, treasureDrops, NamedTextColor.AQUA,
@@ -50,7 +51,7 @@ public class Scoreboard implements Component {
         NamedTextColor.GRAY);
     this.stateFourStatus = new Statusbar("State4:", '■', 15, 0, NamedTextColor.DARK_AQUA,
         NamedTextColor.GRAY);
-    this.libraryStatus = new MultiRowStatusbar(2, "Library:", "          ", '▌', 40, 0,
+    this.libraryStatus = new MultiRowStatusbar(2, "Library:", "          ", '▌', 40, librarySize,
         NamedTextColor.WHITE, NamedTextColor.GRAY);
     this.counter = new Counter("Elapsed time: ", NamedTextColor.GRAY);
 

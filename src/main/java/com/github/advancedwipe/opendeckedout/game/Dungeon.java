@@ -51,7 +51,6 @@ public class Dungeon extends Game {
   private static final int MAX_RANDOM = 100;
   private int tick;
   private static final int MAX_TICK = 30;
-  private CardManager cardManager;
   private List<DungeonPlayer> players = new ArrayList<>();
   private List<Entity> ravagers = new ArrayList<>();
   private List<Location> ravagerSpawns = new ArrayList<>();
@@ -192,6 +191,10 @@ public class Dungeon extends Game {
         onMaxDungeonTick();
         return;
       }
+
+      updateScoreboard();
+      hud.update();
+
       tick++;
     }
 
@@ -204,6 +207,7 @@ public class Dungeon extends Game {
   private void onMaxDungeonTick() {
     tick = 0;
     cardManager.drawNewCard();
+    scoreboard.decreaseLibrarySize();
   }
 
   private void onEveryDungeonTick() {
@@ -213,9 +217,6 @@ public class Dungeon extends Game {
       Status playerStatus = dungeonPlayer.getStatus();
       increasedCoinChance = increasedCoinChance + playerStatus.getCoinProbabilityIncrease();
     });
-
-    updateScoreboard();
-    hud.update();
 
     if (increasedCoinChance > 0) {
       dropCoin(BASE_COIN_CHANCE + 15);
@@ -294,6 +295,11 @@ public class Dungeon extends Game {
       // schedule player to join game
     }
 
+    if (cardManager == null) {
+      cardManager = new CardManager(plugin);
+    }
+    cardManager.loadPlayerCards(player);
+
     if (players.isEmpty()) {
       runTask();
     }
@@ -302,13 +308,7 @@ public class Dungeon extends Game {
       players.add(dungeonPlayer);
     }
 
-    if (cardManager == null) {
-      cardManager = new CardManager(plugin);
-    }
-    cardManager.loadPlayerCards(player);
-
     preparePlayer(player);
-
   }
 
   public void runTask() {
@@ -316,7 +316,7 @@ public class Dungeon extends Game {
     final int taskFrequency = 20;
     final int taskDelay = 0;
 
-    scoreboard = new Scoreboard(plugin);
+    scoreboard = new Scoreboard(plugin, cardManager.getLibrarySize());
     hud.addComponent(scoreboard);
 
     // Dungeon has a tick frequency of 20 minecraft ticks (1 second) to process its events

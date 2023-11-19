@@ -1,6 +1,7 @@
 package com.github.advancedwipe.opendeckedout.game;
 
 import com.github.advancedwipe.opendeckedout.OpenDeckedOut;
+import com.github.advancedwipe.opendeckedout.cards.CardManager;
 import com.github.advancedwipe.opendeckedout.hud.CompositeContainer;
 import com.github.advancedwipe.opendeckedout.utils.DungeonUtils;
 import java.io.File;
@@ -27,16 +28,17 @@ public abstract class Game {
   protected boolean preparing = false;
   private final Map<Location, BlockState> originalState = new HashMap<>();
   protected CompositeContainer hud;
+  protected CardManager cardManager;
 
   protected Game(OpenDeckedOut plugin, String name) {
-    this.plugin = plugin;
+    this(plugin, java.util.UUID.randomUUID());
     this.name = name;
-    this.uuid = java.util.UUID.randomUUID();
   }
 
   protected Game(OpenDeckedOut plugin, UUID uuid) {
     this.plugin = plugin;
     this.uuid = uuid;
+    this.cardManager = new CardManager(plugin);
   }
 
 
