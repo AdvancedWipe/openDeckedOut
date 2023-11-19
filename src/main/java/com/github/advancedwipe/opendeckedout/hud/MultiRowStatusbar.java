@@ -5,6 +5,7 @@ import java.util.List;
 import net.kyori.adventure.text.format.NamedTextColor;
 
 public class MultiRowStatusbar {
+
   private final int size;
   private int status;
   private final int sizeOfEachRow;
@@ -28,18 +29,19 @@ public class MultiRowStatusbar {
   }
 
   private void update() {
+    int halfStatus = status / 2;
     if (status % 2 == 0) {
-      System.out.println(status + " is even.");
+      rows.get(0).setStatus(halfStatus);
+      rows.get(1).setStatus(halfStatus);
     } else {
-      var row = rows.get(0);
-      int currentStatus = row.getStatus();
-      currentStatus++;
-      row.setStatus(currentStatus);
+      int remaining = status % 2;
+      rows.get(0).setStatus(halfStatus + remaining);
+      rows.get(1).setStatus(halfStatus);
     }
   }
 
   public void setStatus(int status) {
-    if(this.status != status) {
+    if (this.status != status) {
       this.status = status;
       update();
     }
@@ -47,6 +49,10 @@ public class MultiRowStatusbar {
 
   public Statusbar getRow(int row) {
     return rows.get(row);
+  }
+
+  public int getStatus() {
+    return status;
   }
 
 }
