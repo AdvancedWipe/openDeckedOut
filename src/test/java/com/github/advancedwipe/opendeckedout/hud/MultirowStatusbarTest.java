@@ -8,8 +8,26 @@ import org.junit.jupiter.api.Test;
 class MultirowStatusbarTest {
 
   @Test
+  void testSetStatus_WithInitialStatus_ShouldNotUpdate() {
+    MultiRowStatusbar multiRowStatusbar = new MultiRowStatusbar(3, "Key", "Placeholder", '*', 10, 0,
+        NamedTextColor.RED, NamedTextColor.GRAY);
+
+    assertEquals(0, multiRowStatusbar.getRow(0).getStatus());
+    assertEquals(0, multiRowStatusbar.getRow(1).getStatus());
+  }
+
+  @Test
+  void testSetStatus_WithInitialStatus_ShouldUpdate() {
+    MultiRowStatusbar multiRowStatusbar = new MultiRowStatusbar(3, "Key", "Placeholder", '*', 10, 10,
+        NamedTextColor.RED, NamedTextColor.GRAY);
+
+    assertEquals(5, multiRowStatusbar.getRow(0).getStatus());
+    assertEquals(5, multiRowStatusbar.getRow(1).getStatus());
+  }
+
+  @Test
   void testSetStatus_WithDifferentStatus_ShouldUpdate() {
-    MultiRowStatusbar multiRowStatusbar = new MultiRowStatusbar(3, "Key", "Placeholder", '*', 10, 2,
+    MultiRowStatusbar multiRowStatusbar = new MultiRowStatusbar(3, "Key", "Placeholder", '*', 10, 20,
         NamedTextColor.RED, NamedTextColor.GRAY);
 
     multiRowStatusbar.setStatus(3);
@@ -19,7 +37,7 @@ class MultirowStatusbarTest {
 
   @Test
   void testSetStatus_WithSameStatus_ShouldNotUpdate() {
-    MultiRowStatusbar multiRowStatusbar = new MultiRowStatusbar(2, "Key", "Placeholder", '*', 10, 2,
+    MultiRowStatusbar multiRowStatusbar = new MultiRowStatusbar(2, "Key", "Placeholder", '*', 10, 20,
         NamedTextColor.RED, NamedTextColor.GRAY);
 
     multiRowStatusbar.setStatus(2);

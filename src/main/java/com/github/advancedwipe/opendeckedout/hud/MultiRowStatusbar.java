@@ -26,6 +26,7 @@ public class MultiRowStatusbar {
             NamedTextColor.GRAY));
       }
     }
+    update();
   }
 
   private void update() {
